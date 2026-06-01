@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tasty — Kitchen Intelligence Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..800;1,400..600&family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+/* ============================================================
+   TASTY — Kitchen Intelligence Platform
+   Design tokens + base system
+   ============================================================ */
+
+:root {
+  /* Surfaces */
+  --bg:        #0C0B09;
+  --surface-1: #181510;
+  --surface-2: #1E1A12;
+  --surface-3: #25201700; /* used via rgba below */
+  --raised:    #211C14;
+
+  /* Accents */
+  --olive:      #7A9E50;
+  --olive-soft: rgba(122,158,80,0.14);
+  --olive-line: rgba(122,158,80,0.32);
+  --gold:       #D4A040;
+  --gold-soft:  rgba(212,160,64,0.12);
+
+  /* Semantic */
+  --success: #7A9E50;
+  --warning: #D4A040;
+  --error:   #B5564A;
+  --info:    #6E94B0;
+
+  /* Text */
+  --text:        #F0EDE4;
+  --text-muted:  #A39C8C;
+  --text-dim:    #6E685C;
+  --text-faint:  #4A453C;
+
+  /* Lines */
+  --line:       rgba(255,255,255,0.08);
+  --line-soft:  rgba(255,255,255,0.05);
+  --line-strong:rgba(255,255,255,0.14);
+
+  /* Type */
+  --font-brand: "Playfair Display", Georgia, serif;
+  --font-ui:    "Outfit", system-ui, sans-serif;
+  --font-mono:  "JetBrains Mono", "SF Mono", monospace;
+
+  /* Geometry */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+
+  --shadow-soft: 0 1px 0 rgba(255,255,255,0.03) inset, 0 8px 30px rgba(0,0,0,0.45);
+  --glow-olive: 0 0 0 1px var(--olive-line), 0 6px 28px rgba(122,158,80,0.18);
+
+  --sidebar-w: 264px;
+  --topbar-h: 68px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#root { height: 100%; }
+
+::selection { background: var(--olive-soft); color: var(--text); }
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
+
+/* ===== Typographic helpers ===== */
+.brand-serif { font-family: var(--font-brand); }
+.mono { font-family: var(--font-mono); }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.tabular { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+/* ============================================================
+   LAYOUT SHELL
+   ============================================================ */
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ---- Sidebar ---- */
+.sidebar {
+  background: linear-gradient(180deg, #0E0D0A 0%, #0A0907 100%);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  z-index: 20;
+}
+
+.sb-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 22px 22px 20px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.sb-logo {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(150deg, var(--olive), #5e7d3c);
+  display: grid; place-items: center;
+  box-shadow: 0 4px 14px rgba(122,158,80,0.3);
+  flex-shrink: 0;
+}
+.sb-logo span {
+  font-family: var(--font-brand);
+  font-weight: 800;
+  font-size: 19px;
+  color: #0C0B09;
+  line-height: 1;
+}
+.sb-name {
+  font-family: var(--font-brand);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.sb-name b { color: var(--olive); font-weight: 700; }
+.sb-tag {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.22em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+.sb-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 12px 8px;
+}
+.sb-section-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding: 14px 12px 7px;
+}
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: var(--r-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 450;
+  position: relative;
+  transition: background .16s ease, color .16s ease;
+  user-select: none;
+}
+.sb-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: .82; }
+.sb-item:hover { background: rgba(255,255,255,0.035); color: var(--text); }
+.sb-item.active {
+  background: var(--olive-soft);
+  color: var(--text);
+}
+.sb-item.active svg { opacity: 1; color: var(--olive); }
+.sb-item.active::before {
+  content: "";
+  position: absolute;
+  left: -12px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 20px;
+  background: var(--olive);
+  border-radius: 0 3px 3px 0;
+}
+.sb-badge {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text-muted);
+  padding: 1px 7px;
+  border-radius: 20px;
+}
+.sb-badge.gold { color: var(--gold); border-color: var(--gold-soft); }
+
+.sb-footer {
+  border-top: 1px solid var(--line-soft);
+  padding: 12px;
+}
+.sb-user {
+  display: flex; align-items: center; gap: 11px;
+  padding: 8px; border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background .16s;
+}
+.sb-user:hover { background: rgba(255,255,255,0.035); }
+.sb-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(140deg, #3a3326, #2a2519);
+  border: 1px solid var(--line-strong);
+  display: grid; place-items: center;
+  font-family: var(--font-brand); font-weight: 700;
+  color: var(--gold); font-size: 14px;
+  flex-shrink: 0;
+}
+.sb-user-meta { line-height: 1.25; overflow: hidden; }
+.sb-user-name { font-size: 13.5px; font-weight: 500; white-space: nowrap; }
+.sb-user-role { font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+
+/* ---- Main column ---- */
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(900px 500px at 78% -8%, rgba(122,158,80,0.05), transparent 60%),
+    var(--bg);
+}
+
+/* ---- Top bar ---- */
+.topbar {
+  height: var(--topbar-h);
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 28px;
+  background: rgba(12,11,9,0.7);
+  backdrop-filter: blur(12px);
+}
+.search {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 9px 14px;
+  width: 380px;
+  max-width: 40vw;
+  color: var(--text-dim);
+  transition: border-color .16s, box-shadow .16s;
+}
+.search:focus-within { border-color: var(--olive-line); box-shadow: 0 0 0 3px var(--olive-soft); }
+.search input {
+  background: none; border: none; outline: none;
+  color: var(--text); font-family: var(--font-ui); font-size: 14px;
+  width: 100%;
+}
+.search input::placeholder { color: var(--text-dim); }
+.search kbd {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-dim);
+  border: 1px solid var(--line); border-radius: 5px;
+  padding: 2px 6px; margin-left: auto;
+}
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.tb-btn {
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border-radius: var(--r-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  position: relative;
+  transition: background .16s, color .16s;
+  border: 1px solid transparent;
+}
+.tb-btn:hover { background: var(--surface-1); color: var(--text); border-color: var(--line); }
+.tb-btn svg { width: 19px; height: 19px; }
+.tb-dot {
+  position: absolute; top: 7px; right: 8px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--bg);
+}
+.kitchen-status {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 13px 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  background: var(--surface-1);
+  font-size: 12.5px;
+  color: var(--text-muted);
+  cursor: default;
+}
+.pulse {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--olive);
+  position: relative;
+  box-shadow: 0 0 0 0 rgba(122,158,80,0.5);
+  animation: pulse 2.4s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(122,158,80,0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(122,158,80,0); }
+  100% { box-shadow: 0 0 0 0 rgba(122,158,80,0); }
+}
+
+/* ---- Content scroll area ---- */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 36px 80px;
+}
+.content-narrow { max-width: 1500px; margin: 0 auto; }
+
+/* ============================================================
+   PRIMITIVES
+   ============================================================ */
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  position: relative;
+}
+.card-pad { padding: 22px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: var(--font-ui); font-size: 14px; font-weight: 500;
+  padding: 11px 18px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: all .16s ease;
+  white-space: nowrap;
+}
+.btn:hover { border-color: var(--line-strong); background: var(--raised); }
+.btn svg { width: 17px; height: 17px; }
+.btn-primary {
+  background: linear-gradient(140deg, var(--olive), #65853f);
+  color: #0C0B09;
+  border-color: transparent;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(122,158,80,0.25);
+}
+.btn-primary:hover { background: linear-gradient(140deg, #88ad5b, #6f9146); filter: brightness(1.04); }
+.btn-ghost { background: transparent; border-color: var(--line); }
+.btn-sm { padding: 7px 12px; font-size: 13px; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 11px;
+  padding: 4px 10px; border-radius: 20px;
+  border: 1px solid var(--line);
+  color: var(--text-muted);
+  background: var(--surface-1);
+  cursor: pointer;
+  transition: all .14s;
+  white-space: nowrap;
+}
+.chip:hover { border-color: var(--line-strong); color: var(--text); }
+.chip.on { background: var(--olive-soft); border-color: var(--olive-line); color: var(--text); }
+
+.tag {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: .04em;
+  padding: 2.5px 8px; border-radius: 5px;
+  border: 1px solid var(--line);
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.tag.olive { color: var(--olive); border-color: var(--olive-line); background: var(--olive-soft); }
+.tag.gold  { color: var(--gold);  border-color: var(--gold-soft); background: var(--gold-soft); }
+.tag.error { color: #cf7d72; border-color: rgba(181,86,74,0.4); background: rgba(181,86,74,0.1); }
+
+/* Page header */
+.page-head { margin-bottom: 26px; }
+.page-title {
+  font-family: var(--font-brand);
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+.page-sub { color: var(--text-muted); margin-top: 8px; font-size: 14.5px; max-width: 620px; }
+
+/* Section header */
+.sec-head {
+  display: flex; align-items: center; gap: 14px;
+  margin: 36px 0 16px;
+}
+.sec-head h3 {
+  font-size: 13px; font-weight: 600; letter-spacing: .02em;
+  color: var(--text);
+  text-transform: none;
+}
+.sec-head .eyebrow { margin-left: auto; }
+.sec-rule { flex: 1; height: 1px; background: var(--line); }
+
+/* Utility */
+.row { display: flex; align-items: center; }
+.between { justify-content: space-between; }
+.gap8 { gap: 8px; } .gap12 { gap: 12px; } .gap16 { gap: 16px; }
+.muted { color: var(--text-muted); }
+.dim { color: var(--text-dim); }
+.grow { flex: 1; }
+
+.fade-in { animation: fadeIn .45s ease both; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.rise { animation: rise .5s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* ============================================================
+   TASTY — Screen-specific styles
+   ============================================================ */
+
+/* ---- Hero ---- */
+.hero {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: 38px 40px;
+  overflow: hidden;
+  background:
+    radial-gradient(700px 320px at 88% 10%, rgba(122,158,80,0.12), transparent 70%),
+    radial-gradient(500px 300px at 0% 100%, rgba(212,160,64,0.06), transparent 70%),
+    linear-gradient(180deg, #19160F, #131009);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(600px 300px at 80% 0%, #000, transparent 75%);
+  pointer-events: none;
+}
+.hero-inner { position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; }
+.hero h1 {
+  font-family: var(--font-brand);
+  font-size: 46px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.02;
+  max-width: 620px;
+}
+.hero h1 em { color: var(--olive); font-style: normal; }
+.hero-sub { color: var(--text-muted); margin-top: 16px; font-size: 15.5px; max-width: 560px; line-height: 1.55; }
+.hero-cta { display: flex; gap: 12px; margin-top: 26px; }
+.hero-side {
+  flex-shrink: 0;
+  display: grid;
+  gap: 12px;
+  min-width: 230px;
+}
+.hero-stat {
+  background: rgba(12,11,9,0.55);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  backdrop-filter: blur(6px);
+}
+.hero-stat .v { font-family: var(--font-brand); font-size: 27px; font-weight: 600; line-height: 1; }
+.hero-stat .l { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); margin-top: 7px; }
+
+/* ---- KPI grid ---- */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.kpi {
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+}
+.kpi:hover { border-color: var(--olive-line); transform: translateY(-2px); box-shadow: var(--glow-olive); }
+.kpi-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.kpi-label { font-size: 12.5px; color: var(--text-muted); line-height: 1.3; max-width: 130px; }
+.kpi-val { font-family: var(--font-brand); font-size: 34px; font-weight: 600; line-height: 1; margin-top: 14px; }
+.kpi-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+.kpi-trend { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-size: 11.5px; }
+.kpi-trend.up { color: var(--olive); }
+.kpi-trend.down { color: var(--gold); }
+.kpi-trend svg { width: 13px; height: 13px; }
+.kpi-hint { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: .05em; text-transform: uppercase; }
+
+/* ---- Analytics grid ---- */
+.an-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+.an-card {
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 20px 22px;
+  display: flex; flex-direction: column;
+}
+.an-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; gap: 12px; }
+.an-title { font-size: 14.5px; font-weight: 600; }
+.an-desc { font-size: 12px; color: var(--text-dim); margin-top: 3px; }
+.an-figure { font-family: var(--font-brand); font-size: 26px; font-weight: 600; }
+
+.legend { display: flex; flex-direction: column; gap: 9px; }
+.legend-item { display: flex; align-items: center; gap: 9px; font-size: 13px; }
+.legend-dot { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
+.legend-val { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+
+.span-3 { grid-column: span 3; } .span-4 { grid-column: span 4; }
+.span-5 { grid-column: span 5; } .span-6 { grid-column: span 6; }
+.span-7 { grid-column: span 7; } .span-8 { grid-column: span 8; } .span-12 { grid-column: span 12; }
+
+/* ---- Generator 3-col ---- */
+.gen-layout { display: grid; grid-template-columns: 320px 1fr 360px; gap: 18px; align-items: start; }
+.gen-col { background: var(--surface-1); border: 1px solid var(--line); border-radius: var(--r-lg); }
+.gen-col-head { padding: 18px 20px; border-bottom: 1px solid var(--line-soft); display: flex; align-items: center; gap: 10px; }
+.gen-col-head h3 { font-size: 14px; font-weight: 600; }
+.gen-col-head .eyebrow { margin-left: auto; }
+.gen-col-body { padding: 18px 20px; }
+
+.field { margin-bottom: 17px; }
+.field label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 7px; font-weight: 450; }
+.field-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 7px; }
+.field-row label { margin: 0; }
+.field-row .v { font-family: var(--font-mono); font-size: 13px; color: var(--olive); }
+.inp {
+  width: 100%; background: var(--bg); border: 1px solid var(--line);
+  border-radius: var(--r-sm); padding: 10px 12px; color: var(--text);
+  font-family: var(--font-ui); font-size: 14px; outline: none; transition: border-color .15s, box-shadow .15s;
+}
+.inp:focus { border-color: var(--olive-line); box-shadow: 0 0 0 3px var(--olive-soft); }
+select.inp { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236E685C' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+
+.range { width: 100%; -webkit-appearance: none; height: 4px; border-radius: 4px; background: rgba(255,255,255,0.1); outline: none; }
+.range::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--olive); cursor: pointer; box-shadow: 0 0 0 4px var(--olive-soft); }
+.seg { display: flex; gap: 6px; }
+.seg button {
+  flex: 1; padding: 8px; border: 1px solid var(--line); background: var(--bg);
+  color: var(--text-muted); border-radius: var(--r-sm); font-size: 12.5px; cursor: pointer; font-family: var(--font-ui);
+  transition: all .14s;
+}
+.seg button.on { background: var(--olive-soft); border-color: var(--olive-line); color: var(--text); }
+.seg button:hover:not(.on) { border-color: var(--line-strong); }
+
+/* generated menu groups */
+.menu-group { margin-bottom: 16px; }
+.menu-group-head { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.menu-group-head .gh { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.menu-group-head .ln { flex: 1; height: 1px; background: var(--line-soft); }
+.menu-group-head .ct { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); }
+.dish {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 13px; align-items: center;
+  padding: 11px 14px; border: 1px solid var(--line); border-radius: var(--r-md);
+  background: var(--bg); margin-bottom: 7px; transition: border-color .15s, background .15s;
+}
+.dish:hover { border-color: var(--line-strong); background: var(--surface-1); }
+.dish-color { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 0 3px rgba(255,255,255,0.04); }
+.dish-name { font-size: 13.5px; font-weight: 450; }
+.dish-meta { display: flex; gap: 12px; margin-top: 3px; }
+.dish-meta span { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); display: inline-flex; align-items: center; gap: 3px; }
+.dish-cost { font-family: var(--font-mono); font-size: 13px; color: var(--text); text-align: right; }
+.diff-dots { display: inline-flex; gap: 2px; }
+.diff-dots i { width: 4px; height: 4px; border-radius: 50%; background: var(--text-faint); }
+.diff-dots i.on { background: var(--gold); }
+
+/* AI engine cards */
+.ai-rec {
+  border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px;
+  margin-bottom: 11px; display: flex; gap: 12px; background: var(--bg);
+}
+.ai-rec-ic { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; flex-shrink: 0; }
+.ai-rec.ok .ai-rec-ic { background: var(--olive-soft); color: var(--olive); }
+.ai-rec.warn .ai-rec-ic { background: var(--gold-soft); color: var(--gold); }
+.ai-rec-t { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.ai-rec-x { font-size: 12.5px; color: var(--text-muted); line-height: 1.45; }
+
+/* loading sequence */
+.gen-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 24px; text-align: center; }
+.gen-spinner { width: 56px; height: 56px; margin-bottom: 22px; position: relative; }
+.gen-spinner svg { animation: spin 1.1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.gen-log { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-muted); margin-top: 5px; min-height: 20px; }
+.gen-log b { color: var(--olive); }
+
+/* database table */
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl th {
+  text-align: left; font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--text-dim); font-weight: 500; padding: 10px 14px; border-bottom: 1px solid var(--line);
+}
+.tbl td { padding: 13px 14px; border-bottom: 1px solid var(--line-soft); font-size: 13.5px; }
+.tbl tr { transition: background .12s; }
+.tbl tbody tr:hover { background: rgba(255,255,255,0.022); }
+.tbl tbody tr { cursor: default; }
+
+/* analysis */
+.score-card { background: var(--surface-1); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px; display: flex; gap: 18px; }
+.score-why { font-size: 13px; color: var(--text-muted); line-height: 1.55; margin-top: 8px; }
+
+/* placeholder */
+.ph-wrap { display: grid; place-items: center; min-height: 440px; }
+.ph {
+  text-align: center; max-width: 420px;
+  border: 1px dashed var(--line-strong); border-radius: var(--r-xl); padding: 48px 40px;
+  background: repeating-linear-gradient(135deg, transparent, transparent 9px, rgba(255,255,255,0.012) 9px, rgba(255,255,255,0.012) 18px);
+}
+.ph-ic { width: 56px; height: 56px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); display: grid; place-items: center; margin: 0 auto 20px; color: var(--gold); }
+.ph h2 { font-family: var(--font-brand); font-size: 25px; font-weight: 600; }
+.ph p { color: var(--text-muted); margin-top: 10px; font-size: 14px; line-height: 1.55; }
+.ph-badge { display: inline-block; margin-top: 20px; }
+
+@media (max-width: 1280px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .gen-layout { grid-template-columns: 1fr; }
+}
+
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" data-from="data.jsx">
+/* ============================================================
+   TASTY — Data layer
+   Realistic Polish institutional-kitchen dataset
+   Costs in PLN (zł). Color = dominant plate color for harmony engine.
+   ============================================================ */
+
+// Stations (stanowiska)
+const STATIONS = ["Garmażeria", "Patelnia", "Piec", "Grill", "Zimna kuchnia", "Garnek"];
+
+// color tokens for plate-color profiling
+const C = {
+  brown:  { hex: "#8a5a36", name: "Brąz" },
+  green:  { hex: "#6f8f48", name: "Zieleń" },
+  red:    { hex: "#a4493d", name: "Czerwień" },
+  gold:   { hex: "#caa martin", name: "Złoto" },
+  yellow: { hex: "#caa244", name: "Żółć" },
+  white:  { hex: "#d8d2c2", name: "Biel" },
+  orange: { hex: "#c47a36", name: "Pomarańcz" },
+  purple: { hex: "#7c4a63", name: "Burak" },
+};
+
+// helper to build a dish
+function d(name, cat, station, diff, time, cost, color, tags) {
+  return { name, cat, station, diff, time, cost, color, tags: tags || [] };
+}
+
+const DISHES = [
+  // ---- Zupy ----
+  d("Żurek staropolski na zakwasie", "Zupa", "Garnek", 2, 50, 3.20, C.white, ["sezonowe"]),
+  d("Rosół z kury z makaronem", "Zupa", "Garnek", 1, 90, 2.40, C.gold, ["klasyk"]),
+  d("Krem z pieczonej dyni", "Zupa", "Garnek", 2, 40, 2.10, C.orange, ["wege","sezonowe"]),
+  d("Barszcz czerwony czysty", "Zupa", "Garnek", 2, 70, 1.80, C.purple, ["wege"]),
+  d("Pomidorowa z ryżem", "Zupa", "Garnek", 1, 45, 1.90, C.red, ["klasyk"]),
+  d("Krem z brokułów", "Zupa", "Garnek", 1, 35, 2.30, C.green, ["wege"]),
+  d("Ogórkowa z koperkiem", "Zupa", "Garnek", 1, 50, 1.70, C.green, ["klasyk"]),
+  d("Grochówka wojskowa", "Zupa", "Garnek", 2, 80, 2.00, C.gold, ["sycące"]),
+
+  // ---- Dania mięsne ----
+  d("Schabowy klasyczny panierowany", "Mięsne", "Patelnia", 2, 25, 6.40, C.gold, ["klasyk"]),
+  d("Gulasz wołowy z papryką", "Mięsne", "Garnek", 3, 120, 7.80, C.brown, ["sycące"]),
+  d("Zrazy zawijane wołowe", "Mięsne", "Piec", 4, 140, 9.10, C.brown, ["premium"]),
+  d("Kurczak po staropolsku", "Mięsne", "Piec", 2, 55, 5.20, C.gold, []),
+  d("Pieczeń rzymska z sosem", "Mięsne", "Piec", 3, 90, 5.90, C.brown, []),
+  d("Udko z kaczki konfitowane", "Mięsne", "Piec", 4, 150, 11.40, C.brown, ["premium"]),
+  d("Bitki wołowe w sosie", "Mięsne", "Patelnia", 3, 70, 8.30, C.brown, []),
+  d("Kotlet de volaille", "Mięsne", "Patelnia", 4, 40, 7.10, C.gold, ["premium"]),
+  d("Pierś z indyka grillowana", "Mięsne", "Grill", 2, 30, 6.00, C.white, ["lekkie"]),
+  d("Gołąbki w sosie pomidorowym", "Mięsne", "Piec", 3, 110, 4.80, C.red, ["klasyk"]),
+
+  // ---- Ryby ----
+  d("Dorsz pieczony z ziołami", "Rybne", "Piec", 2, 35, 8.90, C.white, ["lekkie"]),
+  d("Łosoś z pieca na warzywach", "Rybne", "Piec", 3, 40, 12.60, C.orange, ["premium","lekkie"]),
+  d("Filet z miruny smażony", "Rybne", "Patelnia", 2, 25, 5.40, C.gold, []),
+  d("Pstrąg z masłem i migdałami", "Rybne", "Patelnia", 3, 35, 10.20, C.gold, ["premium"]),
+
+  // ---- Wegetariańskie / Wegańskie ----
+  d("Placki z cukinii z jogurtem", "Wege", "Patelnia", 2, 35, 3.10, C.green, ["wege"]),
+  d("Naleśniki ze szpinakiem i fetą", "Wege", "Patelnia", 3, 45, 3.60, C.green, ["wege"]),
+  d("Risotto z grzybami leśnymi", "Wege", "Patelnia", 3, 40, 4.20, C.brown, ["wege","sezonowe"]),
+  d("Curry z ciecierzycy", "Wegańskie", "Garnek", 2, 50, 3.40, C.orange, ["wegan"]),
+  d("Gulasz warzywny po węgiersku", "Wegańskie", "Garnek", 2, 60, 3.00, C.red, ["wegan"]),
+  d("Kotlety z soczewicy", "Wegańskie", "Patelnia", 3, 45, 3.20, C.brown, ["wegan"]),
+
+  // ---- Garnięry warzywne ----
+  d("Marchewka z groszkiem", "Warzywa", "Garnek", 1, 25, 1.40, C.orange, ["wege"]),
+  d("Buraczki zasmażane", "Warzywa", "Garnek", 1, 40, 1.30, C.purple, ["wege"]),
+  d("Fasolka szparagowa z bułką", "Warzywa", "Garnek", 1, 25, 1.60, C.green, ["wege"]),
+  d("Kapusta zasmażana", "Warzywa", "Garnek", 1, 50, 1.20, C.gold, ["wege"]),
+  d("Brokuły na parze", "Warzywa", "Garnek", 1, 18, 1.80, C.green, ["wege","lekkie"]),
+  d("Mizeria ze śmietaną", "Warzywa", "Zimna kuchnia", 1, 15, 1.50, C.green, ["wege"]),
+
+  // ---- Pierogi ----
+  d("Pierogi ruskie", "Pierogi", "Garnek", 3, 90, 3.80, C.gold, ["klasyk"]),
+  d("Pierogi z mięsem", "Pierogi", "Garnek", 3, 95, 4.40, C.gold, []),
+  d("Pierogi z kapustą i grzybami", "Pierogi", "Garnek", 3, 100, 3.60, C.brown, ["sezonowe"]),
+
+  // ---- Kopytka ----
+  d("Kopytka tradycyjne", "Kopytka", "Garnek", 2, 60, 2.10, C.white, ["klasyk"]),
+  d("Kopytka z masłem i bułką tartą", "Kopytka", "Garnek", 2, 65, 2.40, C.gold, []),
+
+  // ---- Ziemniaki i kasze ----
+  d("Ziemniaki gotowane z koperkiem", "Ziemniaki", "Garnek", 1, 30, 0.90, C.white, ["wege"]),
+  d("Ziemniaki opiekane", "Ziemniaki", "Piec", 1, 40, 1.10, C.gold, ["wege"]),
+  d("Puree ziemniaczane", "Ziemniaki", "Garnek", 1, 35, 1.20, C.white, ["wege"]),
+  d("Kasza gryczana", "Ziemniaki", "Garnek", 1, 25, 1.00, C.brown, ["wege"]),
+  d("Ryż biały na sypko", "Ziemniaki", "Garnek", 1, 22, 0.80, C.white, ["wege"]),
+  d("Kluski śląskie", "Ziemniaki", "Garnek", 2, 50, 1.60, C.white, ["klasyk"]),
+
+  // ---- Surówki ----
+  d("Surówka z białej kapusty", "Surówki", "Zimna kuchnia", 1, 15, 0.90, C.green, ["wege"]),
+  d("Surówka z marchwi i jabłka", "Surówki", "Zimna kuchnia", 1, 15, 1.00, C.orange, ["wege"]),
+  d("Surówka z buraków", "Surówki", "Zimna kuchnia", 1, 20, 1.10, C.purple, ["wege"]),
+  d("Colesław", "Surówki", "Zimna kuchnia", 1, 18, 1.20, C.green, ["wege"]),
+  d("Surówka z kiszonej kapusty", "Surówki", "Zimna kuchnia", 1, 12, 0.80, C.gold, ["wege"]),
+  d("Sałatka z pomidorów i cebuli", "Surówki", "Zimna kuchnia", 1, 14, 1.30, C.red, ["wege"]),
+  d("Surówka z selera", "Surówki", "Zimna kuchnia", 1, 16, 1.10, C.white, ["wege"]),
+];
+
+// fix the broken gold hex typo from token table
+C.gold.hex = "#caa244";
+
+// Category → how many per generated day (from user's spec)
+const DAY_COMPOSITION = [
+  { cat: "Zupa",      label: "Zupy",                count: 2 },
+  { cat: "Mięsne",    label: "Dania mięsne",        count: 3 },
+  { cat: "Rybne",     label: "Dania rybne",         count: 1 },
+  { cat: "Wege",      label: "Wegetariańskie",      count: 1 },
+  { cat: "Wegańskie", label: "Wegańskie",           count: 2 },
+  { cat: "Warzywa",   label: "Garnięry warzywne",   count: 2 },
+  { cat: "Pierogi",   label: "Pierogi",             count: 1 },
+  { cat: "Kopytka",   label: "Kopytka",             count: 1 },
+  { cat: "Ziemniaki", label: "Ziemniaki i kasze",   count: 3 },
+  { cat: "Surówki",   label: "Surówki",             count: 5 },
+];
+
+// Build one generated day, deterministic-ish with seed rotation
+function buildMenu(seed) {
+  seed = seed || 0;
+  const out = [];
+  DAY_COMPOSITION.forEach((g) => {
+    const pool = DISHES.filter((x) => x.cat === g.cat);
+    for (let i = 0; i < g.count; i++) {
+      const pick = pool[(seed + i * 3 + g.count) % pool.length];
+      out.push({ ...pick, _g: g.label });
+    }
+  });
+  return out;
+}
+
+// ---- KPI definitions (dashboard) ----
+const KPIS = [
+  { key: "stress",   label: "Indeks obciążenia kuchni", value: 64, unit: "", trend: -6, good: "low",  spark: [72,70,75,68,71,66,64], hint: "Umiarkowane" },
+  { key: "harmony",  label: "Harmonia kolorów",         value: 87, unit: "", trend: +4, good: "high", spark: [78,80,79,83,85,84,87], hint: "Bardzo dobra" },
+  { key: "appeal",   label: "Atrakcyjność dla gości",   value: 91, unit: "", trend: +2, good: "high", spark: [85,86,88,87,89,90,91], hint: "Wysoka" },
+  { key: "foodcost", label: "Efektywność food cost",    value: 28.4,unit: "%",trend: -1.2,good: "low", spark: [31,30.5,30,29.4,29,28.8,28.4], hint: "Cel ≤ 30%" },
+  { key: "complex",  label: "Złożoność produkcji",      value: 58, unit: "", trend: +3, good: "low",  spark: [52,54,53,55,56,57,58], hint: "Średnia" },
+  { key: "opeff",    label: "Efektywność operacyjna",   value: 82, unit: "", trend: +5, good: "high", spark: [74,76,75,78,80,81,82], hint: "Silna" },
+  { key: "capacity", label: "Wykorzystanie przepustowości", value: 76, unit: "%", trend: +2, good: "mid", spark: [70,72,71,74,73,75,76], hint: "Optymalne" },
+  { key: "diversity",label: "Różnorodność menu",        value: 84, unit: "", trend: +1, good: "high", spark: [80,81,80,82,83,83,84], hint: "Zróżnicowane" },
+];
+
+// Station load (% of capacity today)
+const STATION_LOAD = [
+  { name: "Garmażeria",    load: 88, items: 14 },
+  { name: "Patelnia",      load: 72, items: 9 },
+  { name: "Piec",          load: 64, items: 7 },
+  { name: "Grill",         load: 41, items: 3 },
+  { name: "Zimna kuchnia", load: 79, items: 12 },
+  { name: "Garnek",        load: 93, items: 18 },
+];
+
+// Weekly menu balance — heavy vs light per weekday
+const WEEK_BALANCE = [
+  { day: "Pon", heavy: 62, light: 38, score: 81 },
+  { day: "Wt",  heavy: 55, light: 45, score: 86 },
+  { day: "Śr",  heavy: 70, light: 30, score: 74 },
+  { day: "Czw", heavy: 48, light: 52, score: 90 },
+  { day: "Pt",  heavy: 40, light: 60, score: 88 },
+  { day: "Sob", heavy: 58, light: 42, score: 83 },
+  { day: "Ndz", heavy: 66, light: 34, score: 78 },
+];
+
+// Capacity forecast (portions/h capacity vs demand) — next 12h
+const CAPACITY_FORECAST = [
+  { h: "08", cap: 120, dem: 60 }, { h: "09", cap: 120, dem: 90 },
+  { h: "10", cap: 120, dem: 140 }, { h: "11", cap: 160, dem: 210 },
+  { h: "12", cap: 200, dem: 290 }, { h: "13", cap: 200, dem: 270 },
+  { h: "14", cap: 160, dem: 150 }, { h: "15", cap: 120, dem: 70 },
+  { h: "16", cap: 120, dem: 90 }, { h: "17", cap: 160, dem: 180 },
+  { h: "18", cap: 200, dem: 240 }, { h: "19", cap: 200, dem: 160 },
+];
+
+// Cost breakdown
+const COST_BREAKDOWN = [
+  { name: "Mięso i drób", pct: 34, val: "8 420 zł" },
+  { name: "Warzywa",      pct: 21, val: "5 200 zł" },
+  { name: "Ryby",         pct: 14, val: "3 470 zł" },
+  { name: "Nabiał",       pct: 12, val: "2 970 zł" },
+  { name: "Kasze i mąki", pct: 11, val: "2 720 zł" },
+  { name: "Przyprawy",    pct: 8,  val: "1 980 zł" },
+];
+
+// Performance trend (operational score, 30d sampled)
+const PERF_TREND = [68,70,69,72,74,73,76,75,78,77,80,79,82,81,83,82,85,84,86,85,87,86,88,87,89,88,90,89,91,90];
+
+// Category distribution (database)
+const CAT_DIST = [
+  { name: "Surówki", n: 96 }, { name: "Mięsne", n: 78 }, { name: "Zupy", n: 64 },
+  { name: "Ziemniaki", n: 52 }, { name: "Warzywa", n: 48 }, { name: "Wege", n: 34 },
+  { name: "Rybne", n: 22 }, { name: "Pierogi", n: 12 }, { name: "Kopytka", n: 6 },
+];
+
+// AI analysis detailed scores with explanations
+const ANALYSIS_SCORES = [
+  { key: "harmony", label: "Harmonia kolorów", value: 87, good: "high",
+    why: "Talerz dnia łączy 5 dominujących barw (brąz, zieleń, złoto, czerwień, biel). Brak dominacji jednego koloru powyżej 35% — oko gościa odbiera menu jako apetyczne i zbalansowane." },
+  { key: "stress", label: "Obciążenie kuchni", value: 64, good: "low",
+    why: "Stanowisko „Garnek” pracuje na 93% przepustowości w szczycie 12:00–13:00. Trzy dania wymagają długiego gotowania jednocześnie — to główny czynnik podnoszący indeks." },
+  { key: "appeal", label: "Atrakcyjność dla gości", value: 91, good: "high",
+    why: "Wysoki udział dań-klasyków (schabowy, rosół, pierogi ruskie) o sprawdzonej akceptacji + 2 pozycje sezonowe. Prognozowany wskaźnik zwrotów talerzy poniżej 4%." },
+  { key: "foodcost", label: "Food cost", value: 28.4, good: "low", unit: "%",
+    why: "Średni koszt surowca na porcję 4,82 zł przy cenie sprzedaży 17 zł. Najdroższe pozycje (łosoś, kaczka) zbilansowane tańszymi surówkami i kaszami." },
+  { key: "ratio", label: "Ciężkie vs lekkie", value: 56, good: "mid", unit: "%",
+    why: "56% dań klasyfikowanych jako sycące. Dla menu obiadowego 300+ gości zalecany zakres to 50–60% — wartość mieści się w normie." },
+  { key: "stationload", label: "Obciążenie stanowisk", value: 79, good: "mid", unit: "%",
+    why: "Średnie wykorzystanie 6 stanowisk wynosi 79%. „Grill” jest niedociążony (41%) — rekomendacja: przenieść pierś z indyka na grill, by odciążyć patelnię." },
+  { key: "complexity", label: "Złożoność produkcji", value: 58, good: "low",
+    why: "Trzy pozycje o trudności 4/5 (de volaille, zrazy, kaczka). Wymagają doświadczonego kucharza — przy obecnej obsadzie 6 osób to akceptowalny poziom." },
+  { key: "risk", label: "Ryzyko realizacji", value: 22, good: "low", unit: "%",
+    why: "Niskie ryzyko. Jedyny punkt krytyczny: zsynchronizowanie 18 pozycji na stanowisku Garnek w szczycie. Sugerowane przesunięcie startu surówek o 40 min wcześniej." },
+];
+
+const AI_RECOMMENDATIONS = [
+  { type: "ok",   icon: "spark", title: "Doskonałe parowanie", text: "Schabowy + ziemniaki opiekane + surówka z kapusty to zestaw o najwyższej akceptacji gości (96%) w Twojej historii." },
+  { type: "warn", icon: "alert", title: "Przeciążenie stanowiska", text: "Garnek osiąga 93% w szczycie. Przenieś „brokuły na parze” na wcześniejszą godzinę lub na piec." },
+  { type: "ok",   icon: "leaf",  title: "Harmonia kolorów", text: "Dodanie buraczków podniosło różnorodność barw o 6 pkt. Talerz wygląda pełniej i bardziej apetycznie." },
+  { type: "warn", icon: "coin",  title: "Optymalizacja kosztu", text: "Zamiana łososia na dorsza w 1 z 2 dni obniży food cost o 1,8 pkt proc. bez utraty atrakcyjności." },
+  { type: "ok",   icon: "chart", title: "Prognoza satysfakcji", text: "Przewidywana satysfakcja gości: 91/100. To o 7 pkt powyżej średniej z ostatnich 30 dni." },
+];
+
+Object.assign(window, {
+  STATIONS, DISHES, DAY_COMPOSITION, buildMenu, KPIS, STATION_LOAD,
+  WEEK_BALANCE, CAPACITY_FORECAST, COST_BREAKDOWN, PERF_TREND, CAT_DIST,
+  ANALYSIS_SCORES, AI_RECOMMENDATIONS, PLATE_COLORS: C,
+});
+
+  </script>
+
+  <script type="text/babel" data-from="icons.jsx">
+/* ============================================================
+   TASTY — Icon set (simple geometric line icons, 24x24, stroke)
+   ============================================================ */
+const { createElement: h } = React;
+
+function Icon({ name, size = 18, stroke = 1.6, ...rest }) {
+  const p = {
+    width: size, height: size, viewBox: "0 0 24 24", fill: "none",
+    stroke: "currentColor", strokeWidth: stroke, strokeLinecap: "round",
+    strokeLinejoin: "round", ...rest,
+  };
+  const P = (...d) => d.map((x, i) => h("path", { key: i, d: x }));
+  const paths = {
+    dashboard: () => [h("rect",{key:0,x:3,y:3,width:7,height:9,rx:1.5}),h("rect",{key:1,x:14,y:3,width:7,height:5,rx:1.5}),h("rect",{key:2,x:14,y:11,width:7,height:10,rx:1.5}),h("rect",{key:3,x:3,y:15,width:7,height:6,rx:1.5})],
+    generator: () => [h("path",{key:0,d:"M12 3v3M12 18v3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M3 12h3M18 12h3M5.2 18.8l2.1-2.1M16.7 7.3l2.1-2.1"}),h("circle",{key:1,cx:12,cy:12,r:3.4})],
+    database: () => [h("ellipse",{key:0,cx:12,cy:5,rx:8,ry:3}),h("path",{key:1,d:"M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"}),h("path",{key:2,d:"M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"})],
+    analysis: () => [h("path",{key:0,d:"M3 3v18h18"}),h("path",{key:1,d:"M7 14l3.5-4 3 2.5L21 6"})],
+    cost: () => [h("circle",{key:0,cx:12,cy:12,r:9}),h("path",{key:1,d:"M12 7v10M9.5 9.2c0-1.1 1.1-1.7 2.5-1.7s2.5.7 2.5 1.8c0 2.4-5 1.4-5 3.8 0 1.1 1.1 1.8 2.5 1.8s2.5-.6 2.5-1.7"})],
+    production: () => [h("path",{key:0,d:"M3 21h18"}),h("path",{key:1,d:"M5 21V10l5-3 5 3v11"}),h("path",{key:2,d:"M15 21V13l4-2v10"}),h("path",{key:3,d:"M9 21v-5h3v5"})],
+    capacity: () => [h("path",{key:0,d:"M12 3a9 9 0 1 0 9 9"}),h("path",{key:1,d:"M12 12l5-5"}),h("path",{key:2,d:"M12 3v3M21 12h-3"})],
+    reports: () => [h("path",{key:0,d:"M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"}),h("path",{key:1,d:"M14 3v5h5M9 13h6M9 17h6M9 9h2"})],
+    settings: () => [h("circle",{key:0,cx:12,cy:12,r:3}),h("path",{key:1,d:"M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.1A1.6 1.6 0 0 0 7 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3 14H3a2 2 0 0 1 0-4h.1A1.6 1.6 0 0 0 4.6 7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 4.6V3a2 2 0 0 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.6 1.6 0 0 0 21 10h.1a2 2 0 0 1 0 4H21z"})],
+    search: () => [h("circle",{key:0,cx:11,cy:11,r:7}),h("path",{key:1,d:"M21 21l-4.3-4.3"})],
+    bell: () => [h("path",{key:0,d:"M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"}),h("path",{key:1,d:"M13.7 21a2 2 0 0 1-3.4 0"})],
+    activity: () => [h("path",{key:0,d:"M22 12h-4l-3 9L9 3l-3 9H2"})],
+    spark: () => [h("path",{key:0,d:"M12 3l1.8 4.8L18.5 9.5 13.8 11.3 12 16l-1.8-4.7L5.5 9.5l4.7-1.7z"}),h("path",{key:1,d:"M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"})],
+    alert: () => [h("path",{key:0,d:"M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"}),h("path",{key:1,d:"M12 9v4M12 17h.01"})],
+    leaf: () => [h("path",{key:0,d:"M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2.5 1.5 6.5-1 11a7 7 0 0 1-7 7z"}),h("path",{key:1,d:"M2 22c2-3 4-5.5 9-8"})],
+    coin: () => [h("circle",{key:0,cx:12,cy:12,r:9}),h("path",{key:1,d:"M12 6v12M14.5 8.5h-3a1.8 1.8 0 0 0 0 3.5h2a1.8 1.8 0 0 1 0 3.5h-3.2"})],
+    chart: () => [h("path",{key:0,d:"M3 3v18h18"}),h("rect",{key:1,x:7,y:11,width:3,height:6}),h("rect",{key:2,x:12,y:7,width:3,height:10}),h("rect",{key:3,x:17,y:13,width:3,height:4})],
+    clock: () => [h("circle",{key:0,cx:12,cy:12,r:9}),h("path",{key:1,d:"M12 7v5l3 2"})],
+    flame: () => [h("path",{key:0,d:"M12 2s5 4 5 9a5 5 0 0 1-10 0c0-1.5.5-2.5 1-3 .3 1 1 1.5 1.5 1.5C9 7 12 5 12 2z"})],
+    users: () => [h("path",{key:0,d:"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"}),h("circle",{key:1,cx:9,cy:7,r:4}),h("path",{key:2,d:"M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"})],
+    arrowUp: () => P("M12 19V5M5 12l7-7 7 7"),
+    arrowDown: () => P("M12 5v14M5 12l7 7 7-7"),
+    arrowRight: () => P("M5 12h14M12 5l7 7-7 7"),
+    plus: () => P("M12 5v14M5 12h14"),
+    check: () => P("M20 6 9 17l-5-5"),
+    chevDown: () => P("M6 9l6 6 6-6"),
+    filter: () => P("M3 4h18l-7 8v6l-4 2v-8z"),
+    grid: () => [h("rect",{key:0,x:3,y:3,width:7,height:7,rx:1}),h("rect",{key:1,x:14,y:3,width:7,height:7,rx:1}),h("rect",{key:2,x:3,y:14,width:7,height:7,rx:1}),h("rect",{key:3,x:14,y:14,width:7,height:7,rx:1})],
+    list: () => P("M8 6h13M8 12h13M8 18h13","M3 6h.01M3 12h.01M3 18h.01"),
+    plate: () => [h("circle",{key:0,cx:12,cy:12,r:9}),h("circle",{key:1,cx:12,cy:12,r:5})],
+    bolt: () => P("M13 2 3 14h7l-1 8 10-12h-7z"),
+    lock: () => [h("rect",{key:0,x:4,y:11,width:16,height:9,rx:2}),h("path",{key:1,d:"M8 11V7a4 4 0 0 1 8 0v4"})],
+    temp: () => [h("path",{key:0,d:"M10 13.5V5a2 2 0 0 1 4 0v8.5a4 4 0 1 1-4 0z"})],
+  };
+  const fn = paths[name];
+  return h("svg", p, fn ? fn() : null);
+}
+
+window.Icon = Icon;
+
+  </script>
+
+  <script type="text/babel" data-from="charts.jsx">
+/* ============================================================
+   TASTY — Chart primitives (custom SVG, dark editorial)
+   ============================================================ */
+const h = React.createElement;
+const { useState: cUseState, useEffect: cUseEffect, useRef: cUseRef } = React;
+
+function scoreColor(v, good) {
+  // good: "high" => higher is better; "low" => lower is better; "mid" => sweet spot
+  if (good === "low")  return v <= 35 ? "var(--olive)" : v <= 65 ? "var(--gold)" : "var(--error)";
+  if (good === "mid")  return v >= 70 && v <= 88 ? "var(--olive)" : "var(--gold)";
+  return v >= 80 ? "var(--olive)" : v >= 55 ? "var(--gold)" : "var(--error)";
+}
+
+/* Animated counter */
+function Counter({ value, decimals = 0, dur = 900, className }) {
+  const [v, setV] = cUseState(0);
+  const raf = cUseRef();
+  cUseEffect(() => {
+    const start = performance.now();
+    const from = 0, to = Number(value) || 0;
+    const tick = (t) => {
+      const p = Math.min(1, (t - start) / dur);
+      const e = 1 - Math.pow(1 - p, 3);
+      setV(from + (to - from) * e);
+      if (p < 1) raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf.current);
+  }, [value, dur]);
+  return h("span", { className }, v.toFixed(decimals));
+}
+
+/* Radial gauge (for KPI scores) */
+function RadialGauge({ value, good = "high", size = 64, stroke = 6, max = 100, unit = "" }) {
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const pct = Math.min(1, value / max);
+  const [off, setOff] = cUseState(c);
+  cUseEffect(() => {
+    const t = setTimeout(() => setOff(c * (1 - pct)), 60);
+    return () => clearTimeout(t);
+  }, [pct, c]);
+  const col = scoreColor(value, good);
+  return h("div", { style: { position: "relative", width: size, height: size } },
+    h("svg", { width: size, height: size, style: { transform: "rotate(-90deg)" } },
+      h("circle", { cx: size/2, cy: size/2, r, fill: "none", stroke: "rgba(255,255,255,0.07)", strokeWidth: stroke }),
+      h("circle", { cx: size/2, cy: size/2, r, fill: "none", stroke: col, strokeWidth: stroke,
+        strokeLinecap: "round", strokeDasharray: c, strokeDashoffset: off,
+        style: { transition: "stroke-dashoffset 1.1s cubic-bezier(.2,.7,.2,1)" } })
+    ),
+    h("div", { style: { position: "absolute", inset: 0, display: "grid", placeItems: "center",
+      fontFamily: "var(--font-mono)", fontSize: size > 56 ? 16 : 13, fontWeight: 600, color: "var(--text)" } },
+      h(Counter, { value, decimals: unit === "%" || value % 1 !== 0 ? 1 : 0 }), unit)
+  );
+}
+
+/* Sparkline */
+function Sparkline({ data, w = 110, hgt = 34, color = "var(--olive)", fill = true }) {
+  const min = Math.min(...data), max = Math.max(...data);
+  const rng = max - min || 1;
+  const pts = data.map((d, i) => [i / (data.length - 1) * w, hgt - ((d - min) / rng) * (hgt - 4) - 2]);
+  const line = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+  const area = line + ` L${w} ${hgt} L0 ${hgt} Z`;
+  const gid = "sg" + Math.random().toString(36).slice(2, 7);
+  return h("svg", { width: w, height: hgt, style: { display: "block" } },
+    h("defs", null, h("linearGradient", { id: gid, x1: 0, y1: 0, x2: 0, y2: 1 },
+      h("stop", { offset: "0%", stopColor: color, stopOpacity: 0.22 }),
+      h("stop", { offset: "100%", stopColor: color, stopOpacity: 0 }))),
+    fill && h("path", { d: area, fill: `url(#${gid})` }),
+    h("path", { d: line, fill: "none", stroke: color, strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round" }),
+    h("circle", { cx: pts[pts.length-1][0], cy: pts[pts.length-1][1], r: 2.4, fill: color })
+  );
+}
+
+/* Horizontal bar row (station load) */
+function BarRow({ label, value, max = 100, sub, color }) {
+  const [w, setW] = cUseState(0);
+  cUseEffect(() => { const t = setTimeout(() => setW(value / max * 100), 80); return () => clearTimeout(t); }, [value]);
+  const col = color || (value >= 90 ? "var(--error)" : value >= 75 ? "var(--gold)" : "var(--olive)");
+  return h("div", { style: { marginBottom: 13 } },
+    h("div", { className: "row between", style: { marginBottom: 6 } },
+      h("span", { style: { fontSize: 13, color: "var(--text)" } }, label),
+      h("span", { className: "mono", style: { fontSize: 12, color: "var(--text-muted)" } },
+        sub || (value + "%"))),
+    h("div", { style: { height: 7, background: "rgba(255,255,255,0.05)", borderRadius: 6, overflow: "hidden" } },
+      h("div", { style: { height: "100%", width: w + "%", background: col, borderRadius: 6,
+        transition: "width 1s cubic-bezier(.2,.7,.2,1)" } }))
+  );
+}
+
+/* Stacked heavy/light bar */
+function StackBar({ heavy, light, w = "100%" }) {
+  return h("div", { style: { display: "flex", height: 8, width: w, borderRadius: 6, overflow: "hidden", background: "rgba(255,255,255,0.05)" } },
+    h("div", { style: { width: heavy + "%", background: "var(--gold)", transition: "width .8s" } }),
+    h("div", { style: { width: light + "%", background: "var(--olive)", transition: "width .8s" } })
+  );
+}
+
+/* Line + area chart (capacity / trend) */
+function LineArea({ series, w = 560, hgt = 200, pad = 28, showDots = false, colorA = "var(--olive)", labels, yMax }) {
+  // series: array of {data:[], color} OR single array
+  const sets = Array.isArray(series[0]) || typeof series[0] === "object" && series[0].data
+    ? series : [{ data: series, color: colorA }];
+  const all = sets.flatMap(s => s.data);
+  const max = yMax || Math.max(...all) * 1.1;
+  const min = 0;
+  const n = sets[0].data.length;
+  const X = (i) => pad + i / (n - 1) * (w - pad * 2);
+  const Y = (v) => hgt - pad - (v - min) / (max - min) * (hgt - pad * 2);
+  const mkLine = (d) => d.map((v, i) => (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(v).toFixed(1)).join(" ");
+  return h("svg", { width: "100%", viewBox: `0 0 ${w} ${hgt}`, style: { display: "block", overflow: "visible" } },
+    // gridlines
+    [0.25, 0.5, 0.75, 1].map((g, i) => h("line", { key: "g" + i, x1: pad, x2: w - pad,
+      y1: hgt - pad - g * (hgt - pad * 2), y2: hgt - pad - g * (hgt - pad * 2),
+      stroke: "rgba(255,255,255,0.05)", strokeWidth: 1 })),
+    sets.map((s, si) => {
+      const gid = "la" + si + Math.random().toString(36).slice(2, 6);
+      const col = s.color || colorA;
+      return h("g", { key: si },
+        s.fill !== false && h("defs", null, h("linearGradient", { id: gid, x1: 0, y1: 0, x2: 0, y2: 1 },
+          h("stop", { offset: "0%", stopColor: col, stopOpacity: 0.18 }),
+          h("stop", { offset: "100%", stopColor: col, stopOpacity: 0 }))),
+        s.fill !== false && h("path", { d: mkLine(s.data) + ` L${X(n-1)} ${hgt-pad} L${X(0)} ${hgt-pad} Z`, fill: `url(#${gid})` }),
+        h("path", { d: mkLine(s.data), fill: "none", stroke: col, strokeWidth: 2,
+          strokeLinecap: "round", strokeLinejoin: "round", strokeDasharray: s.dashed ? "5 5" : "none" }),
+        showDots && s.data.map((v, i) => h("circle", { key: i, cx: X(i), cy: Y(v), r: 2.6, fill: "var(--bg)", stroke: col, strokeWidth: 1.6 }))
+      );
+    }),
+    labels && labels.map((l, i) => h("text", { key: "x" + i, x: X(i), y: hgt - 6,
+      fill: "var(--text-dim)", fontSize: 10, textAnchor: "middle", fontFamily: "var(--font-mono)" }, l))
+  );
+}
+
+/* Donut (category / cost) */
+function Donut({ data, size = 150, thick = 22, palette }) {
+  const total = data.reduce((s, d) => s + (d.pct ?? d.n), 0);
+  const pal = palette || ["#7A9E50","#D4A040","#6E94B0","#A4493D","#9A7BB0","#C47A36","#84a35c","#caa244","#777"];
+  const r = (size - thick) / 2;
+  const c = 2 * Math.PI * r;
+  let acc = 0;
+  return h("svg", { width: size, height: size, style: { transform: "rotate(-90deg)" } },
+    data.map((d, i) => {
+      const val = d.pct ?? d.n;
+      const frac = val / total;
+      const dash = `${(frac * c).toFixed(2)} ${c.toFixed(2)}`;
+      const off = -acc * c;
+      acc += frac;
+      return h("circle", { key: i, cx: size/2, cy: size/2, r, fill: "none",
+        stroke: pal[i % pal.length], strokeWidth: thick, strokeDasharray: dash,
+        strokeDashoffset: off, style: { transition: "stroke-dasharray 1s ease" } });
+    })
+  );
+}
+
+Object.assign(window, { Counter, RadialGauge, Sparkline, BarRow, StackBar, LineArea, Donut, scoreColor });
+
+  </script>
+
+  <script type="text/babel" data-from="shell.jsx">
+/* ============================================================
+   TASTY — App shell: Sidebar + TopBar
+   ============================================================ */
+
+const h = React.createElement;
+
+const NAV = [
+  { section: "Operacje" },
+  { id: "dashboard", label: "Pulpit", icon: "dashboard" },
+  { id: "generator", label: "Generator Menu AI", icon: "generator", badge: "AI", gold: true },
+  { id: "database",  label: "Baza dań", icon: "database", badge: "412" },
+  { id: "analysis",  label: "Analiza AI", icon: "analysis" },
+  { section: "Zarządzanie" },
+  { id: "cost",       label: "Kontrola food cost", icon: "cost" },
+  { id: "production", label: "Planowanie produkcji", icon: "production" },
+  { id: "capacity",   label: "Przepustowość kuchni", icon: "capacity" },
+  { id: "reports",    label: "Raporty", icon: "reports" },
+  { id: "settings",   label: "Ustawienia", icon: "settings" },
+];
+
+function Sidebar({ active, onNav }) {
+  return h("aside", { className: "sidebar" },
+    h("div", { className: "sb-brand" },
+      h("div", { className: "sb-logo" }, h("span", null, "T")),
+      h("div", null,
+        h("div", { className: "sb-name" }, "Tasty"),
+        h("div", { className: "sb-tag" }, "Kitchen Intelligence")
+      )
+    ),
+    h("nav", { className: "sb-nav" },
+      NAV.map((it, i) => it.section
+        ? h("div", { key: "s" + i, className: "sb-section-label" }, it.section)
+        : h("div", {
+            key: it.id,
+            className: "sb-item" + (active === it.id ? " active" : ""),
+            onClick: () => onNav(it.id),
+          },
+          h(Icon, { name: it.icon }),
+          h("span", null, it.label),
+          it.badge && h("span", { className: "sb-badge" + (it.gold ? " gold" : "") }, it.badge)
+        )
+      )
+    ),
+    h("div", { className: "sb-footer" },
+      h("div", { className: "sb-user" },
+        h("div", { className: "sb-avatar" }, "MK"),
+        h("div", { className: "sb-user-meta" },
+          h("div", { className: "sb-user-name" }, "Marek Kowalczyk"),
+          h("div", { className: "sb-user-role" }, "Szef kuchni · Hotel Vistula")
+        ),
+        h(Icon, { name: "chevDown", size: 15, style: { marginLeft: "auto", color: "var(--text-dim)" } })
+      )
+    )
+  );
+}
+
+function TopBar({ onGenerate }) {
+  const [time, setTime] = React.useState("");
+  React.useEffect(() => {
+    const upd = () => setTime(new Date().toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" }));
+    upd(); const t = setInterval(upd, 30000); return () => clearInterval(t);
+  }, []);
+  return h("header", { className: "topbar" },
+    h("div", { className: "search" },
+      h(Icon, { name: "search", size: 17 }),
+      h("input", { placeholder: "Szukaj dań, raportów, stanowisk…" }),
+      h("kbd", null, "⌘K")
+    ),
+    h("div", { className: "topbar-right" },
+      h("div", { className: "kitchen-status" },
+        h("span", { className: "pulse" }),
+        h("span", null, "Kuchnia aktywna"),
+        h("span", { className: "mono dim", style: { fontSize: 11 } }, "· " + time)
+      ),
+      h("div", { className: "tb-btn", title: "Aktywność zespołu" }, h(Icon, { name: "users" })),
+      h("div", { className: "tb-btn", title: "Powiadomienia" },
+        h(Icon, { name: "bell" }), h("span", { className: "tb-dot" })),
+      h("button", { className: "btn btn-primary btn-sm", onClick: onGenerate, style: { marginLeft: 6 } },
+        h(Icon, { name: "generator", size: 16 }), "Generuj Menu AI")
+    )
+  );
+}
+
+Object.assign(window, { Sidebar, TopBar, NAV });
+
+  </script>
+
+  <script type="text/babel" data-from="dashboard.jsx">
+/* ============================================================
+   TASTY — Dashboard (Centrum Inteligencji Kuchni)
+   ============================================================ */
+
+const h = React.createElement;
+
+function KpiCard({ k, i }) {
+  const up = k.trend > 0;
+  const goodDir = (k.good === "high" && up) || (k.good === "low" && !up);
+  return h("div", { className: "kpi rise", style: { animationDelay: (i * 45) + "ms" } },
+    h("div", { className: "kpi-top" },
+      h("div", { className: "kpi-label" }, k.label),
+      h(RadialGauge, { value: k.value, good: k.good, size: 50, stroke: 5, unit: k.unit })
+    ),
+    h("div", { className: "kpi-foot", style: { marginTop: 16 } },
+      h("div", null,
+        h("div", { className: "kpi-trend " + (goodDir ? "up" : "down") },
+          h(Icon, { name: up ? "arrowUp" : "arrowDown" }),
+          (up ? "+" : "") + k.trend + (k.unit === "%" ? " pp" : "")
+        ),
+        h("div", { className: "kpi-hint", style: { marginTop: 4 } }, k.hint)
+      ),
+      h(Sparkline, { data: k.spark, w: 80, hgt: 30,
+        color: goodDir ? "var(--olive)" : "var(--gold)" })
+    )
+  );
+}
+
+function Dashboard({ onGenerate }) {
+  return h("div", { className: "content-narrow fade-in" },
+    // Hero
+    h("section", { className: "hero" },
+      h("div", { className: "hero-grid" }),
+      h("div", { className: "hero-inner" },
+        h("div", null,
+          h("div", { className: "eyebrow", style: { marginBottom: 16 } }, "Centrum Inteligencji Kuchni"),
+          h("h1", null, "Zaprojektuj menu, które kuchnia ", h("em", null, "naprawdę wykona")),
+          h("p", { className: "hero-sub" },
+            "Generuj zoptymalizowane menu dla 300+ gości w kilka sekund, balansując food cost, obciążenie stanowisk i satysfakcję gości."),
+          h("div", { className: "hero-cta" },
+            h("button", { className: "btn btn-primary", onClick: onGenerate },
+              h(Icon, { name: "generator", size: 17 }), "Generuj Menu AI"),
+            h("button", { className: "btn btn-ghost" },
+              h(Icon, { name: "reports", size: 16 }), "Raport dzienny")
+          )
+        ),
+        h("div", { className: "hero-side" },
+          h("div", { className: "hero-stat" },
+            h("div", { className: "v brand-serif" }, "312"),
+            h("div", { className: "l" }, "Gości dziś")),
+          h("div", { className: "hero-stat" },
+            h("div", { className: "v brand-serif", style: { color: "var(--olive)" } }, "91/100"),
+            h("div", { className: "l" }, "Satysfakcja · prognoza")),
+          h("div", { className: "hero-stat" },
+            h("div", { className: "v brand-serif", style: { color: "var(--gold)" } }, "28,4%"),
+            h("div", { className: "l" }, "Food cost · cel ≤30%"))
+        )
+      )
+    ),
+
+    // KPI section
+    h("div", { className: "sec-head" },
+      h("h3", null, "Wskaźniki operacyjne"),
+      h("div", { className: "sec-rule" }),
+      h("span", { className: "eyebrow" }, "Aktualizacja na żywo · " + new Date().toLocaleDateString("pl-PL"))
+    ),
+    h("div", { className: "kpi-grid" },
+      KPIS.map((k, i) => h(KpiCard, { key: k.key, k, i }))
+    ),
+
+    // Analytics
+    h("div", { className: "sec-head" },
+      h("h3", null, "Analityka kuchni"),
+      h("div", { className: "sec-rule" })
+    ),
+    h("div", { className: "an-grid" },
+      // Station load
+      h("div", { className: "an-card span-4" },
+        h("div", { className: "an-head" },
+          h("div", null,
+            h("div", { className: "an-title" }, "Rozkład obciążenia stanowisk"),
+            h("div", { className: "an-desc" }, "Wykorzystanie przepustowości · dziś")),
+          h(Icon, { name: "flame", size: 18, style: { color: "var(--gold)" } })),
+        STATION_LOAD.map((s) => h(BarRow, { key: s.name, label: s.name, value: s.load, sub: s.load + "% · " + s.items + " poz." }))
+      ),
+      // Capacity forecast
+      h("div", { className: "an-card span-8" },
+        h("div", { className: "an-head" },
+          h("div", null,
+            h("div", { className: "an-title" }, "Prognoza przepustowości produkcyjnej"),
+            h("div", { className: "an-desc" }, "Porcje/h · dostępna moc vs prognozowany popyt")),
+          h("div", { className: "row gap16" },
+            h("span", { className: "legend-item", style: { fontSize: 12 } }, h("span", { className: "legend-dot", style: { background: "var(--olive)" } }), "Moc"),
+            h("span", { className: "legend-item", style: { fontSize: 12 } }, h("span", { className: "legend-dot", style: { background: "var(--gold)" } }), "Popyt"))),
+        h(LineArea, {
+          series: [
+            { data: CAPACITY_FORECAST.map(d => d.cap), color: "var(--olive)" },
+            { data: CAPACITY_FORECAST.map(d => d.dem), color: "var(--gold)", fill: false, dashed: true },
+          ],
+          labels: CAPACITY_FORECAST.map(d => d.h), w: 640, hgt: 200, showDots: true,
+        }),
+        h("div", { className: "row", style: { marginTop: 10, gap: 8 } },
+          h("span", { className: "tag error" }, "Szczyt 11–13: popyt > moc"),
+          h("span", { className: "muted", style: { fontSize: 12 } }, "Rekomendacja: przygotować 90 porcji buforu przed 11:00."))
+      ),
+      // Weekly balance
+      h("div", { className: "an-card span-5" },
+        h("div", { className: "an-head" },
+          h("div", null,
+            h("div", { className: "an-title" }, "Tygodniowy balans menu"),
+            h("div", { className: "an-desc" }, "Dania sycące vs lekkie")),
+          h("div", { className: "row gap12" },
+            h("span", { className: "legend-item", style: { fontSize: 11.5 } }, h("span", { className: "legend-dot", style: { background: "var(--gold)" } }), "Sycące"),
+            h("span", { className: "legend-item", style: { fontSize: 11.5 } }, h("span", { className: "legend-dot", style: { background: "var(--olive)" } }), "Lekkie"))),
+        h("div", null, WEEK_BALANCE.map((w) =>
+          h("div", { key: w.day, style: { display: "grid", gridTemplateColumns: "38px 1fr 42px", gap: 12, alignItems: "center", marginBottom: 11 } },
+            h("span", { className: "mono", style: { fontSize: 12, color: "var(--text-muted)" } }, w.day),
+            h(StackBar, { heavy: w.heavy, light: w.light }),
+            h("span", { className: "mono", style: { fontSize: 12, color: "var(--text)", textAlign: "right" } }, w.score)
+          )))
+      ),
+      // Cost breakdown
+      h("div", { className: "an-card span-4" },
+        h("div", { className: "an-head" },
+          h("div", null,
+            h("div", { className: "an-title" }, "Struktura kosztów"),
+            h("div", { className: "an-desc" }, "Surowce · tydzień")),
+          h("div", { className: "an-figure" }, "24,8k zł")),
+        h("div", { className: "row gap16", style: { alignItems: "center" } },
+          h(Donut, { data: COST_BREAKDOWN, size: 120, thick: 18 }),
+          h("div", { className: "legend grow" }, COST_BREAKDOWN.map((c, i) =>
+            h("div", { key: c.name, className: "legend-item" },
+              h("span", { className: "legend-dot", style: { background: ["#7A9E50","#D4A040","#6E94B0","#A4493D","#9A7BB0","#C47A36"][i] } }),
+              h("span", null, c.name),
+              h("span", { className: "legend-val" }, c.pct + "%"))))
+        )
+      ),
+      // Performance trend
+      h("div", { className: "an-card span-3" },
+        h("div", { className: "an-head" },
+          h("div", null,
+            h("div", { className: "an-title" }, "Wydajność"),
+            h("div", { className: "an-desc" }, "30 dni")),
+          h("div", null,
+            h("div", { className: "an-figure", style: { color: "var(--olive)" } }, "90"),
+            h("div", { className: "kpi-trend up", style: { justifyContent: "flex-end" } }, h(Icon, { name: "arrowUp" }), "+22 pkt"))),
+        h("div", { style: { marginTop: 8 } },
+          h(Sparkline, { data: PERF_TREND, w: 230, hgt: 90, color: "var(--olive)" }))
+      )
+    )
+  );
+}
+
+window.Dashboard = Dashboard;
+
+  </script>
+
+  <script type="text/babel" data-from="generator.jsx">
+/* ============================================================
+   TASTY — AI Menu Generator (3-column, cinematic generation)
+   ============================================================ */
+const h = React.createElement;
+const { useState: gUseState, useEffect: gUseEffect, useRef: gUseRef } = React;
+
+const GEN_STEPS = [
+  "Analizuję dostępne stanowiska i obsadę…",
+  "Dobieram dania z bazy 412 pozycji…",
+  "Balansuję food cost względem budżetu…",
+  "Optymalizuję harmonię kolorów talerza…",
+  "Wykrywam wąskie gardła produkcji…",
+  "Prognozuję satysfakcję gości…",
+];
+
+function DiffDots({ n }) {
+  return h("span", { className: "diff-dots" },
+    [1,2,3,4,5].map(i => h("i", { key: i, className: i <= n ? "on" : "" })));
+}
+
+function MenuDish({ dish, delay }) {
+  return h("div", { className: "dish rise", style: { animationDelay: delay + "ms" } },
+    h("span", { className: "dish-color", style: { background: dish.color.hex } }),
+    h("div", null,
+      h("div", { className: "dish-name" }, dish.name),
+      h("div", { className: "dish-meta" },
+        h("span", null, h(Icon, { name: "clock", size: 11 }), dish.time, " min"),
+        h("span", null, h(DiffDots, { n: dish.diff })),
+        h("span", null, dish.color.name),
+        dish.tags[0] && h("span", { style: { color: "var(--olive)" } }, dish.tags[0]))
+    ),
+    h("div", { className: "dish-cost" }, dish.cost.toFixed(2), " zł")
+  );
+}
+
+function MenuGenerator({ autoTrigger }) {
+  const [guests, setGuests] = gUseState(300);
+  const [budget, setBudget] = gUseState(17);
+  const [complexity, setComplexity] = gUseState("Średnia");
+  const [staff, setStaff] = gUseState(6);
+  const [state, setState] = gUseState("idle"); // idle | loading | done
+  const [step, setStep] = gUseState(0);
+  const [seed, setSeed] = gUseState(2);
+  const [menu, setMenu] = gUseState(() => buildMenu(2));
+  const timers = gUseRef([]);
+
+  const run = () => {
+    timers.current.forEach(clearTimeout);
+    setState("loading"); setStep(0);
+    const s = Math.floor(Math.random() * 7) + 1;
+    GEN_STEPS.forEach((_, i) => {
+      timers.current.push(setTimeout(() => setStep(i), i * 360));
+    });
+    timers.current.push(setTimeout(() => {
+      setSeed(s); setMenu(buildMenu(s)); setState("done");
+    }, GEN_STEPS.length * 360 + 250));
+  };
+
+  gUseEffect(() => { if (autoTrigger) run(); }, [autoTrigger]);
+  gUseEffect(() => () => timers.current.forEach(clearTimeout), []);
+
+  // group menu by _g
+  const groups = {};
+  menu.forEach(d => { (groups[d._g] = groups[d._g] || []).push(d); });
+  const totalCost = menu.reduce((s, d) => s + d.cost, 0);
+  const avgDiff = (menu.reduce((s, d) => s + d.diff, 0) / menu.length);
+
+  return h("div", { className: "fade-in" },
+    h("div", { className: "page-head row between", style: { alignItems: "flex-end" } },
+      h("div", null,
+        h("div", { className: "eyebrow", style: { marginBottom: 10 } }, "Generator Menu AI"),
+        h("h1", { className: "page-title" }, "Skomponuj dzień w kuchni"),
+        h("p", { className: "page-sub" }, "Skonfiguruj parametry — silnik AI dobierze dania, zbalansuje koszt i przewidzi obciążenie stanowisk.")),
+      state === "done" && h("button", { className: "btn btn-primary", onClick: run },
+        h(Icon, { name: "generator", size: 16 }), "Generuj ponownie")
+    ),
+
+    h("div", { className: "gen-layout" },
+      // ---- Column 1: Configuration ----
+      h("div", { className: "gen-col" },
+        h("div", { className: "gen-col-head" },
+          h(Icon, { name: "settings", size: 17, style: { color: "var(--text-muted)" } }),
+          h("h3", null, "Konfiguracja"),
+          h("span", { className: "eyebrow" }, "01")),
+        h("div", { className: "gen-col-body" },
+          h("div", { className: "field" },
+            h("div", { className: "field-row" }, h("label", null, "Liczba gości"), h("span", { className: "v" }, guests)),
+            h("input", { className: "range", type: "range", min: 50, max: 600, step: 10, value: guests, onChange: e => setGuests(+e.target.value) })),
+          h("div", { className: "field" },
+            h("div", { className: "field-row" }, h("label", null, "Budżet na gościa"), h("span", { className: "v" }, budget + ",00 zł")),
+            h("input", { className: "range", type: "range", min: 8, max: 40, step: 1, value: budget, onChange: e => setBudget(+e.target.value) })),
+          h("div", { className: "field" },
+            h("label", null, "Typ menu"),
+            h("select", { className: "inp", defaultValue: "obiadowe" },
+              h("option", { value: "obiadowe" }, "Obiadowe (catering instytucjonalny)"),
+              h("option", null, "Bankietowe"),
+              h("option", null, "Stołówka pracownicza"),
+              h("option", null, "Hotelowe — pełne wyżywienie"))),
+          h("div", { className: "field" },
+            h("label", null, "Ograniczenia dietetyczne"),
+            h("div", { className: "row gap8", style: { flexWrap: "wrap" } },
+              ["Wegetariańskie","Wegańskie","Bezglutenowe","Bez laktozy"].map((t, i) =>
+                h("span", { key: t, className: "chip" + (i < 2 ? " on" : "") }, t)))),
+          h("div", { className: "field" },
+            h("label", null, "Poziom złożoności"),
+            h("div", { className: "seg" },
+              ["Niska","Średnia","Wysoka"].map(c =>
+                h("button", { key: c, className: complexity === c ? "on" : "", onClick: () => setComplexity(c) }, c)))),
+          h("div", { className: "field" },
+            h("div", { className: "field-row" }, h("label", null, "Obsada kuchni"), h("span", { className: "v" }, staff + " osób")),
+            h("input", { className: "range", type: "range", min: 2, max: 14, step: 1, value: staff, onChange: e => setStaff(+e.target.value) })),
+          h("div", { className: "field" },
+            h("label", null, "Dostępne stanowiska"),
+            h("div", { className: "row gap8", style: { flexWrap: "wrap" } },
+              STATIONS.map(s => h("span", { key: s, className: "chip on" }, s)))),
+          h("div", { className: "field" },
+            h("label", null, "Limit czasu produkcji"),
+            h("select", { className: "inp", defaultValue: "4h" },
+              h("option", null, "3 godziny"), h("option", { value: "4h" }, "4 godziny"), h("option", null, "6 godzin"))),
+          h("button", { className: "btn btn-primary", style: { width: "100%", justifyContent: "center", marginTop: 6 },
+            onClick: run, disabled: state === "loading" },
+            h(Icon, { name: "bolt", size: 16 }), state === "loading" ? "Generuję…" : "Generuj menu")
+        )
+      ),
+
+      // ---- Column 2: Generated Menu ----
+      h("div", { className: "gen-col" },
+        h("div", { className: "gen-col-head" },
+          h(Icon, { name: "plate", size: 17, style: { color: "var(--gold)" } }),
+          h("h3", null, "Wygenerowane menu"),
+          state === "done" && h("span", { className: "tag olive", style: { marginLeft: "auto" } }, menu.length + " dań · " + guests + " gości"),
+          state !== "done" && h("span", { className: "eyebrow" }, "02")),
+        h("div", { className: "gen-col-body" },
+          state === "loading"
+            ? h("div", { className: "gen-loading" },
+                h("div", { className: "gen-spinner" },
+                  h("svg", { width: 56, height: 56, viewBox: "0 0 56 56", fill: "none" },
+                    h("circle", { cx: 28, cy: 28, r: 24, stroke: "rgba(255,255,255,0.08)", strokeWidth: 4 }),
+                    h("path", { d: "M28 4a24 24 0 0 1 24 24", stroke: "var(--olive)", strokeWidth: 4, strokeLinecap: "round" }))),
+                h("div", { className: "brand-serif", style: { fontSize: 22, marginBottom: 6 } }, "Komponuję menu…"),
+                h("div", { className: "gen-log" }, h("b", null, "→ "), GEN_STEPS[step]),
+                h("div", { className: "mono dim", style: { fontSize: 11, marginTop: 14 } }, "Krok " + (step + 1) + " / " + GEN_STEPS.length))
+            : DAY_COMPOSITION.map((g) => groups[g.label] && h("div", { key: g.label, className: "menu-group" },
+                h("div", { className: "menu-group-head" },
+                  h("span", { className: "gh" }, g.label),
+                  h("span", { className: "ln" }),
+                  h("span", { className: "ct" }, groups[g.label].length + "×")),
+                groups[g.label].map((d, i) => h(MenuDish, { key: g.label + i, dish: d, delay: i * 40 }))
+              ))
+        )
+      ),
+
+      // ---- Column 3: AI Intelligence Engine ----
+      h("div", { className: "gen-col" },
+        h("div", { className: "gen-col-head" },
+          h(Icon, { name: "spark", size: 17, style: { color: "var(--olive)" } }),
+          h("h3", null, "Silnik AI"),
+          h("span", { className: "eyebrow" }, "03")),
+        h("div", { className: "gen-col-body" },
+          state === "done" && h("div", { className: "fade-in" },
+            // score grid
+            h("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 18 } },
+              [["Harmonia kolorów", 87, "high"], ["Stres kuchni", 64, "low"], ["Satysfakcja", 91, "high"], ["Food cost", +(totalCost / menu.length / budget * 100).toFixed(0), "low", "%"]]
+                .map(([l, v, g, u]) => h("div", { key: l, style: { textAlign: "center", padding: "12px 8px", border: "1px solid var(--line)", borderRadius: 10, background: "var(--bg)" } },
+                  h("div", { style: { display: "grid", placeItems: "center", marginBottom: 8 } }, h(RadialGauge, { value: v, good: g, size: 56, stroke: 5, unit: u || "" })),
+                  h("div", { style: { fontSize: 11, color: "var(--text-muted)" } }, l)))),
+            // narrative summary
+            h("div", { style: { padding: 14, border: "1px solid var(--olive-line)", borderRadius: 12, background: "var(--olive-soft)", marginBottom: 16 } },
+              h("div", { className: "row gap8", style: { marginBottom: 8 } }, h(Icon, { name: "check", size: 15, style: { color: "var(--olive)" } }), h("b", { style: { fontSize: 13 } }, "Menu gotowe do realizacji")),
+              h("div", { style: { fontSize: 12.5, color: "var(--text-muted)", lineHeight: 1.5 } },
+                `Koszt surowca ${(totalCost / menu.length).toFixed(2)} zł/porcję przy budżecie ${budget} zł. Średnia trudność ${avgDiff.toFixed(1)}/5 — wykonalne przy obsadzie ${staff} osób.`)),
+            AI_RECOMMENDATIONS.map((r, i) => h("div", { key: i, className: "ai-rec " + r.type },
+              h("div", { className: "ai-rec-ic" }, h(Icon, { name: r.icon, size: 16 })),
+              h("div", null, h("div", { className: "ai-rec-t" }, r.title), h("div", { className: "ai-rec-x" }, r.text))))
+          ),
+          state !== "done" && h("div", { style: { textAlign: "center", padding: "50px 20px", color: "var(--text-dim)" } },
+            h(Icon, { name: "spark", size: 30, style: { opacity: .4, marginBottom: 12 } }),
+            h("div", { style: { fontSize: 13 } }, state === "loading" ? "Analiza w toku…" : "Wygeneruj menu, aby zobaczyć analizę AI"))
+        )
+      )
+    )
+  );
+}
+
+window.MenuGenerator = MenuGenerator;
+window.DiffDots = DiffDots;
+
+  </script>
+
+  <script type="text/babel" data-from="database.jsx">
+/* ============================================================
+   TASTY — Menu Database (searchable / filterable)
+   ============================================================ */
+const h = React.createElement;
+const { useState: dbUseState, useMemo: dbUseMemo } = React;
+
+const CATS = ["Wszystkie", "Zupa", "Mięsne", "Rybne", "Wege", "Wegańskie", "Warzywa", "Pierogi", "Kopytka", "Ziemniaki", "Surówki"];
+
+function MenuDatabase() {
+  const [q, setQ] = dbUseState("");
+  const [cat, setCat] = dbUseState("Wszystkie");
+  const [station, setStation] = dbUseState("Wszystkie");
+  const [sort, setSort] = dbUseState("name");
+
+  const rows = dbUseMemo(() => {
+    let r = DISHES.filter(d =>
+      (cat === "Wszystkie" || d.cat === cat) &&
+      (station === "Wszystkie" || d.station === station) &&
+      (!q || d.name.toLowerCase().includes(q.toLowerCase())));
+    r = [...r].sort((a, b) =>
+      sort === "cost" ? a.cost - b.cost :
+      sort === "time" ? a.time - b.time :
+      sort === "diff" ? b.diff - a.diff :
+      a.name.localeCompare(b.name, "pl"));
+    return r;
+  }, [q, cat, station, sort]);
+
+  return h("div", { className: "content-narrow fade-in" },
+    h("div", { className: "page-head row between", style: { alignItems: "flex-end" } },
+      h("div", null,
+        h("div", { className: "eyebrow", style: { marginBottom: 10 } }, "Baza dań"),
+        h("h1", { className: "page-title" }, "Biblioteka kulinarna"),
+        h("p", { className: "page-sub" }, "412 receptur z pełną charakterystyką kosztową, czasową i kolorystyczną.")),
+      h("button", { className: "btn btn-primary" }, h(Icon, { name: "plus", size: 16 }), "Nowe danie")
+    ),
+
+    // Filters
+    h("div", { className: "card card-pad", style: { marginBottom: 18 } },
+      h("div", { className: "row gap12", style: { marginBottom: 14 } },
+        h("div", { className: "search", style: { width: "100%", maxWidth: "none" } },
+          h(Icon, { name: "search", size: 17 }),
+          h("input", { placeholder: "Szukaj po nazwie dania…", value: q, onChange: e => setQ(e.target.value) })),
+        h("select", { className: "inp", style: { width: 200 }, value: sort, onChange: e => setSort(e.target.value) },
+          h("option", { value: "name" }, "Sortuj: nazwa"),
+          h("option", { value: "cost" }, "Sortuj: koszt"),
+          h("option", { value: "time" }, "Sortuj: czas"),
+          h("option", { value: "diff" }, "Sortuj: trudność"))),
+      h("div", { className: "row gap8", style: { flexWrap: "wrap", marginBottom: 10 } },
+        CATS.map(c => h("span", { key: c, className: "chip" + (cat === c ? " on" : ""), onClick: () => setCat(c) }, c))),
+      h("div", { className: "row gap8", style: { flexWrap: "wrap" } },
+        ["Wszystkie", ...STATIONS].map(s => h("span", { key: s, className: "chip" + (station === s ? " on" : ""),
+          onClick: () => setStation(s), style: { fontSize: 10.5 } }, s)))
+    ),
+
+    // Table
+    h("div", { className: "card", style: { overflow: "hidden" } },
+      h("div", { className: "row between", style: { padding: "14px 18px", borderBottom: "1px solid var(--line)" } },
+        h("span", { className: "mono", style: { fontSize: 12, color: "var(--text-muted)" } }, rows.length + " z 412 dań"),
+        h("div", { className: "row gap8" },
+          h("span", { className: "tag" }, "Eksport CSV"),
+          h("span", { className: "tag" }, h(Icon, { name: "grid", size: 12 })))),
+      h("table", { className: "tbl" },
+        h("thead", null, h("tr", null,
+          h("th", null, "Danie"), h("th", null, "Kategoria"), h("th", null, "Stanowisko"),
+          h("th", null, "Trudność"), h("th", null, "Czas"), h("th", null, "Kolor"), h("th", { style: { textAlign: "right" } }, "Koszt/porcja"))),
+        h("tbody", null, rows.map((d, i) => h("tr", { key: i },
+          h("td", null, h("div", { className: "row gap8" },
+            h("span", { className: "dish-color", style: { background: d.color.hex, width: 9, height: 9 } }),
+            h("span", { style: { fontWeight: 450 } }, d.name),
+            d.tags.includes("premium") && h("span", { className: "tag gold" }, "premium"))),
+          h("td", null, h("span", { className: "muted" }, d.cat)),
+          h("td", null, h("span", { className: "mono", style: { fontSize: 12, color: "var(--text-muted)" } }, d.station)),
+          h("td", null, h(DiffDots, { n: d.diff })),
+          h("td", null, h("span", { className: "mono", style: { fontSize: 12.5 } }, d.time + " min")),
+          h("td", null, h("span", { className: "mono", style: { fontSize: 11.5, color: "var(--text-dim)" } }, d.color.name)),
+          h("td", { style: { textAlign: "right" } }, h("span", { className: "mono", style: { color: "var(--text)" } }, d.cost.toFixed(2) + " zł"))
+        )))
+      )
+    )
+  );
+}
+
+window.MenuDatabase = MenuDatabase;
+
+  </script>
+
+  <script type="text/babel" data-from="analysis.jsx">
+/* ============================================================
+   TASTY — AI Analysis Center
+   ============================================================ */
+
+const h = React.createElement;
+
+function AnalysisScore({ s, i }) {
+  return h("div", { className: "score-card rise", style: { animationDelay: (i * 50) + "ms" } },
+    h("div", { style: { flexShrink: 0, textAlign: "center" } },
+      h(RadialGauge, { value: s.value, good: s.good, size: 76, stroke: 6, unit: s.unit || "" }),
+      h("div", { className: "mono", style: { fontSize: 9.5, letterSpacing: ".1em", textTransform: "uppercase",
+        color: scoreColor(s.value, s.good), marginTop: 8 } },
+        s.good === "low" ? (s.value <= 35 ? "Niskie" : s.value <= 65 ? "Średnie" : "Wysokie")
+          : s.value >= 80 ? "Doskonałe" : s.value >= 55 ? "Dobre" : "Uwaga")),
+    h("div", null,
+      h("div", { className: "row between" },
+        h("div", { className: "an-title" }, s.label),
+        h(Icon, { name: "spark", size: 15, style: { color: "var(--olive)", opacity: .6 } })),
+      h("div", { className: "score-why" }, s.why))
+  );
+}
+
+function AiAnalysis() {
+  return h("div", { className: "content-narrow fade-in" },
+    h("div", { className: "page-head" },
+      h("div", { className: "eyebrow", style: { marginBottom: 10 } }, "Centrum analizy AI"),
+      h("h1", { className: "page-title" }, "Dlaczego to menu działa"),
+      h("p", { className: "page-sub" }, "Każdy wskaźnik z wyjaśnieniem — silnik AI tłumaczy, jak powstała ocena i co możesz poprawić.")),
+
+    // Overall banner
+    h("div", { className: "card card-pad", style: { marginBottom: 22, background: "linear-gradient(120deg,#19160F,#131009)", display: "flex", alignItems: "center", gap: 28 } },
+      h("div", { style: { display: "grid", placeItems: "center" } },
+        h(RadialGauge, { value: 88, good: "high", size: 108, stroke: 8 })),
+      h("div", { className: "grow" },
+        h("div", { className: "eyebrow", style: { marginBottom: 8 } }, "Ogólna ocena wykonalności"),
+        h("div", { className: "brand-serif", style: { fontSize: 24, marginBottom: 6 } }, "Menu można wykonać sprawnie, spójnie i z zyskiem"),
+        h("p", { className: "muted", style: { fontSize: 13.5, maxWidth: 640 } },
+          "Wszystkie 8 wskaźników mieści się w bezpiecznych progach. Jedyny punkt uwagi to obciążenie stanowiska „Garnek” w szczycie — sugerowana zmiana harmonogramu obniży ryzyko do 12%.")),
+      h("div", { style: { display: "grid", gap: 10 } },
+        [["Gotowość", "GO", "var(--olive)"], ["Ryzyko", "Niskie", "var(--olive)"], ["Marża", "+42%", "var(--gold)"]].map(([l, v, c]) =>
+          h("div", { key: l, style: { textAlign: "right" } },
+            h("div", { className: "brand-serif", style: { fontSize: 20, color: c } }, v),
+            h("div", { className: "kpi-hint" }, l))))
+    ),
+
+    h("div", { className: "sec-head" }, h("h3", null, "Wskaźniki szczegółowe"), h("div", { className: "sec-rule" }),
+      h("span", { className: "eyebrow" }, "8 metryk · z wyjaśnieniem")),
+    h("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 } },
+      ANALYSIS_SCORES.map((s, i) => h(AnalysisScore, { key: s.key, s, i }))
+    )
+  );
+}
+
+window.AiAnalysis = AiAnalysis;
+
+/* ============================================================
+   Placeholder screens (future modules)
+   ============================================================ */
+const PLACEHOLDERS = {
+  cost:       { icon: "cost", title: "Kontrola food cost", sub: "Pełny moduł rentowności: marże per pozycja, alerty progów kosztowych i optymalizacja zakupów surowca." },
+  production: { icon: "production", title: "Planowanie produkcji", sub: "Harmonogram stanowisk, sekwencja mise en place i synchronizacja wydawki dla dużych eventów." },
+  capacity:   { icon: "capacity", title: "Przepustowość kuchni", sub: "Modelowanie mocy produkcyjnej, symulacja szczytów i rekomendacje obsady na zmianę." },
+  reports:    { icon: "reports", title: "Raporty", sub: "Raporty wykonawcze, trendy satysfakcji gości i eksport dla zarządu sieci." },
+  settings:   { icon: "settings", title: "Ustawienia", sub: "Konfiguracja lokali, stanowisk, zespołu i integracji z systemami magazynowymi." },
+};
+
+const FUTURE_MODULES = [
+  "Prognozowanie AI", "Inteligencja magazynowa", "Optymalizacja dostawców",
+  "Rekomendacje zakupowe", "Analityka redukcji odpadów", "Zarządzanie wieloma lokalizacjami", "Raportowanie zarządcze",
+];
+
+function Placeholder({ id }) {
+  const p = PLACEHOLDERS[id] || PLACEHOLDERS.reports;
+  return h("div", { className: "content-narrow fade-in" },
+    h("div", { className: "ph-wrap" },
+      h("div", { className: "ph" },
+        h("div", { className: "ph-ic" }, h(Icon, { name: p.icon, size: 26 })),
+        h("h2", null, p.title),
+        h("p", null, p.sub),
+        h("div", { className: "ph-badge tag gold" }, "Moduł w przygotowaniu"),
+        h("div", { style: { marginTop: 30, paddingTop: 24, borderTop: "1px solid var(--line)" } },
+          h("div", { className: "eyebrow", style: { marginBottom: 14 } }, "Mapa drogowa produktu"),
+          h("div", { className: "row gap8", style: { flexWrap: "wrap", justifyContent: "center" } },
+            FUTURE_MODULES.map(m => h("span", { key: m, className: "chip", style: { cursor: "default" } }, m))))
+      )
+    )
+  );
+}
+
+window.Placeholder = Placeholder;
+
+  </script>
+
+  <script type="text/babel" data-from="app.jsx">
+/* ============================================================
+   TASTY — App root + routing
+   ============================================================ */
+const h = React.createElement;
+const { useState: aUseState } = React;
+
+function App() {
+  const [route, setRoute] = aUseState("dashboard");
+  const [genTrigger, setGenTrigger] = aUseState(0);
+
+  const goGenerate = () => { setRoute("generator"); setGenTrigger(t => t + 1); };
+
+  let screen;
+  switch (route) {
+    case "dashboard": screen = h(Dashboard, { onGenerate: goGenerate }); break;
+    case "generator": screen = h(MenuGenerator, { key: genTrigger, autoTrigger: genTrigger > 0 }); break;
+    case "database":  screen = h(MenuDatabase, null); break;
+    case "analysis":  screen = h(AiAnalysis, null); break;
+    default:          screen = h(Placeholder, { id: route });
+  }
+
+  return h("div", { className: "app" },
+    h(Sidebar, { active: route, onNav: setRoute }),
+    h("div", { className: "main" },
+      h(TopBar, { onGenerate: goGenerate }),
+      h("div", { className: "content" }, screen)
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(h(App, null));
+
+  </script>
+
+</body>
+</html>
