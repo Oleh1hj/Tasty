@@ -664,9 +664,10 @@ select.inp { appearance: none; cursor: pointer; background-image: url("data:imag
 .menu-table td.sub-label { font-size: 10px; color: var(--text-dim); padding-left: 20px; background: var(--raised); font-style: italic; }
 .menu-table tr:last-child td { border-bottom: none; }
 .menu-table td:last-child { border-right: none; }
-.menu-table .dish-entry { margin-bottom: 4px; color: var(--text); }
+.menu-table .dish-entry { margin-bottom: 4px; color: var(--text); padding: 3px 5px; border-radius: 5px; }
 .menu-table .dish-entry:last-child { margin-bottom: 0; }
-.menu-table .dish-cost { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); }
+.menu-table .dish-entry-btn:hover { background: var(--olive-soft); outline: 1px solid var(--olive-line); }
+.menu-table .dish-cost { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); padding-left: 14px; }
 
 /* ---- Print styles ---- */
 @media print {
@@ -1443,18 +1444,18 @@ window.Dashboard = Dashboard;
 
   <script type="text/babel" data-from="generator.jsx">
 /* ============================================================
-   TASTY — AI Menu Generator (3-column, cinematic generation)
+   TASTY — Menu Generator (simplified: table + dish picker)
    ============================================================ */
 const h = React.createElement;
-const { useState: gUseState, useEffect: gUseEffect, useRef: gUseRef } = React;
+const { useState: gUseState, useEffect: gUseEffect, useRef: gUseRef, useMemo: gUseMemo } = React;
 
 const GEN_STEPS = [
-  "Analizuję dostępne stanowiska i obsadę…",
-  "Dobieram dania z bazy 412 pozycji…",
-  "Balansuję food cost względem budżetu…",
-  "Optymalizuję harmonię kolorów talerza…",
-  "Wykrywam wąskie gardła produkcji…",
-  "Prognozuję satysfakcję gości…",
+  "Analizuję bazę dań…",
+  "Dobieram zupy na każdy dzień…",
+  "Układam dania mięsne i rybne…",
+  "Dobieram opcje wegetariańskie…",
+  "Komponuję surówki i dodatki…",
+  "Finalizuję tygodniowe menu…",
 ];
 
 function DiffDots({ n }) {
@@ -1462,116 +1463,62 @@ function DiffDots({ n }) {
     [1,2,3,4,5].map(i => h("i", { key: i, className: i <= n ? "on" : "" })));
 }
 
-function MenuDish({ dish, delay }) {
-  return h("div", { className: "dish rise", style: { animationDelay: delay + "ms" } },
-    h("span", { className: "dish-color", style: { background: dish.color.hex } }),
-    h("div", null,
-      h("div", { className: "dish-name" }, dish.name),
-      h("div", { className: "dish-meta" },
-        h("span", null, h(Icon, { name: "clock", size: 11 }), dish.time, " min"),
-        h("span", null, h(DiffDots, { n: dish.diff })),
-        h("span", null, dish.color.name),
-        dish.tags[0] && h("span", { style: { color: "var(--olive)" } }, dish.tags[0]))
-    ),
-    h("div", { className: "dish-cost" }, dish.cost.toFixed(2), " zł")
-  );
-}
-
 function MenuGenerator({ autoTrigger }) {
-  const [guests, setGuests] = gUseState(300);
-  const [budget, setBudget] = gUseState(17);
-  const [complexity, setComplexity] = gUseState("Średnia");
-  const [staff, setStaff] = gUseState(6);
-  const [days, setDays] = gUseState(1);
-  const [state, setState] = gUseState("idle"); // idle | loading | done
-  const [step, setStep] = gUseState(0);
-  const [seed, setSeed] = gUseState(2);
-  const [menus, setMenus] = gUseState(() => [buildMenu(2)]);
+  const [days, setDays]     = gUseState(5);
+  const [state, setState]   = gUseState("idle");
+  const [step, setStep]     = gUseState(0);
+  const [menus, setMenus]   = gUseState([]);
+  const [overrides, setOverrides] = gUseState({});
+  const [picker, setPicker] = gUseState(null); // { dayIdx, groupLabel, itemIdx, cat } | null
+  const [pickerQ, setPickerQ] = gUseState("");
   const timers = gUseRef([]);
-  const menu = menus[0] || [];
-
-  const [aiAnalysis, setAiAnalysis] = gUseState(null);
-
-  const run = async () => {
-    timers.current.forEach(clearTimeout);
-    setState("loading"); setStep(0); setAiAnalysis(null);
-
-    GEN_STEPS.forEach((_, i) => {
-      timers.current.push(setTimeout(() => setStep(i), i * 360));
-    });
-
-    try {
-      const availDishes = {
-        Zupa:      DISHES.filter(d => d.cat === "Zupa").map(d => d.name),
-        Mięsne:    DISHES.filter(d => d.cat === "Mięsne").map(d => d.name),
-        Rybne:     DISHES.filter(d => d.cat === "Rybne").map(d => d.name),
-        Wege:      DISHES.filter(d => d.cat === "Wege").map(d => d.name),
-        Wegańskie: DISHES.filter(d => d.cat === "Wegańskie").map(d => d.name),
-        Warzywa:   DISHES.filter(d => d.cat === "Warzywa").map(d => d.name),
-        Pierogi:   DISHES.filter(d => d.cat === "Pierogi").map(d => d.name),
-        Kopytka:   DISHES.filter(d => d.cat === "Kopytka").map(d => d.name),
-        Ziemniaki: DISHES.filter(d => d.cat === "Ziemniaki").map(d => d.name),
-        Surówki:   DISHES.filter(d => d.cat === "Surówki").map(d => d.name),
-      };
-
-      const resp = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ guests, budget, complexity, staff, dishes: availDishes }),
-      });
-
-      const data = await resp.json();
-
-      if (data.selected && data.selected.length > 0) {
-        const aiMenu = [];
-        DAY_COMPOSITION.forEach(g => {
-          const picks = data.selected.filter(s => s.group === g.label);
-          picks.forEach(s => {
-            const found = DISHES.find(d => d.name === s.name);
-            if (found) aiMenu.push({ ...found, _g: g.label });
-          });
-        });
-        if (aiMenu.length > 0) {
-          setMenus([aiMenu]);
-          setAiAnalysis(data.analysis || null);
-          setState("done");
-          return;
-        }
-      }
-    } catch (e) {
-      console.warn("AI API error, using fallback:", e.message);
-    }
-
-    const s = Math.floor(Math.random() * 7) + 1;
-    setSeed(s);
-    const generated = [];
-    for (var di = 0; di < days; di++) generated.push(buildMenu(s + di));
-    setMenus(generated);
-    setState("done");
-  };
-
-  gUseEffect(() => { if (autoTrigger) run(); }, [autoTrigger]);
-  gUseEffect(() => () => timers.current.forEach(clearTimeout), []);
-
-  // group first-day menu for AI panel
-  const groups = {};
-  menu.forEach(d => { (groups[d._g] = groups[d._g] || []).push(d); });
-  const totalCost = menu.reduce((s, d) => s + d.cost, 0);
-  const avgDiff = menu.length ? (menu.reduce((s, d) => s + d.diff, 0) / menu.length) : 0;
 
   const DAY_LABELS = ["Poniedziałek","Wtorek","Środa","Czwartek","Piątek","Sobota","Niedziela"];
-  const CAT_ROWS = [
-    { label: "Zupy", subs: ["Mięsna", "VEGE"] },
-    { label: "Mięso", subs: [] },
-    { label: "Ryba", subs: [] },
-    { label: "Wegeteriańskie", subs: ["Wege", ""] },
-    { label: "Warzywa", subs: [] },
-    { label: "Pierogi", subs: [] },
-    { label: "Sałatka", subs: [] },
-  ];
 
+  const run = function() {
+    timers.current.forEach(clearTimeout);
+    setState("loading"); setStep(0); setOverrides({});
+    GEN_STEPS.forEach(function(_, i) {
+      timers.current.push(setTimeout(function(){ setStep(i); }, i * 320));
+    });
+    setTimeout(function() {
+      var s = Math.floor(Math.random() * 99) + 1;
+      var generated = [];
+      for (var di = 0; di < days; di++) generated.push(buildMenu(s + di));
+      setMenus(generated);
+      setState("done");
+    }, GEN_STEPS.length * 320 + 200);
+  };
+
+  gUseEffect(function(){ if (autoTrigger) run(); }, [autoTrigger]);
+  gUseEffect(function(){ return function(){ timers.current.forEach(clearTimeout); }; }, []);
+
+  /* ---- Dish picker helpers ---- */
+  var pickerDishes = gUseMemo(function() {
+    if (!picker) return [];
+    var pool = DISHES.filter(function(d){ return d.cat === picker.cat; });
+    if (pickerQ) pool = pool.filter(function(d){ return d.name.toLowerCase().includes(pickerQ.toLowerCase()); });
+    return pool;
+  }, [picker, pickerQ]);
+
+  function openPicker(dayIdx, groupLabel, itemIdx, cat) {
+    setPickerQ("");
+    setPicker({ dayIdx: dayIdx, groupLabel: groupLabel, itemIdx: itemIdx, cat: cat });
+  }
+
+  function replaceDish(newDish) {
+    var key = picker.dayIdx + "-" + picker.groupLabel + "-" + picker.itemIdx;
+    setOverrides(function(prev) {
+      var next = Object.assign({}, prev);
+      next[key] = Object.assign({}, newDish, { _g: picker.groupLabel });
+      return next;
+    });
+    setPicker(null);
+  }
+
+  /* ---- MenuTable ---- */
   function MenuTable() {
-    if (state !== "done") return null;
+    if (state !== "done" && menus.length === 0) return null;
     return h("div", null,
       h("div", { className: "print-header" },
         h("h2", null, "Menu lunch TASTY"),
@@ -1595,9 +1542,16 @@ function MenuGenerator({ autoTrigger }) {
                   var items = dm.filter(function(d){ return d._g === g.label; });
                   return h("td", { key: di },
                     items.map(function(d, ii) {
-                      return h("div", { key: ii, className: "dish-entry" },
-                        h("div", null, d.name),
-                        h("div", { className: "dish-cost" }, d.cost.toFixed(2) + " zł")
+                      var okey = di + "-" + g.label + "-" + ii;
+                      var dish = overrides[okey] || d;
+                      return h("div", { key: ii, className: "dish-entry dish-entry-btn no-print", title: "Kliknij, aby zmienić danie",
+                        onClick: function(){ openPicker(di, g.label, ii, g.cat); },
+                        style: { cursor: "pointer" } },
+                        h("div", { style: { display: "flex", alignItems: "center", gap: 6 } },
+                          h("span", { style: { width: 8, height: 8, borderRadius: "50%", background: dish.color ? dish.color.hex : "var(--olive)", flexShrink: 0 } }),
+                          h("div", null, dish.name)
+                        ),
+                        h("div", { className: "dish-cost" }, dish.cost.toFixed(2) + " zł")
                       );
                     })
                   );
@@ -1610,146 +1564,108 @@ function MenuGenerator({ autoTrigger }) {
     );
   }
 
-  return h("div", { className: "fade-in" },
-    h("div", { className: "page-head row between", style: { alignItems: "flex-end" } },
-      h("div", null,
-        h("div", { className: "eyebrow", style: { marginBottom: 10 } }, "Generator Menu AI"),
-        h("h1", { className: "page-title" }, "Skomponuj menu"),
-        h("p", { className: "page-sub" }, "Skonfiguruj parametry — silnik AI dobierze dania, zbalansuje koszt i przewidzi obciążenie stanowisk.")),
-      h("div", { className: "row gap8 no-print" },
-        state === "done" && h("button", { className: "btn btn-ghost", onClick: function(){ window.print(); } },
-          h(Icon, { name: "reports", size: 16 }), "Drukuj"),
-        state === "done" && h("button", { className: "btn btn-primary", onClick: run },
-          h(Icon, { name: "generator", size: 16 }), "Generuj ponownie")
-      )
-    ),
-
-    h("div", { className: "gen-layout no-print" },
-      // ---- Column 1: Configuration ----
-      h("div", { className: "gen-col" },
-        h("div", { className: "gen-col-head" },
-          h(Icon, { name: "settings", size: 17, style: { color: "var(--text-muted)" } }),
-          h("h3", null, "Konfiguracja"),
-          h("span", { className: "eyebrow" }, "01")),
-        h("div", { className: "gen-col-body" },
-          h("div", { className: "field" },
-            h("div", { className: "field-row" }, h("label", null, "Liczba gości"), h("span", { className: "v" }, guests)),
-            h("input", { className: "range", type: "range", min: 50, max: 600, step: 10, value: guests, onChange: e => setGuests(+e.target.value) })),
-          h("div", { className: "field" },
-            h("div", { className: "field-row" }, h("label", null, "Budżet na gościa"), h("span", { className: "v" }, budget + ",00 zł")),
-            h("input", { className: "range", type: "range", min: 8, max: 40, step: 1, value: budget, onChange: e => setBudget(+e.target.value) })),
-          h("div", { className: "field" },
-            h("label", null, "Typ menu"),
-            h("select", { className: "inp", defaultValue: "obiadowe" },
-              h("option", { value: "obiadowe" }, "Obiadowe (catering instytucjonalny)"),
-              h("option", null, "Bankietowe"),
-              h("option", null, "Stołówka pracownicza"),
-              h("option", null, "Hotelowe — pełne wyżywienie"))),
-          h("div", { className: "field" },
-            h("label", null, "Ograniczenia dietetyczne"),
-            h("div", { className: "row gap8", style: { flexWrap: "wrap" } },
-              ["Wegetariańskie","Wegańskie","Bezglutenowe","Bez laktozy"].map((t, i) =>
-                h("span", { key: t, className: "chip" + (i < 2 ? " on" : "") }, t)))),
-          h("div", { className: "field" },
-            h("label", null, "Poziom złożoności"),
-            h("div", { className: "seg" },
-              ["Niska","Średnia","Wysoka"].map(c =>
-                h("button", { key: c, className: complexity === c ? "on" : "", onClick: () => setComplexity(c) }, c)))),
-          h("div", { className: "field" },
-            h("div", { className: "field-row" }, h("label", null, "Obsada kuchni"), h("span", { className: "v" }, staff + " osób")),
-            h("input", { className: "range", type: "range", min: 2, max: 14, step: 1, value: staff, onChange: e => setStaff(+e.target.value) })),
-          h("div", { className: "field" },
-            h("label", null, "Dostępne stanowiska"),
-            h("div", { className: "row gap8", style: { flexWrap: "wrap" } },
-              STATIONS.map(s => h("span", { key: s, className: "chip on" }, s)))),
-          h("div", { className: "field" },
-            h("label", null, "Liczba dni"),
-            h("div", { className: "seg" },
-              [1, 3, 5, 7].map(function(d) {
-                return h("button", { key: d, className: days === d ? "on" : "", onClick: function(){ setDays(d); } },
-                  d === 1 ? "1 dzień" : d + " dni");
-              }))),
-          h("div", { className: "field" },
-            h("label", null, "Limit czasu produkcji"),
-            h("select", { className: "inp", defaultValue: "4h" },
-              h("option", null, "3 godziny"), h("option", { value: "4h" }, "4 godziny"), h("option", null, "6 godzin"))),
-          h("button", { className: "btn btn-primary", style: { width: "100%", justifyContent: "center", marginTop: 6 },
-            onClick: run, disabled: state === "loading" },
-            h(Icon, { name: "bolt", size: 16 }), state === "loading" ? "Generuję…" : "Generuj menu")
-        )
-      ),
-
-      // ---- Column 2: Generated Menu ----
-      h("div", { className: "gen-col" },
-        h("div", { className: "gen-col-head" },
-          h(Icon, { name: "plate", size: 17, style: { color: "var(--gold)" } }),
-          h("h3", null, "Wygenerowane menu"),
-          state === "done" && h("span", { className: "tag olive", style: { marginLeft: "auto" } }, (days > 1 ? days + " dni · " : "") + menu.length + " dań · " + guests + " gości"),
-          state !== "done" && h("span", { className: "eyebrow" }, "02")),
-        h("div", { className: "gen-col-body" },
-          state === "loading"
-            ? h("div", { className: "gen-loading" },
-                h("div", { className: "gen-spinner" },
-                  h("svg", { width: 56, height: 56, viewBox: "0 0 56 56", fill: "none" },
-                    h("circle", { cx: 28, cy: 28, r: 24, stroke: "rgba(255,255,255,0.08)", strokeWidth: 4 }),
-                    h("path", { d: "M28 4a24 24 0 0 1 24 24", stroke: "var(--olive)", strokeWidth: 4, strokeLinecap: "round" }))),
-                h("div", { className: "brand-serif", style: { fontSize: 22, marginBottom: 6 } }, "Komponuję menu…"),
-                h("div", { className: "gen-log" }, h("b", null, "→ "), GEN_STEPS[step]),
-                h("div", { className: "mono dim", style: { fontSize: 11, marginTop: 14 } }, "Krok " + (step + 1) + " / " + GEN_STEPS.length))
-            : menus.map(function(dayMenu, dayIdx) {
-                const dg = {};
-                dayMenu.forEach(function(d){ (dg[d._g] = dg[d._g] || []).push(d); });
-                return h("div", { key: dayIdx },
-                  days > 1 && h("div", { style: { fontFamily: "var(--font-mono)", fontSize: 10.5, letterSpacing: ".12em", textTransform: "uppercase", color: "var(--olive)", padding: "14px 0 8px", borderTop: dayIdx > 0 ? "1px solid var(--line)" : "none", marginTop: dayIdx > 0 ? 10 : 0 } }, "Dzień " + (dayIdx + 1)),
-                  DAY_COMPOSITION.map(function(g) {
-                    return dg[g.label] && h("div", { key: g.label, className: "menu-group" },
-                      h("div", { className: "menu-group-head" },
-                        h("span", { className: "gh" }, g.label),
-                        h("span", { className: "ln" }),
-                        h("span", { className: "ct" }, dg[g.label].length + "×")),
-                      dg[g.label].map(function(d, i){ return h(MenuDish, { key: g.label + i, dish: d, delay: i * 40 }); })
-                    );
-                  })
+  /* ---- Dish Picker Modal ---- */
+  function PickerModal() {
+    if (!picker) return null;
+    return h("div", { style: {
+        position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", zIndex: 999,
+        display: "flex", alignItems: "flex-end", justifyContent: "center"
+      }, onClick: function(e){ if (e.target === e.currentTarget) setPicker(null); } },
+      h("div", { style: {
+          width: "100%", maxWidth: 680, background: "var(--surface-1)", borderRadius: "20px 20px 0 0",
+          padding: "24px 24px 32px", maxHeight: "70vh", display: "flex", flexDirection: "column"
+        } },
+        h("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 } },
+          h("div", null,
+            h("div", { className: "eyebrow", style: { marginBottom: 4 } }, picker.groupLabel),
+            h("div", { style: { fontSize: 15, fontWeight: 600 } }, "Wybierz inne danie")
+          ),
+          h("button", { className: "btn btn-ghost", style: { padding: "6px 12px" }, onClick: function(){ setPicker(null); } }, "✕")
+        ),
+        h("input", { className: "inp", placeholder: "Szukaj…", value: pickerQ,
+          onChange: function(e){ setPickerQ(e.target.value); },
+          style: { marginBottom: 14, fontSize: 14 } }),
+        h("div", { style: { overflowY: "auto", flex: 1, display: "flex", flexDirection: "column", gap: 6 } },
+          pickerDishes.length === 0
+            ? h("div", { style: { textAlign: "center", color: "var(--text-muted)", padding: "30px 0" } }, "Brak wyników")
+            : pickerDishes.map(function(dish) {
+                return h("div", { key: dish.name,
+                  onClick: function(){ replaceDish(dish); },
+                  style: { padding: "10px 14px", borderRadius: 10, border: "1px solid var(--line)",
+                    background: "var(--raised)", cursor: "pointer", display: "flex", alignItems: "center", gap: 10 } },
+                  h("span", { style: { width: 10, height: 10, borderRadius: "50%", background: dish.color ? dish.color.hex : "#888", flexShrink: 0 } }),
+                  h("div", { style: { flex: 1 } },
+                    h("div", { style: { fontSize: 14 } }, dish.name),
+                    h("div", { style: { fontSize: 11.5, color: "var(--text-muted)", marginTop: 2 } },
+                      dish.station + " · " + dish.time + " min · koszt " + dish.cost.toFixed(2) + " zł")
+                  )
                 );
               })
         )
-      ),
+      )
+    );
+  }
 
-      // ---- Column 3: AI Intelligence Engine ----
-      h("div", { className: "gen-col" },
-        h("div", { className: "gen-col-head" },
-          h(Icon, { name: "spark", size: 17, style: { color: "var(--olive)" } }),
-          h("h3", null, "Silnik AI"),
-          h("span", { className: "eyebrow" }, "03")),
-        h("div", { className: "gen-col-body" },
-          state === "done" && h("div", { className: "fade-in" },
-            // score grid
-            h("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 18 } },
-              [
-                ["Harmonia kolorów", aiAnalysis ? aiAnalysis.color_harmony : 87, "high"],
-                ["Stres kuchni",     aiAnalysis ? aiAnalysis.kitchen_stress : 64, "low"],
-                ["Satysfakcja",      aiAnalysis ? aiAnalysis.guest_appeal   : 91, "high"],
-                ["Food cost",        aiAnalysis ? aiAnalysis.food_cost_avg  : +(totalCost / menu.length / budget * 100).toFixed(0), "low", "%"]
-              ]
-                .map(([l, v, g, u]) => h("div", { key: l, style: { textAlign: "center", padding: "12px 8px", border: "1px solid var(--line)", borderRadius: 10, background: "var(--bg)" } },
-                  h("div", { style: { display: "grid", placeItems: "center", marginBottom: 8 } }, h(RadialGauge, { value: v, good: g, size: 56, stroke: 5, unit: u || "" })),
-                  h("div", { style: { fontSize: 11, color: "var(--text-muted)" } }, l)))),
-            // narrative summary
-            h("div", { style: { padding: 14, border: "1px solid var(--olive-line)", borderRadius: 12, background: "var(--olive-soft)", marginBottom: 16 } },
-              h("div", { className: "row gap8", style: { marginBottom: 8 } }, h(Icon, { name: "check", size: 15, style: { color: "var(--olive)" } }), h("b", { style: { fontSize: 13 } }, "Menu gotowe do realizacji")),
-              h("div", { style: { fontSize: 12.5, color: "var(--text-muted)", lineHeight: 1.5 } },
-                `${aiAnalysis && aiAnalysis.vibe ? "✦ " + aiAnalysis.vibe + " ✦  " : ""}Koszt surowca ${(totalCost / menu.length).toFixed(2)} zł/porcję przy budżecie ${budget} zł. Średnia trudność ${avgDiff.toFixed(1)}/5 — wykonalne przy obsadzie ${staff} osób.${aiAnalysis && aiAnalysis.warnings && aiAnalysis.warnings[0] ? " ⚠ " + aiAnalysis.warnings[0] : ""}`)),
-            AI_RECOMMENDATIONS.map((r, i) => h("div", { key: i, className: "ai-rec " + r.type },
-              h("div", { className: "ai-rec-ic" }, h(Icon, { name: r.icon, size: 16 })),
-              h("div", null, h("div", { className: "ai-rec-t" }, r.title), h("div", { className: "ai-rec-x" }, r.text))))
-          ),
-          state !== "done" && h("div", { style: { textAlign: "center", padding: "50px 20px", color: "var(--text-dim)" } },
-            h(Icon, { name: "spark", size: 30, style: { opacity: .4, marginBottom: 12 } }),
-            h("div", { style: { fontSize: 13 } }, state === "loading" ? "Analiza w toku…" : "Wygeneruj menu, aby zobaczyć analizę AI"))
-        )
+  /* ---- Main render ---- */
+  return h("div", { className: "fade-in" },
+
+    /* Header */
+    h("div", { className: "page-head row between no-print", style: { alignItems: "center", marginBottom: 24 } },
+      h("div", null,
+        h("div", { className: "eyebrow", style: { marginBottom: 8 } }, "Generator Menu AI"),
+        h("h1", { className: "page-title", style: { marginBottom: 0 } }, "Menu lunch TASTY")
+      ),
+      h("div", { className: "row gap8" },
+        /* Day selector */
+        h("div", { className: "seg" },
+          [1, 3, 5, 7].map(function(d) {
+            return h("button", { key: d, className: days === d ? "on" : "",
+              onClick: function(){ setDays(d); } },
+              d === 1 ? "1 dzień" : d + " dni");
+          })
+        ),
+        /* Buttons */
+        state === "idle" && h("button", { className: "btn btn-primary", onClick: run },
+          h(Icon, { name: "bolt", size: 16 }), "Generuj menu"),
+        state === "loading" && h("button", { className: "btn btn-primary", disabled: true },
+          "Generuję…"),
+        state === "done" && h("button", { className: "btn btn-ghost", onClick: function(){ window.print(); } },
+          h(Icon, { name: "reports", size: 16 }), "Drukuj"),
+        state === "done" && h("button", { className: "btn btn-primary", onClick: run },
+          h(Icon, { name: "bolt", size: 16 }), "Generuj ponownie")
       )
     ),
-    h(MenuTable, null)
+
+    /* Loading */
+    state === "loading" && h("div", { style: { textAlign: "center", padding: "80px 20px" } },
+      h("div", { className: "gen-spinner", style: { margin: "0 auto 24px" } },
+        h("svg", { width: 56, height: 56, viewBox: "0 0 56 56", fill: "none" },
+          h("circle", { cx: 28, cy: 28, r: 24, stroke: "rgba(255,255,255,0.08)", strokeWidth: 4 }),
+          h("path", { d: "M28 4a24 24 0 0 1 24 24", stroke: "var(--olive)", strokeWidth: 4, strokeLinecap: "round" })
+        )
+      ),
+      h("div", { className: "brand-serif", style: { fontSize: 22, marginBottom: 10 } }, "Komponuję menu…"),
+      h("div", { style: { color: "var(--text-muted)", fontSize: 14 } }, GEN_STEPS[step])
+    ),
+
+    /* Empty state */
+    state === "idle" && h("div", { style: { textAlign: "center", padding: "80px 20px", color: "var(--text-dim)" } },
+      h(Icon, { name: "generator", size: 40, style: { opacity: .25, marginBottom: 16 } }),
+      h("div", { style: { fontSize: 15, marginBottom: 8 } }, "Wybierz liczbę dni i naciśnij Generuj menu"),
+      h("div", { style: { fontSize: 13, color: "var(--text-muted)" } }, "Kliknij dowolne danie w tabeli, aby je zamienić")
+    ),
+
+    /* Menu table */
+    state === "done" && h("div", null,
+      h("div", { className: "no-print", style: { marginBottom: 12, fontSize: 12.5, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 6 } },
+        h(Icon, { name: "check", size: 14, style: { color: "var(--olive)" } }),
+        "Kliknij na dowolne danie, aby je zmienić z bazy danych"
+      ),
+      h(MenuTable, null)
+    ),
+
+    /* Picker modal */
+    h(PickerModal, null)
   );
 }
 
