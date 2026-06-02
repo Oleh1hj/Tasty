@@ -63,6 +63,62 @@
   --topbar-h: 68px;
 }
 
+[data-theme="light"] {
+  --bg:        #F5F3EE;
+  --surface-1: #FFFFFF;
+  --surface-2: #F0EDE6;
+  --raised:    #E8E4DA;
+  --olive:      #4e6e27;
+  --olive-soft: rgba(78,110,39,0.1);
+  --olive-line: rgba(78,110,39,0.28);
+  --gold:       #7a5510;
+  --gold-soft:  rgba(122,85,16,0.1);
+  --success: #4e6e27;
+  --warning: #7a5510;
+  --error:   #8b2e24;
+  --info:    #2d567a;
+  --text:        #1A1712;
+  --text-muted:  #5A5346;
+  --text-dim:    #8A8278;
+  --text-faint:  #B0AAA0;
+  --line:       rgba(0,0,0,0.09);
+  --line-soft:  rgba(0,0,0,0.055);
+  --line-strong:rgba(0,0,0,0.14);
+  --shadow-soft: 0 1px 0 rgba(255,255,255,0.8) inset, 0 8px 30px rgba(0,0,0,0.1);
+  --glow-olive: 0 0 0 1px var(--olive-line), 0 6px 28px rgba(78,110,39,0.12);
+}
+[data-theme="light"] .sidebar {
+  background: linear-gradient(180deg, #EDE9E0 0%, #E6E2D7 100%);
+}
+[data-theme="light"] .main {
+  background: radial-gradient(900px 500px at 78% -8%, rgba(78,110,39,0.04), transparent 60%), var(--bg);
+}
+[data-theme="light"] .topbar {
+  background: rgba(245,243,238,0.85);
+}
+[data-theme="light"] .hero {
+  background:
+    radial-gradient(700px 320px at 88% 10%, rgba(78,110,39,0.07), transparent 70%),
+    radial-gradient(500px 300px at 0% 100%, rgba(122,85,16,0.04), transparent 70%),
+    linear-gradient(180deg, #FFFFFF, #F5F3EE);
+}
+[data-theme="light"] .hero-stat {
+  background: rgba(245,243,238,0.7);
+}
+[data-theme="light"] .ph {
+  background: repeating-linear-gradient(135deg, transparent, transparent 9px, rgba(0,0,0,0.012) 9px, rgba(0,0,0,0.012) 18px);
+}
+[data-theme="light"] .range {
+  background: rgba(0,0,0,0.12);
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.14);
+  border-color: var(--bg);
+}
+[data-theme="light"] .sb-avatar {
+  background: linear-gradient(140deg, #d4cebc, #c8c1a8);
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
@@ -74,6 +130,7 @@ html, body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 #root { height: 100%; }
@@ -929,6 +986,9 @@ function Icon({ name, size = 18, stroke = 1.6, ...rest }) {
     bolt: () => P("M13 2 3 14h7l-1 8 10-12h-7z"),
     lock: () => [h("rect",{key:0,x:4,y:11,width:16,height:9,rx:2}),h("path",{key:1,d:"M8 11V7a4 4 0 0 1 8 0v4"})],
     temp: () => [h("path",{key:0,d:"M10 13.5V5a2 2 0 0 1 4 0v8.5a4 4 0 1 1-4 0z"})],
+    sun: () => [h("circle",{key:0,cx:12,cy:12,r:4}),h("path",{key:1,d:"M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"})],
+    moon: () => [h("path",{key:0,d:"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"})],
+    globe: () => [h("circle",{key:0,cx:12,cy:12,r:9}),h("path",{key:1,d:"M2 12h20M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9z"})],
   };
   const fn = paths[name];
   return h("svg", p, fn ? fn() : null);
