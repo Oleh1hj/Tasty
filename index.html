@@ -1122,11 +1122,9 @@ const NAV = [
   { id: "database",  pl: "Baza dań",           en: "Dish Library",    icon: "database", badge: "412" },
   { id: "analysis",  pl: "Analiza AI",          en: "AI Analysis",     icon: "analysis" },
   { section: true, pl: "Zarządzanie", en: "Management" },
-  { id: "cost",       pl: "Kontrola food cost",      en: "Food Cost Control",     icon: "cost" },
-  { id: "production", pl: "Planowanie produkcji",    en: "Production Planning",   icon: "production" },
-  { id: "capacity",   pl: "Przepustowość kuchni",    en: "Kitchen Capacity",      icon: "capacity" },
-  { id: "reports",    pl: "Raporty",                 en: "Reports",               icon: "reports" },
-  { id: "settings",   pl: "Ustawienia",              en: "Settings",              icon: "settings" },
+  { id: "cost",     pl: "Kontrola food cost", en: "Food Cost Control", icon: "cost" },
+  { id: "reports",  pl: "Raporty",            en: "Reports",           icon: "reports" },
+  { id: "settings", pl: "Ustawienia",         en: "Settings",          icon: "settings" },
 ];
 
 function Sidebar({ active, onNav, lang }) {
@@ -1407,11 +1405,13 @@ function MenuGenerator({ autoTrigger }) {
   const [budget, setBudget] = gUseState(17);
   const [complexity, setComplexity] = gUseState("Średnia");
   const [staff, setStaff] = gUseState(6);
+  const [days, setDays] = gUseState(1);
   const [state, setState] = gUseState("idle"); // idle | loading | done
   const [step, setStep] = gUseState(0);
   const [seed, setSeed] = gUseState(2);
-  const [menu, setMenu] = gUseState(() => buildMenu(2));
+  const [menus, setMenus] = gUseState(() => [buildMenu(2)]);
   const timers = gUseRef([]);
+  const menu = menus[0] || [];
 
   const [aiAnalysis, setAiAnalysis] = gUseState(null);
 
@@ -1455,7 +1455,7 @@ function MenuGenerator({ autoTrigger }) {
           });
         });
         if (aiMenu.length > 0) {
-          setMenu(aiMenu);
+          setMenus([aiMenu]);
           setAiAnalysis(data.analysis || null);
           setState("done");
           return;
@@ -1466,17 +1466,21 @@ function MenuGenerator({ autoTrigger }) {
     }
 
     const s = Math.floor(Math.random() * 7) + 1;
-    setSeed(s); setMenu(buildMenu(s)); setState("done");
+    setSeed(s);
+    const generated = [];
+    for (var di = 0; di < days; di++) generated.push(buildMenu(s + di));
+    setMenus(generated);
+    setState("done");
   };
 
   gUseEffect(() => { if (autoTrigger) run(); }, [autoTrigger]);
   gUseEffect(() => () => timers.current.forEach(clearTimeout), []);
 
-  // group menu by _g
+  // group first-day menu for AI panel
   const groups = {};
   menu.forEach(d => { (groups[d._g] = groups[d._g] || []).push(d); });
   const totalCost = menu.reduce((s, d) => s + d.cost, 0);
-  const avgDiff = (menu.reduce((s, d) => s + d.diff, 0) / menu.length);
+  const avgDiff = menu.length ? (menu.reduce((s, d) => s + d.diff, 0) / menu.length) : 0;
 
   return h("div", { className: "fade-in" },
     h("div", { className: "page-head row between", style: { alignItems: "flex-end" } },
@@ -1527,6 +1531,13 @@ function MenuGenerator({ autoTrigger }) {
             h("div", { className: "row gap8", style: { flexWrap: "wrap" } },
               STATIONS.map(s => h("span", { key: s, className: "chip on" }, s)))),
           h("div", { className: "field" },
+            h("label", null, "Liczba dni"),
+            h("div", { className: "seg" },
+              [1, 3, 5, 7].map(function(d) {
+                return h("button", { key: d, className: days === d ? "on" : "", onClick: function(){ setDays(d); } },
+                  d === 1 ? "1 dzień" : d + " dni");
+              }))),
+          h("div", { className: "field" },
             h("label", null, "Limit czasu produkcji"),
             h("select", { className: "inp", defaultValue: "4h" },
               h("option", null, "3 godziny"), h("option", { value: "4h" }, "4 godziny"), h("option", null, "6 godzin"))),
@@ -1541,7 +1552,7 @@ function MenuGenerator({ autoTrigger }) {
         h("div", { className: "gen-col-head" },
           h(Icon, { name: "plate", size: 17, style: { color: "var(--gold)" } }),
           h("h3", null, "Wygenerowane menu"),
-          state === "done" && h("span", { className: "tag olive", style: { marginLeft: "auto" } }, menu.length + " dań · " + guests + " gości"),
+          state === "done" && h("span", { className: "tag olive", style: { marginLeft: "auto" } }, (days > 1 ? days + " dni · " : "") + menu.length + " dań · " + guests + " gości"),
           state !== "done" && h("span", { className: "eyebrow" }, "02")),
         h("div", { className: "gen-col-body" },
           state === "loading"
@@ -1553,13 +1564,22 @@ function MenuGenerator({ autoTrigger }) {
                 h("div", { className: "brand-serif", style: { fontSize: 22, marginBottom: 6 } }, "Komponuję menu…"),
                 h("div", { className: "gen-log" }, h("b", null, "→ "), GEN_STEPS[step]),
                 h("div", { className: "mono dim", style: { fontSize: 11, marginTop: 14 } }, "Krok " + (step + 1) + " / " + GEN_STEPS.length))
-            : DAY_COMPOSITION.map((g) => groups[g.label] && h("div", { key: g.label, className: "menu-group" },
-                h("div", { className: "menu-group-head" },
-                  h("span", { className: "gh" }, g.label),
-                  h("span", { className: "ln" }),
-                  h("span", { className: "ct" }, groups[g.label].length + "×")),
-                groups[g.label].map((d, i) => h(MenuDish, { key: g.label + i, dish: d, delay: i * 40 }))
-              ))
+            : menus.map(function(dayMenu, dayIdx) {
+                const dg = {};
+                dayMenu.forEach(function(d){ (dg[d._g] = dg[d._g] || []).push(d); });
+                return h("div", { key: dayIdx },
+                  days > 1 && h("div", { style: { fontFamily: "var(--font-mono)", fontSize: 10.5, letterSpacing: ".12em", textTransform: "uppercase", color: "var(--olive)", padding: "14px 0 8px", borderTop: dayIdx > 0 ? "1px solid var(--line)" : "none", marginTop: dayIdx > 0 ? 10 : 0 } }, "Dzień " + (dayIdx + 1)),
+                  DAY_COMPOSITION.map(function(g) {
+                    return dg[g.label] && h("div", { key: g.label, className: "menu-group" },
+                      h("div", { className: "menu-group-head" },
+                        h("span", { className: "gh" }, g.label),
+                        h("span", { className: "ln" }),
+                        h("span", { className: "ct" }, dg[g.label].length + "×")),
+                      dg[g.label].map(function(d, i){ return h(MenuDish, { key: g.label + i, dish: d, delay: i * 40 }); })
+                    );
+                  })
+                );
+              })
         )
       ),
 
