@@ -2674,30 +2674,131 @@ const DISHES = [
 // fix the broken gold hex typo from token table
 C.gold.hex = "#caa244";
 
-// Category → how many per generated day (matches real Tasty menu structure)
+// Category → row labels for the menu table
 const DAY_COMPOSITION = [
-  { cat: "Zupa",      label: "Zupy",           count: 2 },
-  { cat: "Mięsne",    label: "Mięso",          count: 3 },
-  { cat: "Rybne",     label: "Ryba",           count: 1 },
-  { cat: "Wege",      label: "Wegeteriańskie", count: 3 },
-  { cat: "Warzywa",   label: "Warzywa",        count: 2 },
-  { cat: "Pierogi",   label: "Pierogi",        count: 2 },
-  { cat: "Ziemniaki", label: "Ziemniaki",      count: 2 },
-  { cat: "Surówki",   label: "Surówki",        count: 3 },
+  { cat: "Zupa",      label: "Zupa mięsna",    count: 1 },
+  { cat: "Zupa",      label: "Zupa wege",       count: 1 },
+  { cat: "Mięsne",    label: "Mięso",           count: 3 },
+  { cat: "Rybne",     label: "Ryba",            count: 1 },
+  { cat: "Wege",      label: "Wegetariańskie",  count: 3 },
+  { cat: "Ziemniaki", label: "Dodatki",         count: 5 },
+  { cat: "Surówki",   label: "Sałatki",         count: 5 },
 ];
 
-// Build one generated day, deterministic-ish with seed rotation
-function buildMenu(seed) {
-  seed = seed || 0;
-  const out = [];
-  DAY_COMPOSITION.forEach((g) => {
-    const pool = DISHES.filter((x) => x.cat === g.cat);
-    for (let i = 0; i < g.count; i++) {
-      const pick = pool[(seed + i * 3 + g.count) % pool.length];
-      out.push({ ...pick, _g: g.label });
+// ---- Classification helpers ----
+function isMeatSoup(name) {
+  return /rosół|bulion|kurczak|kaczk|kura|wieprz|schab|kiełbas|wędzon|boczek|żeberk|golonk|kapuśniak|grochówk|flaczk|indyk|wołow|charczo|gulaszow|bawarska|fasolowa.*kiełbas|meksykańsk|chłopsk|barszcz.*ukr|szczaw|gęsty/i.test(name);
+}
+function isChicken(name) {
+  return /kurczak|kura\b|drób|indyk|perliczk/i.test(name);
+}
+function isPork(name) {
+  return /schab|wieprz|karkówk|szynk|boczk|żeberk|golonk|kiełbas|kotlet.*mielon|stek.*wieprz|pulpet|wieprzow/i.test(name);
+}
+function isVeganDish(name) {
+  return /vegan|wegan|chili sin|chana|hara bhara|falafel/i.test(name);
+}
+function rng(seed) {
+  var s = seed;
+  return function() {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return (s >>> 0) / 4294967295;
+  };
+}
+
+// ---- Smart week menu builder (Mon–Fri, all rules) ----
+function buildSmartWeekMenu(numDays, seedVal) {
+  numDays = numDays || 5;
+  var rand = rng(seedVal || Math.floor(Date.now() % 99999));
+
+  function pick1(pool) {
+    if (!pool.length) return null;
+    return pool[Math.floor(rand() * pool.length)];
+  }
+  function pickNr(pool, n) {
+    var a = pool.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rand() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
     }
-  });
-  return out;
+    return a.slice(0, n);
+  }
+
+  var used = {};
+  function notUsed(d) { return !used[d.name]; }
+  function take(d, grp) {
+    if (!d) return null;
+    used[d.name] = true;
+    return Object.assign({}, d, { _g: grp });
+  }
+
+  var FISH_DAYS = [2, 4]; // Wed=2, Fri=4 (0-indexed Mon=0)
+
+  var poolMeatSoup  = DISHES.filter(function(d){ return d.cat === 'Zupa' && isMeatSoup(d.name); });
+  var poolVegeSoup  = DISHES.filter(function(d){ return d.cat === 'Zupa' && !isMeatSoup(d.name); });
+  var poolChicken   = DISHES.filter(function(d){ return d.cat === 'Mięsne' && isChicken(d.name); });
+  var poolPork      = DISHES.filter(function(d){ return d.cat === 'Mięsne' && isPork(d.name); });
+  var poolOtherMeat = DISHES.filter(function(d){ return d.cat === 'Mięsne' && !isChicken(d.name) && !isPork(d.name); });
+  var poolFish      = DISHES.filter(function(d){ return d.cat === 'Rybne'; });
+  var poolVegan     = DISHES.filter(function(d){ return d.cat === 'Wege' && isVeganDish(d.name); });
+  var poolVege      = DISHES.filter(function(d){ return d.cat === 'Wege' && !isVeganDish(d.name); });
+  var poolSides     = DISHES.filter(function(d){ return d.cat === 'Ziemniaki' || d.cat === 'Warzywa' || d.cat === 'Pierogi'; });
+  var poolSalads    = DISHES.filter(function(d){ return d.cat === 'Surówki'; });
+
+  var weekMenus = [];
+
+  for (var di = 0; di < numDays; di++) {
+    var hasFish = FISH_DAYS.indexOf(di) !== -1;
+    var day = [];
+
+    // 1. Soups
+    var ms = take(pick1(poolMeatSoup.filter(notUsed)), 'Zupa mięsna');
+    var vs = take(pick1(poolVegeSoup.filter(notUsed)), 'Zupa wege');
+    if (ms) day.push(ms);
+    if (vs) day.push(vs);
+
+    // 2. Meat: 1 chicken + 1 pork + 1 other
+    var ch = take(pick1(poolChicken.filter(notUsed)),   'Mięso');
+    var pk = take(pick1(poolPork.filter(notUsed)),      'Mięso');
+    var om = take(pick1(poolOtherMeat.filter(notUsed)), 'Mięso');
+    if (ch) day.push(ch);
+    if (pk) day.push(pk);
+    if (om) day.push(om);
+
+    // 3. Fish (only Wed/Fri)
+    if (hasFish) {
+      var fi = take(pick1(poolFish.filter(notUsed)), 'Ryba');
+      if (fi) day.push(fi);
+    }
+
+    // 4. Vege: 1 vegan + 2 regular
+    var vg1 = take(pick1(poolVegan.filter(notUsed)), 'Wegetariańskie');
+    var vg2 = take(pick1(poolVege.filter(notUsed)),  'Wegetariańskie');
+    var vg3 = take(pick1(poolVege.filter(notUsed)),  'Wegetariańskie');
+    if (vg1) day.push(vg1);
+    if (vg2) day.push(vg2);
+    if (vg3) day.push(vg3);
+
+    // 5. Sides: 5 varied
+    pickNr(poolSides.filter(notUsed), 5).forEach(function(d) {
+      used[d.name] = true;
+      day.push(Object.assign({}, d, { _g: 'Dodatki' }));
+    });
+
+    // 6. Salads: 5
+    pickNr(poolSalads.filter(notUsed), 5).forEach(function(d) {
+      used[d.name] = true;
+      day.push(Object.assign({}, d, { _g: 'Sałatki' }));
+    });
+
+    weekMenus.push(day);
+  }
+  return weekMenus;
+}
+
+// Legacy single-day builder (kept for compatibility)
+function buildMenu(seed) {
+  return buildSmartWeekMenu(1, seed)[0];
 }
 
 // ---- KPI definitions (dashboard) — real Tasty data ----
@@ -3312,10 +3413,8 @@ function MenuGenerator({ autoTrigger }) {
       timers.current.push(setTimeout(function(){ setStep(i); }, i * 320));
     });
     setTimeout(function() {
-      var s = Math.floor(Math.random() * 99) + 1;
-      var generated = [];
-      for (var di = 0; di < days; di++) generated.push(buildMenu(s + di));
-      setMenus(generated);
+      var weekMenus = buildSmartWeekMenu(days);
+      setMenus(weekMenus);
       setState("done");
     }, GEN_STEPS.length * 320 + 200);
   };
