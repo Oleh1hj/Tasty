@@ -746,92 +746,113 @@ function d(name, cat, station, diff, time, cost, color, tags) {
 }
 
 const DISHES = [
-  // ---- Zupy ----
-  d("Żurek staropolski na zakwasie", "Zupa", "Garnek", 2, 50, 3.20, C.white, ["sezonowe"]),
-  d("Rosół z kury z makaronem", "Zupa", "Garnek", 1, 90, 2.40, C.gold, ["klasyk"]),
-  d("Krem z pieczonej dyni", "Zupa", "Garnek", 2, 40, 2.10, C.orange, ["wege","sezonowe"]),
-  d("Barszcz czerwony czysty", "Zupa", "Garnek", 2, 70, 1.80, C.purple, ["wege"]),
-  d("Pomidorowa z ryżem", "Zupa", "Garnek", 1, 45, 1.90, C.red, ["klasyk"]),
-  d("Krem z brokułów", "Zupa", "Garnek", 1, 35, 2.30, C.green, ["wege"]),
-  d("Ogórkowa z koperkiem", "Zupa", "Garnek", 1, 50, 1.70, C.green, ["klasyk"]),
-  d("Grochówka wojskowa", "Zupa", "Garnek", 2, 80, 2.00, C.gold, ["sycące"]),
+  // ---- Zupy mięsne ----
+  d("Rosół z makaronem",                              "Zupa", "Garnek", 1, 90, 2.50, C.gold,   ["klasyk"]),
+  d("Grzybowa",                                       "Zupa", "Garnek", 2, 60, 3.00, C.brown,  ["sezonowe"]),
+  d("Fasolowa z kiełbaską i ziemniakami",             "Zupa", "Garnek", 2, 80, 3.20, C.gold,   ["sycące"]),
+  d("Żurek staropolski",                              "Zupa", "Garnek", 2, 70, 2.80, C.white,  ["klasyk"]),
+  d("Pomidorowa z ryżem",                             "Zupa", "Garnek", 1, 45, 1.90, C.red,    ["klasyk"]),
+  d("Ogórkowa z koperkiem",                           "Zupa", "Garnek", 1, 50, 1.80, C.green,  ["klasyk"]),
+  d("Krupnik z warzywami",                            "Zupa", "Garnek", 2, 60, 2.10, C.gold,   ["klasyk"]),
+  d("Grochówka z kiełbasą",                           "Zupa", "Garnek", 2, 80, 2.40, C.gold,   ["sycące"]),
+  // ---- Zupy wege ----
+  d("Zupa ziemniaczano-porowa",                       "Zupa", "Garnek", 1, 50, 2.00, C.green,  ["wege"]),
+  d("Chłodnik",                                       "Zupa", "Garnek", 1, 30, 2.20, C.purple, ["wege","sezonowe"]),
+  d("Krem z brokuła i cukinii",                       "Zupa", "Garnek", 1, 40, 2.40, C.green,  ["wege"]),
+  d("Krem z dyni",                                    "Zupa", "Garnek", 2, 40, 2.10, C.orange, ["wege","sezonowe"]),
+  d("Barszcz czerwony",                               "Zupa", "Garnek", 2, 70, 1.80, C.purple, ["wege"]),
 
   // ---- Dania mięsne ----
-  d("Schabowy klasyczny panierowany", "Mięsne", "Patelnia", 2, 25, 6.40, C.gold, ["klasyk"]),
-  d("Gulasz wołowy z papryką", "Mięsne", "Garnek", 3, 120, 7.80, C.brown, ["sycące"]),
-  d("Zrazy zawijane wołowe", "Mięsne", "Piec", 4, 140, 9.10, C.brown, ["premium"]),
-  d("Kurczak po staropolsku", "Mięsne", "Piec", 2, 55, 5.20, C.gold, []),
-  d("Pieczeń rzymska z sosem", "Mięsne", "Piec", 3, 90, 5.90, C.brown, []),
-  d("Udko z kaczki konfitowane", "Mięsne", "Piec", 4, 150, 11.40, C.brown, ["premium"]),
-  d("Bitki wołowe w sosie", "Mięsne", "Patelnia", 3, 70, 8.30, C.brown, []),
-  d("Kotlet de volaille", "Mięsne", "Patelnia", 4, 40, 7.10, C.gold, ["premium"]),
-  d("Pierś z indyka grillowana", "Mięsne", "Grill", 2, 30, 6.00, C.white, ["lekkie"]),
-  d("Gołąbki w sosie pomidorowym", "Mięsne", "Piec", 3, 110, 4.80, C.red, ["klasyk"]),
+  d("Udziki z kurczaka faszerowane fetą i suszonymi pomidorami", "Mięsne", "Piec",    3, 60,  6.50, C.gold,   []),
+  d("Fit leczo z kurczakiem",                         "Mięsne", "Garnek",   2, 50,  4.80, C.orange, ["lekkie"]),
+  d("Pieczona szynka w sosie z zielonego pieprzu",    "Mięsne", "Piec",     3, 90,  7.20, C.brown,  []),
+  d("Schab panierowany smażony na smalcu",            "Mięsne", "Patelnia", 2, 30,  5.90, C.gold,   ["klasyk"]),
+  d("Kurczak w marynacie cytrynowo-miodowej",         "Mięsne", "Piec",     2, 55,  5.40, C.gold,   ["lekkie"]),
+  d("Stek wieprzowy mielony z cebulką",               "Mięsne", "Patelnia", 2, 30,  4.60, C.brown,  ["klasyk"]),
+  d("Filet z kurczaka panierowany w siemieniu lnianym","Mięsne", "Patelnia", 2, 30, 5.20, C.gold,   []),
+  d("Grillowana karkówka z warzywami",                "Mięsne", "Grill",    3, 45,  6.80, C.brown,  []),
+  d("Gołąbki w sosie pomidorowym",                    "Mięsne", "Piec",     3, 110, 5.20, C.red,    ["klasyk"]),
+  d("Pulpety w sosie śmietanowym",                    "Mięsne", "Garnek",   2, 50,  4.40, C.white,  ["klasyk"]),
+  d("Kotlet schabowy klasyczny",                      "Mięsne", "Patelnia", 2, 25,  5.90, C.gold,   ["klasyk"]),
+  d("Pieczone udka z kurczaka z ziołami",             "Mięsne", "Piec",     2, 60,  5.00, C.gold,   []),
 
   // ---- Ryby ----
-  d("Dorsz pieczony z ziołami", "Rybne", "Piec", 2, 35, 8.90, C.white, ["lekkie"]),
-  d("Łosoś z pieca na warzywach", "Rybne", "Piec", 3, 40, 12.60, C.orange, ["premium","lekkie"]),
-  d("Filet z miruny smażony", "Rybne", "Patelnia", 2, 25, 5.40, C.gold, []),
-  d("Pstrąg z masłem i migdałami", "Rybne", "Patelnia", 3, 35, 10.20, C.gold, ["premium"]),
+  d("Morszczuk smażony",                              "Rybne",  "Patelnia", 2, 25,  6.80, C.white,  []),
+  d("Łosoś z pieca z ziołami",                        "Rybne",  "Piec",     3, 40,  12.60,C.orange, ["premium","lekkie"]),
+  d("Filet z dorsza panierowany",                     "Rybne",  "Patelnia", 2, 25,  7.40, C.gold,   []),
 
-  // ---- Wegetariańskie / Wegańskie ----
-  d("Placki z cukinii z jogurtem", "Wege", "Patelnia", 2, 35, 3.10, C.green, ["wege"]),
-  d("Naleśniki ze szpinakiem i fetą", "Wege", "Patelnia", 3, 45, 3.60, C.green, ["wege"]),
-  d("Risotto z grzybami leśnymi", "Wege", "Patelnia", 3, 40, 4.20, C.brown, ["wege","sezonowe"]),
-  d("Curry z ciecierzycy", "Wegańskie", "Garnek", 2, 50, 3.40, C.orange, ["wegan"]),
-  d("Gulasz warzywny po węgiersku", "Wegańskie", "Garnek", 2, 60, 3.00, C.red, ["wegan"]),
-  d("Kotlety z soczewicy", "Wegańskie", "Patelnia", 3, 45, 3.20, C.brown, ["wegan"]),
+  // ---- Wegetariańskie ----
+  d("Kotleciki jaglane z serem białym",               "Wege", "Patelnia",   3, 45,  3.60, C.gold,   ["wege"]),
+  d("Makaron noodle z sosem orzechowym i fasolką",    "Wege", "Garnek",     2, 30,  4.20, C.brown,  ["wege"]),
+  d("Chrupiące bakłażany panierowane w orzechach",    "Wege", "Piec",       3, 40,  3.80, C.purple, ["wege"]),
+  d("Zapiekanka z kalafiorem i camembert",            "Wege", "Piec",       3, 50,  4.80, C.white,  ["wege"]),
+  d("Tagliatelle ze szpinakiem i pieczarkami",        "Wege", "Patelnia",   2, 30,  4.00, C.green,  ["wege"]),
+  d("Tarta szparagowa",                               "Wege", "Piec",       4, 60,  5.20, C.green,  ["wege","sezonowe"]),
+  d("Bakłażan z warzywami duszony na ostro",          "Wege", "Piec",       2, 50,  3.40, C.purple, ["wege","wegan"]),
+  d("Pieczona ciecierzyca z tofu",                    "Wege", "Piec",       2, 40,  3.80, C.orange, ["wege","wegan"]),
 
-  // ---- Garnięry warzywne ----
-  d("Marchewka z groszkiem", "Warzywa", "Garnek", 1, 25, 1.40, C.orange, ["wege"]),
-  d("Buraczki zasmażane", "Warzywa", "Garnek", 1, 40, 1.30, C.purple, ["wege"]),
-  d("Fasolka szparagowa z bułką", "Warzywa", "Garnek", 1, 25, 1.60, C.green, ["wege"]),
-  d("Kapusta zasmażana", "Warzywa", "Garnek", 1, 50, 1.20, C.gold, ["wege"]),
-  d("Brokuły na parze", "Warzywa", "Garnek", 1, 18, 1.80, C.green, ["wege","lekkie"]),
-  d("Mizeria ze śmietaną", "Warzywa", "Zimna kuchnia", 1, 15, 1.50, C.green, ["wege"]),
+  // ---- Warzywa ----
+  d("Szpinak z jajkiem",                              "Warzywa", "Patelnia", 1, 20, 2.20, C.green,  ["wege"]),
+  d("Mix warzyw ze słonecznikiem",                    "Warzywa", "Piec",     1, 25, 1.80, C.green,  ["wege","wegan"]),
+  d("Kapusta młoda zasmażana",                        "Warzywa", "Garnek",   1, 30, 1.40, C.green,  ["wege"]),
+  d("Brokuł z masłem",                                "Warzywa", "Garnek",   1, 20, 1.60, C.green,  ["wege"]),
+  d("Pieczone warzywa",                               "Warzywa", "Piec",     1, 35, 1.80, C.orange, ["wege","wegan"]),
+  d("Kalafior z sezamem",                             "Warzywa", "Garnek",   1, 25, 1.70, C.white,  ["wege"]),
+  d("Fasolka szparagowa z masłem",                    "Warzywa", "Garnek",   1, 20, 2.00, C.green,  ["wege"]),
+  d("Marchewka z groszkiem",                          "Warzywa", "Garnek",   1, 25, 1.40, C.orange, ["wege"]),
 
-  // ---- Pierogi ----
-  d("Pierogi ruskie", "Pierogi", "Garnek", 3, 90, 3.80, C.gold, ["klasyk"]),
-  d("Pierogi z mięsem", "Pierogi", "Garnek", 3, 95, 4.40, C.gold, []),
-  d("Pierogi z kapustą i grzybami", "Pierogi", "Garnek", 3, 100, 3.60, C.brown, ["sezonowe"]),
-
-  // ---- Kopytka ----
-  d("Kopytka tradycyjne", "Kopytka", "Garnek", 2, 60, 2.10, C.white, ["klasyk"]),
-  d("Kopytka z masłem i bułką tartą", "Kopytka", "Garnek", 2, 65, 2.40, C.gold, []),
+  // ---- Pierogi i kopytka ----
+  d("Pierogi z ziemniakami i żółtym serem",           "Pierogi", "Garnek",  3, 90, 3.80, C.gold,   ["klasyk"]),
+  d("Pierogi z twarogiem i świeżymi ziołami",         "Pierogi", "Garnek",  3, 85, 3.60, C.white,  []),
+  d("Pierogi z truskawkami",                          "Pierogi", "Garnek",  3, 85, 4.20, C.red,    ["sezonowe"]),
+  d("Kopytka buraczane",                              "Pierogi", "Garnek",  3, 70, 3.20, C.purple, []),
+  d("Kopytka marchewkowe",                            "Pierogi", "Garnek",  3, 70, 3.00, C.orange, []),
+  d("Kopytka podsmażane na masełku z szałwią",        "Pierogi", "Patelnia",3, 75, 3.40, C.gold,   ["premium"]),
 
   // ---- Ziemniaki i kasze ----
-  d("Ziemniaki gotowane z koperkiem", "Ziemniaki", "Garnek", 1, 30, 0.90, C.white, ["wege"]),
-  d("Ziemniaki opiekane", "Ziemniaki", "Piec", 1, 40, 1.10, C.gold, ["wege"]),
-  d("Puree ziemniaczane", "Ziemniaki", "Garnek", 1, 35, 1.20, C.white, ["wege"]),
-  d("Kasza gryczana", "Ziemniaki", "Garnek", 1, 25, 1.00, C.brown, ["wege"]),
-  d("Ryż biały na sypko", "Ziemniaki", "Garnek", 1, 22, 0.80, C.white, ["wege"]),
-  d("Kluski śląskie", "Ziemniaki", "Garnek", 2, 50, 1.60, C.white, ["klasyk"]),
+  d("Maślane puree z parmezanem",                     "Ziemniaki", "Garnek", 2, 35, 1.80, C.white, ["wege"]),
+  d("Ziemniaki gotowane z ziołami",                   "Ziemniaki", "Garnek", 1, 30, 0.90, C.white, ["wege"]),
+  d("Ziemniaki pieczone z czosnkiem i majerankiem",   "Ziemniaki", "Piec",   1, 40, 1.10, C.gold,  ["wege"]),
+  d("Ziemniaki pieczone z warzywami",                 "Ziemniaki", "Piec",   1, 40, 1.20, C.orange,["wege"]),
+  d("Kasza bulgur z warzywami i soczewicą",           "Ziemniaki", "Garnek", 1, 35, 1.40, C.brown, ["wege","wegan"]),
+  d("Ryż biały",                                      "Ziemniaki", "Garnek", 1, 22, 0.80, C.white, ["wege","wegan"]),
+  d("Kasza pęczak z grzybami",                        "Ziemniaki", "Garnek", 2, 40, 1.60, C.brown, ["wege"]),
+  d("Ziemniaki z wody z cebulką prażoną",             "Ziemniaki", "Garnek", 1, 30, 0.90, C.white, ["wege"]),
 
   // ---- Surówki ----
-  d("Surówka z białej kapusty", "Surówki", "Zimna kuchnia", 1, 15, 0.90, C.green, ["wege"]),
-  d("Surówka z marchwi i jabłka", "Surówki", "Zimna kuchnia", 1, 15, 1.00, C.orange, ["wege"]),
-  d("Surówka z buraków", "Surówki", "Zimna kuchnia", 1, 20, 1.10, C.purple, ["wege"]),
-  d("Colesław", "Surówki", "Zimna kuchnia", 1, 18, 1.20, C.green, ["wege"]),
-  d("Surówka z kiszonej kapusty", "Surówki", "Zimna kuchnia", 1, 12, 0.80, C.gold, ["wege"]),
-  d("Sałatka z pomidorów i cebuli", "Surówki", "Zimna kuchnia", 1, 14, 1.30, C.red, ["wege"]),
-  d("Surówka z selera", "Surówki", "Zimna kuchnia", 1, 16, 1.10, C.white, ["wege"]),
+  d("Surówka z białej kapusty z papryką",             "Surówki", "Zimna kuchnia", 1, 15, 0.90, C.green,  ["wege","wegan"]),
+  d("Surówka z czerwonej kapusty z pomarańczą",       "Surówki", "Zimna kuchnia", 1, 15, 1.00, C.purple, ["wege","wegan"]),
+  d("Marchewka po koreańsku",                         "Surówki", "Zimna kuchnia", 1, 15, 1.10, C.orange, ["wege","wegan"]),
+  d("Surówka z kiszonej kapusty",                     "Surówki", "Zimna kuchnia", 1, 12, 0.80, C.gold,   ["wege","wegan"]),
+  d("Pomidory ze śmietaną",                           "Surówki", "Zimna kuchnia", 1, 10, 1.20, C.red,    ["wege"]),
+  d("Surówka z ogórka z koperkiem",                   "Surówki", "Zimna kuchnia", 1, 12, 0.80, C.green,  ["wege","wegan"]),
+  d("Surówka z kapusty pekińskiej z kukurydzą",       "Surówki", "Zimna kuchnia", 1, 15, 0.90, C.green,  ["wege","wegan"]),
+  d("Mizeria ze śmietaną",                            "Surówki", "Zimna kuchnia", 1, 12, 1.00, C.green,  ["wege"]),
+  d("Surówka z buraków z cebulką",                    "Surówki", "Zimna kuchnia", 1, 15, 1.10, C.purple, ["wege","wegan"]),
+  d("Surówka z marchewki z jabłkiem",                 "Surówki", "Zimna kuchnia", 1, 15, 0.90, C.orange, ["wege","wegan"]),
+  d("Surówka z pora i rzodkiewką",                    "Surówki", "Zimna kuchnia", 1, 15, 1.00, C.green,  ["wege","wegan"]),
+  d("Colesław",                                       "Surówki", "Zimna kuchnia", 1, 18, 1.20, C.green,  ["wege"]),
+  d("Sałatka z rzodkiewką, jajkiem i ogórkiem",       "Surówki", "Zimna kuchnia", 2, 20, 1.60, C.green,  ["wege"]),
+  d("Sałatka grecka",                                 "Surówki", "Zimna kuchnia", 1, 15, 2.40, C.white,  ["wege"]),
+  d("Mix sałat",                                      "Surówki", "Zimna kuchnia", 1, 10, 1.20, C.green,  ["wege","wegan"]),
+  d("Sałatka z arbuza i pomidora z fetą",             "Surówki", "Zimna kuchnia", 2, 20, 2.20, C.red,    ["wege","sezonowe"]),
+  d("Sałatka Cezar z brokułami",                      "Surówki", "Zimna kuchnia", 2, 20, 2.80, C.green,  ["wege"]),
+  d("Sałatka caprese",                                "Surówki", "Zimna kuchnia", 1, 10, 2.60, C.red,    ["wege"]),
 ];
 
 // fix the broken gold hex typo from token table
 C.gold.hex = "#caa244";
 
-// Category → how many per generated day (from user's spec)
+// Category → how many per generated day (matches real Tasty menu structure)
 const DAY_COMPOSITION = [
-  { cat: "Zupa",      label: "Zupy",                count: 2 },
-  { cat: "Mięsne",    label: "Dania mięsne",        count: 3 },
-  { cat: "Rybne",     label: "Dania rybne",         count: 1 },
-  { cat: "Wege",      label: "Wegetariańskie",      count: 1 },
-  { cat: "Wegańskie", label: "Wegańskie",           count: 2 },
-  { cat: "Warzywa",   label: "Garnięry warzywne",   count: 2 },
-  { cat: "Pierogi",   label: "Pierogi",             count: 1 },
-  { cat: "Kopytka",   label: "Kopytka",             count: 1 },
-  { cat: "Ziemniaki", label: "Ziemniaki i kasze",   count: 3 },
-  { cat: "Surówki",   label: "Surówki",             count: 5 },
+  { cat: "Zupa",      label: "Zupy",           count: 2 },
+  { cat: "Mięsne",    label: "Mięso",          count: 3 },
+  { cat: "Rybne",     label: "Ryba",           count: 1 },
+  { cat: "Wege",      label: "Wegeteriańskie", count: 3 },
+  { cat: "Warzywa",   label: "Warzywa",        count: 2 },
+  { cat: "Pierogi",   label: "Pierogi",        count: 2 },
+  { cat: "Ziemniaki", label: "Ziemniaki",      count: 2 },
+  { cat: "Surówki",   label: "Surówki",        count: 3 },
 ];
 
 // Build one generated day, deterministic-ish with seed rotation
@@ -848,13 +869,13 @@ function buildMenu(seed) {
   return out;
 }
 
-// ---- KPI definitions (dashboard) ----
+// ---- KPI definitions (dashboard) — real Tasty data ----
 const KPIS = [
-  { key: "stress",   label: "Indeks obciążenia kuchni", value: 64, unit: "", trend: -6, good: "low",  spark: [72,70,75,68,71,66,64], hint: "Umiarkowane" },
-  { key: "harmony",  label: "Harmonia kolorów",         value: 87, unit: "", trend: +4, good: "high", spark: [78,80,79,83,85,84,87], hint: "Bardzo dobra" },
-  { key: "appeal",   label: "Atrakcyjność dla gości",   value: 91, unit: "", trend: +2, good: "high", spark: [85,86,88,87,89,90,91], hint: "Wysoka" },
-  { key: "foodcost", label: "Efektywność food cost",    value: 28.4,unit: "%",trend: -1.2,good: "low", spark: [31,30.5,30,29.4,29,28.8,28.4], hint: "Cel ≤ 30%" },
-  { key: "complex",  label: "Złożoność produkcji",      value: 58, unit: "", trend: +3, good: "low",  spark: [52,54,53,55,56,57,58], hint: "Średnia" },
+  { key: "guests",   label: "Śr. gości dziennie",      value: 262, unit: "",  trend: +8,  good: "high", spark: [238,278,296,250,188,256,294,305,280,287,232,308,312,184,316], hint: "Śr. tygodniowa" },
+  { key: "revenue",  label: "Śr. obrót dzienny",       value: 8100,unit: "zł",trend: +320,good: "high", spark: [7489,7827,8593,8175,6161,8287,9538,9000,8098,8445,6827,8702,9529,5795,9802], hint: "Bez piątku: ~8 800 zł" },
+  { key: "check",    label: "Średni rachunek/gość",    value: 31.0,unit: "zł",trend: +0.4,good: "high", spark: [31.4,28.2,29.0,32.7,34.6,32.4,32.4,29.5,28.9,29.4,29.4,28.2,30.5,31.5,31.0], hint: "6.99 zł / 100 g" },
+  { key: "friday",   label: "Piątek vs reszta",        value: 185, unit: "",  trend: -5,  good: "low",  spark: [202,185,174,178,188,184], hint: "Zawsze niższy o ~30%" },
+  { key: "peak",     label: "Szczyt: Śr./Wt.",         value: 297, unit: "",  trend: +12, good: "high", spark: [272,284,296,305,308,316,278,294,300,297,308,316], hint: "Środa = rekord" },
   { key: "opeff",    label: "Efektywność operacyjna",   value: 82, unit: "", trend: +5, good: "high", spark: [74,76,75,78,80,81,82], hint: "Silna" },
   { key: "capacity", label: "Wykorzystanie przepustowości", value: 76, unit: "%", trend: +2, good: "mid", spark: [70,72,71,74,73,75,76], hint: "Optymalne" },
   { key: "diversity",label: "Różnorodność menu",        value: 84, unit: "", trend: +1, good: "high", spark: [80,81,80,82,83,83,84], hint: "Zróżnicowane" },
@@ -1311,14 +1332,14 @@ function Dashboard({ onGenerate }) {
         ),
         h("div", { className: "hero-side" },
           h("div", { className: "hero-stat" },
-            h("div", { className: "v brand-serif" }, "312"),
-            h("div", { className: "l" }, "Gości dziś")),
+            h("div", { className: "v brand-serif" }, "262"),
+            h("div", { className: "l" }, "Śr. gości / dzień")),
           h("div", { className: "hero-stat" },
-            h("div", { className: "v brand-serif", style: { color: "var(--olive)" } }, "91/100"),
-            h("div", { className: "l" }, "Satysfakcja · prognoza")),
+            h("div", { className: "v brand-serif", style: { color: "var(--olive)" } }, "31 zł"),
+            h("div", { className: "l" }, "Śr. rachunek / gość")),
           h("div", { className: "hero-stat" },
-            h("div", { className: "v brand-serif", style: { color: "var(--gold)" } }, "28,4%"),
-            h("div", { className: "l" }, "Food cost · cel ≤30%"))
+            h("div", { className: "v brand-serif", style: { color: "var(--gold)" } }, "8 100 zł"),
+            h("div", { className: "l" }, "Śr. obrót dzienny"))
         )
       )
     ),
@@ -1852,31 +1873,27 @@ function AnalysisScore({ s, i }) {
    ============================================================ */
 const { useState: anUseState } = React;
 
+// Price = 6.99 zł / 100g · typical portion weights estimated
 const PROFIT_DATA = [
-  { dish: "Żurek z jajkiem",     cost: 3.20, price: 14.00 },
-  { dish: "Bigos staropolski",   cost: 4.80, price: 16.00 },
-  { dish: "Filet z łososia",     cost: 9.50, price: 26.00 },
-  { dish: "Pierogi ruskie",      cost: 2.80, price: 13.00 },
-  { dish: "Kotlet schabowy",     cost: 5.40, price: 18.00 },
-  { dish: "Zupa pomidorowa",     cost: 1.90, price: 10.00 },
-  { dish: "Sałatka grecka",      cost: 3.60, price: 15.00 },
-  { dish: "Gołąbki w sosie",     cost: 4.20, price: 17.00 },
+  { dish: "Rosół z makaronem (~300g)",                   price: 20.97 },
+  { dish: "Fasolowa z kiełbaską (~300g)",                price: 20.97 },
+  { dish: "Udziki z kurczaka faszerowane (~200g)",       price: 13.98 },
+  { dish: "Schab panierowany (~180g)",                   price: 12.58 },
+  { dish: "Morszczuk smażony (~180g)",                   price: 12.58 },
+  { dish: "Pierogi z ziemniakami (~200g)",               price: 13.98 },
+  { dish: "Kopytka z masełkiem i szałwią (~200g)",       price: 13.98 },
+  { dish: "Kotleciki jaglane z serem (~180g)",           price: 12.58 },
+  { dish: "Ziemniaki pieczone z czosnkiem (~150g)",      price: 10.49 },
+  { dish: "Mix sałat (~100g)",                           price: 6.99  },
 ];
 
-const MONTH_NAMES = ["Sty","Lut","Mar","Kwi","Maj","Cze","Lip","Sie","Wrz","Paź","Lis","Gru"];
+// Real data from Tasty sales reports (Mar–Jun 2025)
 const SEASON_DATA = [
-  { m: "Sty", guests: 210, weather: "zima",  icon: "❄️" },
-  { m: "Lut", guests: 195, weather: "zima",  icon: "❄️" },
-  { m: "Mar", guests: 260, weather: "wiosna",icon: "🌱" },
-  { m: "Kwi", guests: 310, weather: "wiosna",icon: "🌸" },
-  { m: "Maj", guests: 355, weather: "wiosna",icon: "🌿" },
-  { m: "Cze", guests: 390, weather: "lato",  icon: "☀️" },
-  { m: "Lip", guests: 420, weather: "lato",  icon: "☀️" },
-  { m: "Sie", guests: 405, weather: "lato",  icon: "☀️" },
-  { m: "Wrz", guests: 360, weather: "jesień",icon: "🍂" },
-  { m: "Paź", guests: 280, weather: "jesień",icon: "🍂" },
-  { m: "Lis", guests: 230, weather: "zima",  icon: "🌧️" },
-  { m: "Gru", guests: 250, weather: "zima",  icon: "❄️" },
+  { m: "Pon", guests: 252, razem: 7676,  icon: "📅", note: "dobry start" },
+  { m: "Wt",  guests: 286, razem: 8887,  icon: "🔥", note: "szczyt tygodnia" },
+  { m: "Śr",  guests: 297, razem: 8884,  icon: "🔥", note: "szczyt tygodnia" },
+  { m: "Czw", guests: 249, razem: 7793,  icon: "📅", note: "stabilny" },
+  { m: "Pt",  guests: 185, razem: 5778,  icon: "⬇️", note: "zawsze niższy" },
 ];
 
 const TREND_DATA = [
@@ -1916,23 +1933,17 @@ function AnalyticsScreen() {
       h("table", { className: "profit-table" },
         h("thead", null,
           h("tr", null,
-            h("th", { style: { padding: "11px 16px", textAlign: "left", borderBottom: "1px solid var(--line)", fontSize: 11, letterSpacing: ".08em", color: "var(--text-muted)", textTransform: "uppercase" } }, "Danie"),
-            h("th", { style: { padding: "11px 16px", textAlign: "right", borderBottom: "1px solid var(--line)", fontSize: 11, letterSpacing: ".08em", color: "var(--text-muted)", textTransform: "uppercase" } }, "Koszt"),
-            h("th", { style: { padding: "11px 16px", textAlign: "right", borderBottom: "1px solid var(--line)", fontSize: 11, letterSpacing: ".08em", color: "var(--text-muted)", textTransform: "uppercase" } }, "Cena"),
-            h("th", { style: { padding: "11px 16px", textAlign: "right", borderBottom: "1px solid var(--line)", fontSize: 11, letterSpacing: ".08em", color: "var(--text-muted)", textTransform: "uppercase" } }, "Marża")
+            h("th", { style: { padding: "11px 16px", textAlign: "left", borderBottom: "1px solid var(--line)", fontSize: 11, letterSpacing: ".08em", color: "var(--text-muted)", textTransform: "uppercase" } }, "Danie / porcja"),
+            h("th", { style: { padding: "11px 16px", textAlign: "right", borderBottom: "1px solid var(--line)", fontSize: 11, letterSpacing: ".08em", color: "var(--text-muted)", textTransform: "uppercase" } }, "Cena sprzedaży"),
+            h("th", { style: { padding: "11px 16px", textAlign: "right", borderBottom: "1px solid var(--line)", fontSize: 11, letterSpacing: ".08em", color: "var(--text-muted)", textTransform: "uppercase" } }, "Podstawa")
           )
         ),
         h("tbody", null,
           PROFIT_DATA.map(function(row) {
-            var margin = ((row.price - row.cost) / row.price * 100).toFixed(0);
-            var good = margin >= 65;
             return h("tr", { key: row.dish, style: { borderBottom: "1px solid var(--line)" } },
               h("td", { style: { padding: "10px 16px", fontSize: 13.5 } }, row.dish),
-              h("td", { style: { padding: "10px 16px", textAlign: "right", fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--text-muted)" } }, row.cost.toFixed(2) + " zł"),
-              h("td", { style: { padding: "10px 16px", textAlign: "right", fontFamily: "var(--font-mono)", fontSize: 13 } }, row.price.toFixed(2) + " zł"),
-              h("td", { style: { padding: "10px 16px", textAlign: "right" } },
-                h("span", { className: "tag " + (good ? "olive" : "error"), style: { fontSize: 12 } }, margin + "%")
-              )
+              h("td", { style: { padding: "10px 16px", textAlign: "right", fontFamily: "var(--font-mono)", fontSize: 14, fontWeight: 600 } }, row.price.toFixed(2) + " zł"),
+              h("td", { style: { padding: "10px 16px", textAlign: "right", fontSize: 12, color: "var(--text-muted)" } }, "6,99 zł / 100g")
             );
           })
         )
@@ -1963,56 +1974,62 @@ function AnalyticsScreen() {
       )
     ),
 
-    /* ── 3. Guest flow ── */
+    /* ── 3. Guest flow by day of week ── */
     h("div", { className: "sec-head" },
-      h("h3", null, "Przewidywany przepływ gości"),
+      h("h3", null, "Przepływ gości wg dnia tygodnia"),
       h("div", { className: "sec-rule" }),
-      h("span", { className: "eyebrow" }, "Dane z poprzedniego roku")
+      h("span", { className: "eyebrow" }, "Dane rzeczywiste · Mar–Cze 2025")
     ),
     h("div", { className: "card card-pad", style: { marginBottom: 24 } },
-      h("div", { style: { display: "flex", alignItems: "flex-end", gap: 8, height: 120, marginBottom: 12 } },
+      h("div", { style: { display: "flex", alignItems: "flex-end", gap: 12, height: 130, marginBottom: 16 } },
         SEASON_DATA.map(function(d) {
           var barH = Math.round(d.guests / maxG * 100);
-          return h("div", { key: d.m, style: { flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 } },
-            h("div", { style: { width: "100%", height: barH + "%", background: "var(--olive)", borderRadius: "4px 4px 0 0", opacity: .85, minHeight: 4 } }),
-            h("div", { style: { fontSize: 10, color: "var(--text-muted)", fontFamily: "var(--font-mono)" } }, d.m)
+          var isLow = d.guests < 200;
+          return h("div", { key: d.m, style: { flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 } },
+            h("div", { style: { fontFamily: "var(--font-mono)", fontSize: 11, color: isLow ? "var(--gold)" : "var(--olive)", marginBottom: 2 } }, d.guests),
+            h("div", { style: { width: "100%", height: barH + "%", background: isLow ? "var(--gold)" : "var(--olive)", borderRadius: "6px 6px 0 0", opacity: .85, minHeight: 8 } }),
+            h("div", { style: { fontSize: 13, fontWeight: 600, fontFamily: "var(--font-mono)" } }, d.m)
           );
         })
       ),
-      h("div", { style: { display: "flex", flexWrap: "wrap", gap: 8 } },
+      h("div", { style: { display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10 } },
         SEASON_DATA.map(function(d) {
-          return h("div", { key: d.m, style: { fontSize: 11.5, color: "var(--text-muted)" } },
-            d.icon + " " + d.guests
+          return h("div", { key: d.m, style: { padding: "10px 12px", border: "1px solid var(--line)", borderRadius: 10, background: "var(--raised)", textAlign: "center" } },
+            h("div", { style: { fontSize: 18, marginBottom: 4 } }, d.icon),
+            h("div", { style: { fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 700 } }, d.razem.toLocaleString("pl-PL") + " zł"),
+            h("div", { style: { fontSize: 11, color: "var(--text-muted)", marginTop: 2 } }, d.note)
           );
         })
       ),
       h("div", { style: { marginTop: 14, padding: "10px 14px", background: "var(--olive-soft)", borderRadius: 8, border: "1px solid var(--olive-line)", fontSize: 12.5, color: "var(--text-muted)" } },
-        "💡 Szczyt letni: lipiec (" + Math.max.apply(null, SEASON_DATA.map(function(d){return d.guests;})) + " gości). Minimum w lutym — warto planować urlopy i serwis wtedy."
+        "💡 Piątek zawsze o ~30% słabszy od reszty tygodnia. Wtorek i środa = szczyt. Zamawiaj więcej surowców na pn–czw, a mniej na piątek."
       )
     ),
 
-    /* ── 4. Seasonality ── */
+    /* ── 4. Sezonowość (minimalna) ── */
     h("div", { className: "sec-head" },
       h("h3", null, "Sezonowość"),
       h("div", { className: "sec-rule" }),
-      h("span", { className: "eyebrow" }, "12 miesięcy · charakterystyka")
+      h("span", { className: "eyebrow" }, "Korelacja minimalna")
     ),
     h("div", { className: "card card-pad", style: { marginBottom: 24 } },
-      h("div", { style: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 } },
-        SEASON_DATA.map(function(d) {
-          var intensity = Math.round(d.guests / maxG * 10);
-          return h("div", { key: d.m, style: { padding: "12px 14px", border: "1px solid var(--line)", borderRadius: 10, background: "var(--raised)" } },
-            h("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 } },
-              h("span", { style: { fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-muted)" } }, d.m),
-              h("span", { style: { fontSize: 18 } }, d.icon)
-            ),
-            h("div", { style: { fontFamily: "var(--font-mono)", fontSize: 20, fontWeight: 700, marginBottom: 4 } }, d.guests),
-            h("div", { style: { display: "flex", gap: 2, marginBottom: 4 } },
-              [1,2,3,4,5,6,7,8,9,10].map(function(n) {
-                return h("div", { key: n, style: { flex: 1, height: 4, borderRadius: 2, background: n <= intensity ? "var(--olive)" : "var(--line)" } });
-              })
-            ),
-            h("div", { style: { fontSize: 10.5, color: "var(--text-muted)" } }, d.weather)
+      h("div", { style: { padding: "14px", background: "var(--olive-soft)", borderRadius: 8, border: "1px solid var(--olive-line)", fontSize: 13.5, marginBottom: 14 } },
+        h("b", null, "✓ Twój lokal ma minimalną sezonowość."),
+        h("div", { style: { fontSize: 12.5, color: "var(--text-muted)", marginTop: 6 } },
+          "Na podstawie danych Mar–Cze 2025: obrót i liczba gości są stabilne przez cały rok. Główna zmienna to dzień tygodnia, nie pora roku."
+        )
+      ),
+      h("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 } },
+        [
+          { label: "Rekordowy dzień", val: "10 860 zł", sub: "Wtorek 10 marca · 333 gości" },
+          { label: "Najsłabszy dzień", val: "5 193 zł", sub: "Piątek 27 marca · 174 gości" },
+          { label: "Najlepszy dzień tygodnia", val: "Wtorek/Środa", sub: "Śr. 286–297 gości" },
+          { label: "Najsłabszy dzień tygodnia", val: "Piątek", sub: "Śr. 185 gości · -30%" },
+        ].map(function(item) {
+          return h("div", { key: item.label, style: { padding: "14px 16px", border: "1px solid var(--line)", borderRadius: 10, background: "var(--raised)" } },
+            h("div", { style: { fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 4 } }, item.label),
+            h("div", { style: { fontSize: 17, fontWeight: 700, fontFamily: "var(--font-mono)", marginBottom: 2 } }, item.val),
+            h("div", { style: { fontSize: 11.5, color: "var(--text-muted)" } }, item.sub)
           );
         })
       )
