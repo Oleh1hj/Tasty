@@ -794,6 +794,11 @@ window.TRANSLATIONS = {
     score_low: "Niskie", score_mid: "Średnie", score_high_s: "Wysokie",
     score_excellent: "Doskonałe", score_good: "Dobre", score_warn: "Uwaga",
     ph_badge: "Moduł w przygotowaniu", ph_roadmap: "Mapa drogowa produktu",
+    dash_poz: " poz.", dash_pts: " pkt",
+    db_cat_all: "Wszystkie", db_cat_Zupa: "Zupa", db_cat_Mięsne: "Mięsne",
+    db_cat_Rybne: "Rybne", db_cat_Wege: "Wege", db_cat_Wegańskie: "Wegańskie",
+    db_cat_Warzywa: "Warzywa", db_cat_Pierogi: "Pierogi", db_cat_Kopytka: "Kopytka",
+    db_cat_Ziemniaki: "Ziemniaki", db_cat_Surówki: "Surówki",
     locale: "pl-PL",
   },
   en: {
@@ -870,6 +875,11 @@ window.TRANSLATIONS = {
     score_low: "Low", score_mid: "Medium", score_high_s: "High",
     score_excellent: "Excellent", score_good: "Good", score_warn: "Warning",
     ph_badge: "Module in preparation", ph_roadmap: "Product roadmap",
+    dash_poz: " items", dash_pts: " pts",
+    db_cat_all: "All", db_cat_Zupa: "Soups", db_cat_Mięsne: "Meat",
+    db_cat_Rybne: "Fish", db_cat_Wege: "Vegetarian", db_cat_Wegańskie: "Vegan",
+    db_cat_Warzywa: "Vegetables", db_cat_Pierogi: "Dumplings", db_cat_Kopytka: "Potato dump.",
+    db_cat_Ziemniaki: "Potatoes", db_cat_Surówki: "Salads",
     locale: "en-US",
   }
 };
@@ -979,16 +989,16 @@ C.gold.hex = "#caa244";
 
 // Category → how many per generated day (from user's spec)
 const DAY_COMPOSITION = [
-  { cat: "Zupa",      label: "Zupy",                count: 2 },
-  { cat: "Mięsne",    label: "Dania mięsne",        count: 3 },
-  { cat: "Rybne",     label: "Dania rybne",         count: 1 },
-  { cat: "Wege",      label: "Wegetariańskie",      count: 1 },
-  { cat: "Wegańskie", label: "Wegańskie",           count: 2 },
-  { cat: "Warzywa",   label: "Garnięry warzywne",   count: 2 },
-  { cat: "Pierogi",   label: "Pierogi",             count: 1 },
-  { cat: "Kopytka",   label: "Kopytka",             count: 1 },
-  { cat: "Ziemniaki", label: "Ziemniaki i kasze",   count: 3 },
-  { cat: "Surówki",   label: "Surówki",             count: 5 },
+  { cat: "Zupa",      label: "Zupy",                label_en: "Soups",              count: 2 },
+  { cat: "Mięsne",    label: "Dania mięsne",        label_en: "Meat dishes",        count: 3 },
+  { cat: "Rybne",     label: "Dania rybne",         label_en: "Fish dishes",        count: 1 },
+  { cat: "Wege",      label: "Wegetariańskie",      label_en: "Vegetarian",         count: 1 },
+  { cat: "Wegańskie", label: "Wegańskie",           label_en: "Vegan",              count: 2 },
+  { cat: "Warzywa",   label: "Garnięry warzywne",   label_en: "Vegetable sides",    count: 2 },
+  { cat: "Pierogi",   label: "Pierogi",             label_en: "Dumplings",          count: 1 },
+  { cat: "Kopytka",   label: "Kopytka",             label_en: "Potato dumplings",   count: 1 },
+  { cat: "Ziemniaki", label: "Ziemniaki i kasze",   label_en: "Potatoes & grains",  count: 3 },
+  { cat: "Surówki",   label: "Surówki",             label_en: "Fresh salads",       count: 5 },
 ];
 
 // Build one generated day, deterministic-ish with seed rotation
@@ -1019,23 +1029,23 @@ const KPIS = [
 
 // Station load (% of capacity today)
 const STATION_LOAD = [
-  { name: "Garmażeria",    load: 88, items: 14 },
-  { name: "Patelnia",      load: 72, items: 9 },
-  { name: "Piec",          load: 64, items: 7 },
-  { name: "Grill",         load: 41, items: 3 },
-  { name: "Zimna kuchnia", load: 79, items: 12 },
-  { name: "Garnek",        load: 93, items: 18 },
+  { name: "Garmażeria",    name_en: "Larder",       load: 88, items: 14 },
+  { name: "Patelnia",      name_en: "Sauté",        load: 72, items: 9 },
+  { name: "Piec",          name_en: "Oven",         load: 64, items: 7 },
+  { name: "Grill",         name_en: "Grill",        load: 41, items: 3 },
+  { name: "Zimna kuchnia", name_en: "Cold kitchen", load: 79, items: 12 },
+  { name: "Garnek",        name_en: "Stock pot",    load: 93, items: 18 },
 ];
 
 // Weekly menu balance — heavy vs light per weekday
 const WEEK_BALANCE = [
-  { day: "Pon", heavy: 62, light: 38, score: 81 },
-  { day: "Wt",  heavy: 55, light: 45, score: 86 },
-  { day: "Śr",  heavy: 70, light: 30, score: 74 },
-  { day: "Czw", heavy: 48, light: 52, score: 90 },
-  { day: "Pt",  heavy: 40, light: 60, score: 88 },
-  { day: "Sob", heavy: 58, light: 42, score: 83 },
-  { day: "Ndz", heavy: 66, light: 34, score: 78 },
+  { day: "Pon", day_en: "Mon", heavy: 62, light: 38, score: 81 },
+  { day: "Wt",  day_en: "Tue", heavy: 55, light: 45, score: 86 },
+  { day: "Śr",  day_en: "Wed", heavy: 70, light: 30, score: 74 },
+  { day: "Czw", day_en: "Thu", heavy: 48, light: 52, score: 90 },
+  { day: "Pt",  day_en: "Fri", heavy: 40, light: 60, score: 88 },
+  { day: "Sob", day_en: "Sat", heavy: 58, light: 42, score: 83 },
+  { day: "Ndz", day_en: "Sun", heavy: 66, light: 34, score: 78 },
 ];
 
 // Capacity forecast (portions/h capacity vs demand) — next 12h
@@ -1534,7 +1544,7 @@ function Dashboard({ onGenerate }) {
             h("div", { className: "an-title" }, t("dash_station_load")),
             h("div", { className: "an-desc" }, t("dash_station_today"))),
           h(Icon, { name: "flame", size: 18, style: { color: "var(--gold)" } })),
-        STATION_LOAD.map((s) => h(BarRow, { key: s.name, label: s.name, value: s.load, sub: s.load + "% · " + s.items + t("dash_poz") }))
+        STATION_LOAD.map((s) => h(BarRow, { key: s.name, label: lang === "en" && s.name_en ? s.name_en : s.name, value: s.load, sub: s.load + "% · " + s.items + t("dash_poz") }))
       ),
       // Capacity forecast
       h("div", { className: "an-card span-8" },
@@ -1567,7 +1577,7 @@ function Dashboard({ onGenerate }) {
             h("span", { className: "legend-item", style: { fontSize: 11.5 } }, h("span", { className: "legend-dot", style: { background: "var(--olive)" } }), t("dash_light")))),
         h("div", null, WEEK_BALANCE.map((w) =>
           h("div", { key: w.day, style: { display: "grid", gridTemplateColumns: "38px 1fr 42px", gap: 12, alignItems: "center", marginBottom: 11 } },
-            h("span", { className: "mono", style: { fontSize: 12, color: "var(--text-muted)" } }, w.day),
+            h("span", { className: "mono", style: { fontSize: 12, color: "var(--text-muted)" } }, lang === "en" && w.day_en ? w.day_en : w.day),
             h(StackBar, { heavy: w.heavy, light: w.light }),
             h("span", { className: "mono", style: { fontSize: 12, color: "var(--text)", textAlign: "right" } }, w.score)
           )))
@@ -1596,7 +1606,7 @@ function Dashboard({ onGenerate }) {
             h("div", { className: "an-desc" }, t("dash_30d"))),
           h("div", null,
             h("div", { className: "an-figure", style: { color: "var(--olive)" } }, "90"),
-            h("div", { className: "kpi-trend up", style: { justifyContent: "flex-end" } }, h(Icon, { name: "arrowUp" }), "+22 pkt"))),
+            h("div", { className: "kpi-trend up", style: { justifyContent: "flex-end" } }, h(Icon, { name: "arrowUp" }), "+22" + t("dash_pts")))),
         h("div", { style: { marginTop: 8 } },
           h(Sparkline, { data: PERF_TREND, w: 230, hgt: 90, color: "var(--olive)" }))
       )
@@ -1791,7 +1801,7 @@ function MenuGenerator({ autoTrigger }) {
                 h("div", { className: "mono dim", style: { fontSize: 11, marginTop: 14 } }, t("gen_step_prefix") + (step + 1) + " / " + genSteps.length))
             : DAY_COMPOSITION.map((g) => groups[g.label] && h("div", { key: g.label, className: "menu-group" },
                 h("div", { className: "menu-group-head" },
-                  h("span", { className: "gh" }, g.label),
+                  h("span", { className: "gh" }, lang === "en" && g.label_en ? g.label_en : g.label),
                   h("span", { className: "ln" }),
                   h("span", { className: "ct" }, groups[g.label].length + "×")),
                 groups[g.label].map((d, i) => h(MenuDish, { key: g.label + i, dish: d, delay: i * 40 }))
@@ -1896,7 +1906,7 @@ function MenuDatabase() {
           h("option", { value: "diff" }, t("db_sort_diff")))),
       h("div", { className: "row gap8", style: { flexWrap: "wrap", marginBottom: 10 } },
         CATS.map(c => h("span", { key: c, className: "chip" + (cat === c ? " on" : ""), onClick: () => setCat(c) },
-          c === "Wszystkie" ? t("db_all") : c))),
+          t("db_cat_" + (c === "Wszystkie" ? "all" : c)) || c))),
       h("div", { className: "row gap8", style: { flexWrap: "wrap" } },
         ["Wszystkie", ...STATIONS].map(s => h("span", { key: s, className: "chip" + (station === s ? " on" : ""),
           onClick: () => setStation(s), style: { fontSize: 10.5 } }, s === "Wszystkie" ? t("db_all") : s)))
@@ -2048,8 +2058,11 @@ const { useState: aUseState } = React;
 function App() {
   const [route, aSetRoute] = aUseState("dashboard");
   const [genTrigger, setGenTrigger] = aUseState(0);
-  const [lang, setLang] = aUseState("pl");
-  const [theme, setTheme] = aUseState("dark");
+  const [lang,  setLangRaw]  = aUseState(() => localStorage.getItem("tasty_lang")  || "pl");
+  const [theme, setThemeRaw] = aUseState(() => localStorage.getItem("tasty_theme") || "dark");
+
+  const setLang  = (v) => { localStorage.setItem("tasty_lang",  v); setLangRaw(v); };
+  const setTheme = (v) => { localStorage.setItem("tasty_theme", v); setThemeRaw(v); };
 
   React.useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
