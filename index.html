@@ -63,30 +63,20 @@
   --topbar-h: 68px;
 }
 
-/* ===== Light theme overrides ===== */
 [data-theme="light"] {
-  --bg:          #F5F2EC;
-  --surface-1:   #EDEAE2;
-  --surface-2:   #E5E1D8;
-  --raised:      #E8E4DA;
-  --text:        #1A1714;
-  --text-muted:  #5C5649;
-  --text-dim:    #8A8478;
-  --text-faint:  #B0AA9E;
-  --line:        rgba(0,0,0,0.09);
-  --line-soft:   rgba(0,0,0,0.05);
-  --line-strong: rgba(0,0,0,0.14);
+  --bg: #F5F2EC; --surface-1: #EDEAE2; --surface-2: #E5E1D8; --raised: #E8E4DA;
+  --text: #1A1714; --text-muted: #5C5649; --text-dim: #8A8478; --text-faint: #B0AA9E;
+  --line: rgba(0,0,0,0.09); --line-soft: rgba(0,0,0,0.05); --line-strong: rgba(0,0,0,0.14);
   --shadow-soft: 0 1px 0 rgba(255,255,255,0.7) inset, 0 8px 30px rgba(0,0,0,0.10);
 }
 [data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); }
-[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.22); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
   height: 100%;
   background: var(--bg);
-  transition: background-color .25s, color .25s;
+  transition: background-color .3s, color .3s;
   color: var(--text);
   font-family: var(--font-ui);
   font-size: 15px;
@@ -672,149 +662,6 @@ select.inp { appearance: none; cursor: pointer; background-image: url("data:imag
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-  <script type="text/babel" data-from="context.jsx">
-/* Global translations */
-window.TR = {
-  pl: {
-    /* navigation */
-    s_ops: "Operacje", s_mgmt: "Zarządzanie",
-    n_dashboard: "Pulpit", n_generator: "Generator Menu AI",
-    n_database: "Baza dań", n_analysis: "Analiza AI",
-    n_cost: "Kontrola food cost", n_production: "Planowanie produkcji",
-    n_capacity: "Przepustowość kuchni", n_reports: "Raporty", n_settings: "Ustawienia",
-    /* topbar */
-    tb_search: "Szukaj dań, raportów, stanowisk…",
-    tb_kitchen: "Kuchnia aktywna", tb_generate: "Generuj Menu AI",
-    tb_users: "Aktywność zespołu", tb_notif: "Powiadomienia",
-    /* dashboard */
-    dash_title: "Centrum Inteligencji Kuchni",
-    dash_h1a: "Zaprojektuj menu, które kuchnia ",
-    dash_h1b: "naprawdę wykona",
-    dash_sub: "Generuj zoptymalizowane menu dla 300+ gości w kilka sekund, balansując food cost, obciążenie stanowisk i satysfakcję gości.",
-    dash_generate: "Generuj Menu AI", dash_report: "Raport dzienny",
-    dash_guests: "Gości dziś", dash_sat: "Satysfakcja · prognoza", dash_fc: "Food cost · cel ≤30%",
-    dash_kpi: "Wskaźniki operacyjne", dash_live: "Aktualizacja na żywo · ",
-    dash_analytics: "Analityka kuchni",
-    dash_station: "Rozkład obciążenia stanowisk", dash_station_sub: "Wykorzystanie przepustowości · dziś",
-    dash_cap: "Prognoza przepustowości produkcyjnej", dash_cap_sub: "Porcje/h · dostępna moc vs prognozowany popyt",
-    dash_power: "Moc", dash_demand: "Popyt",
-    dash_peak: "Szczyt 11–13: popyt > moc", dash_rec: "Rekomendacja: przygotować 90 porcji buforu przed 11:00.",
-    dash_balance: "Tygodniowy balans menu", dash_balance_sub: "Dania sycące vs lekkie",
-    dash_heavy: "Sycące", dash_light: "Lekkie",
-    dash_cost: "Struktura kosztów", dash_cost_sub: "Surowce · tydzień",
-    dash_perf: "Wydajność", dash_perf_sub: "30 dni",
-    /* generator */
-    gen_title: "Generator Menu AI", gen_h1: "Skomponuj dzień w kuchni",
-    gen_sub: "Skonfiguruj parametry — silnik AI dobierze dania, zbalansuje koszt i przewidzi obciążenie stanowisk.",
-    gen_config: "Konfiguracja", gen_menu: "Wygenerowane menu", gen_ai: "Silnik AI",
-    gen_guests: "Liczba gości", gen_budget: "Budżet na gościa",
-    gen_type: "Typ menu", gen_diet: "Ograniczenia dietetyczne",
-    gen_complexity: "Poziom złożoności", gen_staff: "Obsada kuchni",
-    gen_stations: "Dostępne stanowiska", gen_time: "Limit czasu produkcji",
-    gen_run: "Generuj menu", gen_running: "Generuję…", gen_again: "Generuj ponownie",
-    gen_composing: "Komponuję menu…",
-    gen_step1: "Analizuję dostępne stanowiska i obsadę…",
-    gen_step2: "Dobieram dania z bazy 412 pozycji…",
-    gen_step3: "Balansuję food cost względem budżetu…",
-    gen_step4: "Optymalizuję harmonię kolorów talerza…",
-    gen_step5: "Wykrywam wąskie gardła produkcji…",
-    gen_step6: "Prognozuję satysfakcję gości…",
-    gen_ready: "Menu gotowe do realizacji",
-    gen_score_color: "Harmonia kolorów", gen_score_stress: "Stres kuchni",
-    gen_score_appeal: "Satysfakcja", gen_score_fc: "Food cost",
-    gen_waiting: "Wygeneruj menu, aby zobaczyć analizę AI", gen_analyzing: "Analiza w toku…",
-    gen_per: "porcję", gen_diff: "Średnia trudność",
-    gen_crew: "wykonalne przy obsadzie", gen_people: "osób",
-    /* database */
-    db_title: "Baza dań", db_h1: "Biblioteka kulinarna",
-    db_sub: "412 receptur z pełną charakterystyką kosztową, czasową i kolorystyczną.",
-    db_new: "Nowe danie", db_search: "Szukaj po nazwie dania…",
-    db_sort_name: "Sortuj: nazwa", db_sort_cost: "Sortuj: koszt",
-    db_sort_time: "Sortuj: czas", db_sort_diff: "Sortuj: trudność",
-    db_col_dish: "Danie", db_col_cat: "Kategoria", db_col_station: "Stanowisko",
-    db_col_diff: "Trudność", db_col_time: "Czas", db_col_color: "Kolor", db_col_cost: "Koszt/porcja",
-    db_export: "Eksport CSV",
-    /* analysis */
-    an_eyebrow: "Centrum analizy AI", an_h1: "Dlaczego to menu działa",
-    an_sub: "Każdy wskaźnik z wyjaśnieniem — silnik AI tłumaczy, jak powstała ocena i co możesz poprawić.",
-    an_overall: "Ogólna ocena wykonalności",
-    an_verdict: "Menu można wykonać sprawnie, spójnie i z zyskiem",
-    an_detail: "Wszystkie 8 wskaźników mieści się w bezpiecznych progach. Jedyny punkt uwagi to obciążenie stanowiska „Garnek" w szczycie — sugerowana zmiana harmonogramu obniży ryzyko do 12%.",
-    an_ready: "Gotowość", an_risk: "Ryzyko", an_risk_val: "Niskie", an_margin: "Marża",
-    an_scores: "Wskaźniki szczegółowe", an_metrics: "8 metryk · z wyjaśnieniem",
-    score_low: "Niskie", score_mid: "Średnie", score_high: "Wysokie",
-    score_great: "Doskonałe", score_good: "Dobre", score_warn: "Uwaga",
-    /* placeholders */
-    ph_coming: "Moduł w przygotowaniu", ph_roadmap: "Mapa drogowa produktu",
-  },
-  en: {
-    s_ops: "Operations", s_mgmt: "Management",
-    n_dashboard: "Dashboard", n_generator: "AI Menu Generator",
-    n_database: "Dish Library", n_analysis: "AI Analysis",
-    n_cost: "Food Cost Control", n_production: "Production Planning",
-    n_capacity: "Kitchen Capacity", n_reports: "Reports", n_settings: "Settings",
-    tb_search: "Search dishes, reports, stations…",
-    tb_kitchen: "Kitchen active", tb_generate: "Generate AI Menu",
-    tb_users: "Team activity", tb_notif: "Notifications",
-    dash_title: "Kitchen Intelligence Hub",
-    dash_h1a: "Design a menu your kitchen can ",
-    dash_h1b: "actually execute",
-    dash_sub: "Generate optimised menus for 300+ guests in seconds, balancing food cost, station load, and guest satisfaction.",
-    dash_generate: "Generate AI Menu", dash_report: "Daily report",
-    dash_guests: "Guests today", dash_sat: "Satisfaction · forecast", dash_fc: "Food cost · target ≤30%",
-    dash_kpi: "Operational KPIs", dash_live: "Live update · ",
-    dash_analytics: "Kitchen analytics",
-    dash_station: "Station load distribution", dash_station_sub: "Capacity utilisation · today",
-    dash_cap: "Production capacity forecast", dash_cap_sub: "Portions/h · available capacity vs forecast demand",
-    dash_power: "Capacity", dash_demand: "Demand",
-    dash_peak: "Peak 11–13: demand exceeds capacity", dash_rec: "Recommendation: prepare 90-portion buffer before 11:00.",
-    dash_balance: "Weekly menu balance", dash_balance_sub: "Heavy vs light dishes",
-    dash_heavy: "Heavy", dash_light: "Light",
-    dash_cost: "Cost structure", dash_cost_sub: "Raw materials · week",
-    dash_perf: "Performance", dash_perf_sub: "30 days",
-    gen_title: "AI Menu Generator", gen_h1: "Compose a kitchen day",
-    gen_sub: "Configure parameters — the AI engine will pick dishes, balance cost, and predict station load.",
-    gen_config: "Configuration", gen_menu: "Generated menu", gen_ai: "AI Engine",
-    gen_guests: "Number of guests", gen_budget: "Budget per guest",
-    gen_type: "Menu type", gen_diet: "Dietary restrictions",
-    gen_complexity: "Complexity level", gen_staff: "Kitchen crew",
-    gen_stations: "Available stations", gen_time: "Production time limit",
-    gen_run: "Generate menu", gen_running: "Generating…", gen_again: "Generate again",
-    gen_composing: "Composing menu…",
-    gen_step1: "Analysing available stations and crew…",
-    gen_step2: "Selecting dishes from 412-item library…",
-    gen_step3: "Balancing food cost against budget…",
-    gen_step4: "Optimising plate colour harmony…",
-    gen_step5: "Detecting production bottlenecks…",
-    gen_step6: "Forecasting guest satisfaction…",
-    gen_ready: "Menu ready to execute",
-    gen_score_color: "Colour harmony", gen_score_stress: "Kitchen stress",
-    gen_score_appeal: "Satisfaction", gen_score_fc: "Food cost",
-    gen_waiting: "Generate a menu to see the AI analysis", gen_analyzing: "Analysis in progress…",
-    gen_per: "portion", gen_diff: "Avg difficulty",
-    gen_crew: "executable with a crew of", gen_people: "people",
-    db_title: "Dish Library", db_h1: "Culinary Library",
-    db_sub: "412 recipes with full cost, time and colour profiles.",
-    db_new: "New dish", db_search: "Search by dish name…",
-    db_sort_name: "Sort: name", db_sort_cost: "Sort: cost",
-    db_sort_time: "Sort: time", db_sort_diff: "Sort: difficulty",
-    db_col_dish: "Dish", db_col_cat: "Category", db_col_station: "Station",
-    db_col_diff: "Difficulty", db_col_time: "Time", db_col_color: "Colour", db_col_cost: "Cost/portion",
-    db_export: "Export CSV",
-    an_eyebrow: "AI Analysis Centre", an_h1: "Why this menu works",
-    an_sub: "Every metric explained — the AI engine shows how the score was calculated and what you can improve.",
-    an_overall: "Overall executability score",
-    an_verdict: "This menu can be executed efficiently, consistently, and profitably",
-    an_detail: "All 8 metrics are within safe thresholds. The only point of attention is the Stockpot station load at peak — a schedule adjustment would reduce risk to 12%.",
-    an_ready: "Readiness", an_risk: "Risk", an_risk_val: "Low", an_margin: "Margin",
-    an_scores: "Detailed metrics", an_metrics: "8 metrics · with explanation",
-    score_low: "Low", score_mid: "Medium", score_high: "High",
-    score_great: "Excellent", score_good: "Good", score_warn: "Attention",
-    ph_coming: "Module in preparation", ph_roadmap: "Product roadmap",
-  }
-};
-  </script>
-
   <script type="text/babel" data-from="data.jsx">
 /* ============================================================
    TASTY — Data layer
@@ -1091,9 +938,8 @@ function Icon({ name, size = 18, stroke = 1.6, ...rest }) {
     bolt: () => P("M13 2 3 14h7l-1 8 10-12h-7z"),
     lock: () => [h("rect",{key:0,x:4,y:11,width:16,height:9,rx:2}),h("path",{key:1,d:"M8 11V7a4 4 0 0 1 8 0v4"})],
     temp: () => [h("path",{key:0,d:"M10 13.5V5a2 2 0 0 1 4 0v8.5a4 4 0 1 1-4 0z"})],
-    sun: () => [h("circle",{key:0,cx:12,cy:12,r:4}),h("path",{key:1,d:"M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"})],
+    sun:  () => [h("circle",{key:0,cx:12,cy:12,r:4}),h("path",{key:1,d:"M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"})],
     moon: () => P("M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"),
-    globe: () => [h("circle",{key:0,cx:12,cy:12,r:9}),h("path",{key:1,d:"M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"})],
   };
   const fn = paths[name];
   return h("svg", p, fn ? fn() : null);
@@ -1269,21 +1115,22 @@ Object.assign(window, { Counter, RadialGauge, Sparkline, BarRow, StackBar, LineA
 
 const h = React.createElement;
 
-const NAV_ITEMS = [
-  { section: "s_ops" },
-  { id: "dashboard", key: "n_dashboard", icon: "dashboard" },
-  { id: "generator", key: "n_generator", icon: "generator", badge: "AI", gold: true },
-  { id: "database",  key: "n_database",  icon: "database", badge: "412" },
-  { id: "analysis",  key: "n_analysis",  icon: "analysis" },
-  { section: "s_mgmt" },
-  { id: "cost",       key: "n_cost",       icon: "cost" },
-  { id: "production", key: "n_production", icon: "production" },
-  { id: "capacity",   key: "n_capacity",   icon: "capacity" },
-  { id: "reports",    key: "n_reports",    icon: "reports" },
-  { id: "settings",   key: "n_settings",   icon: "settings" },
+const NAV = [
+  { section: true, pl: "Operacje",    en: "Operations" },
+  { id: "dashboard", pl: "Pulpit",             en: "Dashboard",       icon: "dashboard" },
+  { id: "generator", pl: "Generator Menu AI",  en: "AI Menu Generator", icon: "generator", badge: "AI", gold: true },
+  { id: "database",  pl: "Baza dań",           en: "Dish Library",    icon: "database", badge: "412" },
+  { id: "analysis",  pl: "Analiza AI",          en: "AI Analysis",     icon: "analysis" },
+  { section: true, pl: "Zarządzanie", en: "Management" },
+  { id: "cost",       pl: "Kontrola food cost",      en: "Food Cost Control",     icon: "cost" },
+  { id: "production", pl: "Planowanie produkcji",    en: "Production Planning",   icon: "production" },
+  { id: "capacity",   pl: "Przepustowość kuchni",    en: "Kitchen Capacity",      icon: "capacity" },
+  { id: "reports",    pl: "Raporty",                 en: "Reports",               icon: "reports" },
+  { id: "settings",   pl: "Ustawienia",              en: "Settings",              icon: "settings" },
 ];
 
-function Sidebar({ active, onNav, t }) {
+function Sidebar({ active, onNav, lang }) {
+  var L = lang || "pl";
   return h("aside", { className: "sidebar" },
     h("div", { className: "sb-brand" },
       h("div", { className: "sb-logo" }, h("span", null, "T")),
@@ -1293,18 +1140,18 @@ function Sidebar({ active, onNav, t }) {
       )
     ),
     h("nav", { className: "sb-nav" },
-      NAV_ITEMS.map((it, i) => it.section
-        ? h("div", { key: "s" + i, className: "sb-section-label" }, t(it.section))
-        : h("div", {
+      NAV.map(function(it, i) {
+        if (it.section) return h("div", { key: "s" + i, className: "sb-section-label" }, it[L]);
+        return h("div", {
             key: it.id,
             className: "sb-item" + (active === it.id ? " active" : ""),
-            onClick: () => onNav(it.id),
+            onClick: function(){ onNav(it.id); },
           },
           h(Icon, { name: it.icon }),
-          h("span", null, t(it.key)),
+          h("span", null, it[L]),
           it.badge && h("span", { className: "sb-badge" + (it.gold ? " gold" : "") }, it.badge)
-        )
-      )
+        );
+      })
     ),
     h("div", { className: "sb-footer" },
       h("div", { className: "sb-user" },
@@ -1319,45 +1166,45 @@ function Sidebar({ active, onNav, t }) {
   );
 }
 
-function TopBar({ onGenerate, t, lang, setLang, theme, setTheme }) {
+function TopBar({ onGenerate, lang, setLang, theme, setTheme }) {
   const [time, setTime] = React.useState("");
-  React.useEffect(() => {
-    const locale = lang === "pl" ? "pl-PL" : "en-GB";
-    const upd = () => setTime(new Date().toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" }));
-    upd(); const ti = setInterval(upd, 30000); return () => clearInterval(ti);
-  }, [lang]);
+  React.useEffect(function() {
+    var upd = function(){ setTime(new Date().toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" })); };
+    upd(); var ti = setInterval(upd, 30000); return function(){ clearInterval(ti); };
+  }, []);
+  var isDark = theme === "dark";
   return h("header", { className: "topbar" },
     h("div", { className: "search" },
       h(Icon, { name: "search", size: 17 }),
-      h("input", { placeholder: t("tb_search") }),
+      h("input", { placeholder: lang === "en" ? "Search dishes, reports, stations…" : "Szukaj dań, raportów, stanowisk…" }),
       h("kbd", null, "⌘K")
     ),
     h("div", { className: "topbar-right" },
       h("div", { className: "kitchen-status" },
         h("span", { className: "pulse" }),
-        h("span", null, t("tb_kitchen")),
+        h("span", null, lang === "en" ? "Kitchen active" : "Kuchnia aktywna"),
         h("span", { className: "mono dim", style: { fontSize: 11 } }, "· " + time)
       ),
-      h("div", { className: "tb-btn", title: t("tb_users") }, h(Icon, { name: "users" })),
-      h("div", { className: "tb-btn", title: t("tb_notif") },
-        h(Icon, { name: "bell" }), h("span", { className: "tb-dot" })),
-      h("div", {
-        className: "tb-btn", title: theme === "dark" ? "Light mode" : "Dark mode",
-        onClick: () => setTheme(theme === "dark" ? "light" : "dark"),
-        style: { color: theme === "light" ? "var(--gold)" : "var(--text-muted)" }
-      }, h(Icon, { name: theme === "dark" ? "sun" : "moon" })),
+      h("div", { className: "tb-btn" }, h(Icon, { name: "users" })),
+      h("div", { className: "tb-btn" }, h(Icon, { name: "bell" }), h("span", { className: "tb-dot" })),
       h("div", {
         className: "tb-btn",
-        onClick: () => setLang(lang === "pl" ? "en" : "pl"),
-        style: { fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 600, letterSpacing: ".05em", minWidth: 36, justifyContent: "center" }
+        onClick: function(){ setTheme(isDark ? "light" : "dark"); },
+        style: { cursor: "pointer" },
+        title: isDark ? "Light mode" : "Dark mode"
+      }, h(Icon, { name: isDark ? "sun" : "moon" })),
+      h("div", {
+        className: "tb-btn",
+        onClick: function(){ setLang(lang === "pl" ? "en" : "pl"); },
+        style: { fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 600, cursor: "pointer", minWidth: 32, justifyContent: "center" }
       }, lang === "pl" ? "EN" : "PL"),
       h("button", { className: "btn btn-primary btn-sm", onClick: onGenerate, style: { marginLeft: 6 } },
-        h(Icon, { name: "generator", size: 16 }), t("tb_generate"))
+        h(Icon, { name: "generator", size: 16 }), lang === "en" ? "Generate AI Menu" : "Generuj Menu AI")
     )
   );
 }
 
-Object.assign(window, { Sidebar, TopBar, NAV_ITEMS });
+Object.assign(window, { Sidebar, TopBar, NAV });
 
   </script>
 
@@ -1390,43 +1237,43 @@ function KpiCard({ k, i }) {
   );
 }
 
-function Dashboard({ onGenerate, t, lang }) {
-  const locale = lang === "pl" ? "pl-PL" : "en-GB";
+function Dashboard({ onGenerate }) {
   return h("div", { className: "content-narrow fade-in" },
     // Hero
     h("section", { className: "hero" },
       h("div", { className: "hero-grid" }),
       h("div", { className: "hero-inner" },
         h("div", null,
-          h("div", { className: "eyebrow", style: { marginBottom: 16 } }, t("dash_title")),
-          h("h1", null, t("dash_h1a"), h("em", null, t("dash_h1b"))),
-          h("p", { className: "hero-sub" }, t("dash_sub")),
+          h("div", { className: "eyebrow", style: { marginBottom: 16 } }, "Centrum Inteligencji Kuchni"),
+          h("h1", null, "Zaprojektuj menu, które kuchnia ", h("em", null, "naprawdę wykona")),
+          h("p", { className: "hero-sub" },
+            "Generuj zoptymalizowane menu dla 300+ gości w kilka sekund, balansując food cost, obciążenie stanowisk i satysfakcję gości."),
           h("div", { className: "hero-cta" },
             h("button", { className: "btn btn-primary", onClick: onGenerate },
-              h(Icon, { name: "generator", size: 17 }), t("dash_generate")),
+              h(Icon, { name: "generator", size: 17 }), "Generuj Menu AI"),
             h("button", { className: "btn btn-ghost" },
-              h(Icon, { name: "reports", size: 16 }), t("dash_report"))
+              h(Icon, { name: "reports", size: 16 }), "Raport dzienny")
           )
         ),
         h("div", { className: "hero-side" },
           h("div", { className: "hero-stat" },
             h("div", { className: "v brand-serif" }, "312"),
-            h("div", { className: "l" }, t("dash_guests"))),
+            h("div", { className: "l" }, "Gości dziś")),
           h("div", { className: "hero-stat" },
             h("div", { className: "v brand-serif", style: { color: "var(--olive)" } }, "91/100"),
-            h("div", { className: "l" }, t("dash_sat"))),
+            h("div", { className: "l" }, "Satysfakcja · prognoza")),
           h("div", { className: "hero-stat" },
             h("div", { className: "v brand-serif", style: { color: "var(--gold)" } }, "28,4%"),
-            h("div", { className: "l" }, t("dash_fc")))
+            h("div", { className: "l" }, "Food cost · cel ≤30%"))
         )
       )
     ),
 
     // KPI section
     h("div", { className: "sec-head" },
-      h("h3", null, t("dash_kpi")),
+      h("h3", null, "Wskaźniki operacyjne"),
       h("div", { className: "sec-rule" }),
-      h("span", { className: "eyebrow" }, t("dash_live") + new Date().toLocaleDateString(locale))
+      h("span", { className: "eyebrow" }, "Aktualizacja na żywo · " + new Date().toLocaleDateString("pl-PL"))
     ),
     h("div", { className: "kpi-grid" },
       KPIS.map((k, i) => h(KpiCard, { key: k.key, k, i }))
@@ -1434,7 +1281,7 @@ function Dashboard({ onGenerate, t, lang }) {
 
     // Analytics
     h("div", { className: "sec-head" },
-      h("h3", null, t("dash_analytics")),
+      h("h3", null, "Analityka kuchni"),
       h("div", { className: "sec-rule" })
     ),
     h("div", { className: "an-grid" },
@@ -1442,8 +1289,8 @@ function Dashboard({ onGenerate, t, lang }) {
       h("div", { className: "an-card span-4" },
         h("div", { className: "an-head" },
           h("div", null,
-            h("div", { className: "an-title" }, t("dash_station")),
-            h("div", { className: "an-desc" }, t("dash_station_sub"))),
+            h("div", { className: "an-title" }, "Rozkład obciążenia stanowisk"),
+            h("div", { className: "an-desc" }, "Wykorzystanie przepustowości · dziś")),
           h(Icon, { name: "flame", size: 18, style: { color: "var(--gold)" } })),
         STATION_LOAD.map((s) => h(BarRow, { key: s.name, label: s.name, value: s.load, sub: s.load + "% · " + s.items + " poz." }))
       ),
@@ -1451,11 +1298,11 @@ function Dashboard({ onGenerate, t, lang }) {
       h("div", { className: "an-card span-8" },
         h("div", { className: "an-head" },
           h("div", null,
-            h("div", { className: "an-title" }, t("dash_cap")),
-            h("div", { className: "an-desc" }, t("dash_cap_sub"))),
+            h("div", { className: "an-title" }, "Prognoza przepustowości produkcyjnej"),
+            h("div", { className: "an-desc" }, "Porcje/h · dostępna moc vs prognozowany popyt")),
           h("div", { className: "row gap16" },
-            h("span", { className: "legend-item", style: { fontSize: 12 } }, h("span", { className: "legend-dot", style: { background: "var(--olive)" } }), t("dash_power")),
-            h("span", { className: "legend-item", style: { fontSize: 12 } }, h("span", { className: "legend-dot", style: { background: "var(--gold)" } }), t("dash_demand")))),
+            h("span", { className: "legend-item", style: { fontSize: 12 } }, h("span", { className: "legend-dot", style: { background: "var(--olive)" } }), "Moc"),
+            h("span", { className: "legend-item", style: { fontSize: 12 } }, h("span", { className: "legend-dot", style: { background: "var(--gold)" } }), "Popyt"))),
         h(LineArea, {
           series: [
             { data: CAPACITY_FORECAST.map(d => d.cap), color: "var(--olive)" },
@@ -1464,18 +1311,18 @@ function Dashboard({ onGenerate, t, lang }) {
           labels: CAPACITY_FORECAST.map(d => d.h), w: 640, hgt: 200, showDots: true,
         }),
         h("div", { className: "row", style: { marginTop: 10, gap: 8 } },
-          h("span", { className: "tag error" }, t("dash_peak")),
-          h("span", { className: "muted", style: { fontSize: 12 } }, t("dash_rec")))
+          h("span", { className: "tag error" }, "Szczyt 11–13: popyt > moc"),
+          h("span", { className: "muted", style: { fontSize: 12 } }, "Rekomendacja: przygotować 90 porcji buforu przed 11:00."))
       ),
       // Weekly balance
       h("div", { className: "an-card span-5" },
         h("div", { className: "an-head" },
           h("div", null,
-            h("div", { className: "an-title" }, t("dash_balance")),
-            h("div", { className: "an-desc" }, t("dash_balance_sub"))),
+            h("div", { className: "an-title" }, "Tygodniowy balans menu"),
+            h("div", { className: "an-desc" }, "Dania sycące vs lekkie")),
           h("div", { className: "row gap12" },
-            h("span", { className: "legend-item", style: { fontSize: 11.5 } }, h("span", { className: "legend-dot", style: { background: "var(--gold)" } }), t("dash_heavy")),
-            h("span", { className: "legend-item", style: { fontSize: 11.5 } }, h("span", { className: "legend-dot", style: { background: "var(--olive)" } }), t("dash_light")))),
+            h("span", { className: "legend-item", style: { fontSize: 11.5 } }, h("span", { className: "legend-dot", style: { background: "var(--gold)" } }), "Sycące"),
+            h("span", { className: "legend-item", style: { fontSize: 11.5 } }, h("span", { className: "legend-dot", style: { background: "var(--olive)" } }), "Lekkie"))),
         h("div", null, WEEK_BALANCE.map((w) =>
           h("div", { key: w.day, style: { display: "grid", gridTemplateColumns: "38px 1fr 42px", gap: 12, alignItems: "center", marginBottom: 11 } },
             h("span", { className: "mono", style: { fontSize: 12, color: "var(--text-muted)" } }, w.day),
@@ -1487,8 +1334,8 @@ function Dashboard({ onGenerate, t, lang }) {
       h("div", { className: "an-card span-4" },
         h("div", { className: "an-head" },
           h("div", null,
-            h("div", { className: "an-title" }, t("dash_cost")),
-            h("div", { className: "an-desc" }, t("dash_cost_sub"))),
+            h("div", { className: "an-title" }, "Struktura kosztów"),
+            h("div", { className: "an-desc" }, "Surowce · tydzień")),
           h("div", { className: "an-figure" }, "24,8k zł")),
         h("div", { className: "row gap16", style: { alignItems: "center" } },
           h(Donut, { data: COST_BREAKDOWN, size: 120, thick: 18 }),
@@ -1503,8 +1350,8 @@ function Dashboard({ onGenerate, t, lang }) {
       h("div", { className: "an-card span-3" },
         h("div", { className: "an-head" },
           h("div", null,
-            h("div", { className: "an-title" }, t("dash_perf")),
-            h("div", { className: "an-desc" }, t("dash_perf_sub"))),
+            h("div", { className: "an-title" }, "Wydajność"),
+            h("div", { className: "an-desc" }, "30 dni")),
           h("div", null,
             h("div", { className: "an-figure", style: { color: "var(--olive)" } }, "90"),
             h("div", { className: "kpi-trend up", style: { justifyContent: "flex-end" } }, h(Icon, { name: "arrowUp" }), "+22 pkt"))),
@@ -1526,7 +1373,14 @@ window.Dashboard = Dashboard;
 const h = React.createElement;
 const { useState: gUseState, useEffect: gUseEffect, useRef: gUseRef } = React;
 
-/* GEN_STEPS are now built per language inside the component */
+const GEN_STEPS = [
+  "Analizuję dostępne stanowiska i obsadę…",
+  "Dobieram dania z bazy 412 pozycji…",
+  "Balansuję food cost względem budżetu…",
+  "Optymalizuję harmonię kolorów talerza…",
+  "Wykrywam wąskie gardła produkcji…",
+  "Prognozuję satysfakcję gości…",
+];
 
 function DiffDots({ n }) {
   return h("span", { className: "diff-dots" },
@@ -1548,8 +1402,7 @@ function MenuDish({ dish, delay }) {
   );
 }
 
-function MenuGenerator({ autoTrigger, t }) {
-  const GEN_STEPS = ["gen_step1","gen_step2","gen_step3","gen_step4","gen_step5","gen_step6"];
+function MenuGenerator({ autoTrigger }) {
   const [guests, setGuests] = gUseState(300);
   const [budget, setBudget] = gUseState(17);
   const [complexity, setComplexity] = gUseState("Średnia");
@@ -1628,11 +1481,11 @@ function MenuGenerator({ autoTrigger, t }) {
   return h("div", { className: "fade-in" },
     h("div", { className: "page-head row between", style: { alignItems: "flex-end" } },
       h("div", null,
-        h("div", { className: "eyebrow", style: { marginBottom: 10 } }, t("gen_title")),
-        h("h1", { className: "page-title" }, t("gen_h1")),
-        h("p", { className: "page-sub" }, t("gen_sub"))),
+        h("div", { className: "eyebrow", style: { marginBottom: 10 } }, "Generator Menu AI"),
+        h("h1", { className: "page-title" }, "Skomponuj dzień w kuchni"),
+        h("p", { className: "page-sub" }, "Skonfiguruj parametry — silnik AI dobierze dania, zbalansuje koszt i przewidzi obciążenie stanowisk.")),
       state === "done" && h("button", { className: "btn btn-primary", onClick: run },
-        h(Icon, { name: "generator", size: 16 }), t("gen_again"))
+        h(Icon, { name: "generator", size: 16 }), "Generuj ponownie")
     ),
 
     h("div", { className: "gen-layout" },
@@ -1640,46 +1493,46 @@ function MenuGenerator({ autoTrigger, t }) {
       h("div", { className: "gen-col" },
         h("div", { className: "gen-col-head" },
           h(Icon, { name: "settings", size: 17, style: { color: "var(--text-muted)" } }),
-          h("h3", null, t("gen_config")),
+          h("h3", null, "Konfiguracja"),
           h("span", { className: "eyebrow" }, "01")),
         h("div", { className: "gen-col-body" },
           h("div", { className: "field" },
-            h("div", { className: "field-row" }, h("label", null, t("gen_guests")), h("span", { className: "v" }, guests)),
+            h("div", { className: "field-row" }, h("label", null, "Liczba gości"), h("span", { className: "v" }, guests)),
             h("input", { className: "range", type: "range", min: 50, max: 600, step: 10, value: guests, onChange: e => setGuests(+e.target.value) })),
           h("div", { className: "field" },
-            h("div", { className: "field-row" }, h("label", null, t("gen_budget")), h("span", { className: "v" }, budget + ",00 zł")),
+            h("div", { className: "field-row" }, h("label", null, "Budżet na gościa"), h("span", { className: "v" }, budget + ",00 zł")),
             h("input", { className: "range", type: "range", min: 8, max: 40, step: 1, value: budget, onChange: e => setBudget(+e.target.value) })),
           h("div", { className: "field" },
-            h("label", null, t("gen_type")),
+            h("label", null, "Typ menu"),
             h("select", { className: "inp", defaultValue: "obiadowe" },
               h("option", { value: "obiadowe" }, "Obiadowe (catering instytucjonalny)"),
               h("option", null, "Bankietowe"),
               h("option", null, "Stołówka pracownicza"),
               h("option", null, "Hotelowe — pełne wyżywienie"))),
           h("div", { className: "field" },
-            h("label", null, t("gen_diet")),
+            h("label", null, "Ograniczenia dietetyczne"),
             h("div", { className: "row gap8", style: { flexWrap: "wrap" } },
-              ["Wegetariańskie","Wegańskie","Bezglutenowe","Bez laktozy"].map((lbl, i) =>
-                h("span", { key: lbl, className: "chip" + (i < 2 ? " on" : "") }, lbl)))),
+              ["Wegetariańskie","Wegańskie","Bezglutenowe","Bez laktozy"].map((t, i) =>
+                h("span", { key: t, className: "chip" + (i < 2 ? " on" : "") }, t)))),
           h("div", { className: "field" },
-            h("label", null, t("gen_complexity")),
+            h("label", null, "Poziom złożoności"),
             h("div", { className: "seg" },
               ["Niska","Średnia","Wysoka"].map(c =>
                 h("button", { key: c, className: complexity === c ? "on" : "", onClick: () => setComplexity(c) }, c)))),
           h("div", { className: "field" },
-            h("div", { className: "field-row" }, h("label", null, t("gen_staff")), h("span", { className: "v" }, staff + " osób")),
+            h("div", { className: "field-row" }, h("label", null, "Obsada kuchni"), h("span", { className: "v" }, staff + " osób")),
             h("input", { className: "range", type: "range", min: 2, max: 14, step: 1, value: staff, onChange: e => setStaff(+e.target.value) })),
           h("div", { className: "field" },
-            h("label", null, t("gen_stations")),
+            h("label", null, "Dostępne stanowiska"),
             h("div", { className: "row gap8", style: { flexWrap: "wrap" } },
               STATIONS.map(s => h("span", { key: s, className: "chip on" }, s)))),
           h("div", { className: "field" },
-            h("label", null, t("gen_time")),
+            h("label", null, "Limit czasu produkcji"),
             h("select", { className: "inp", defaultValue: "4h" },
               h("option", null, "3 godziny"), h("option", { value: "4h" }, "4 godziny"), h("option", null, "6 godzin"))),
           h("button", { className: "btn btn-primary", style: { width: "100%", justifyContent: "center", marginTop: 6 },
             onClick: run, disabled: state === "loading" },
-            h(Icon, { name: "bolt", size: 16 }), state === "loading" ? t("gen_running") : t("gen_run"))
+            h(Icon, { name: "bolt", size: 16 }), state === "loading" ? "Generuję…" : "Generuj menu")
         )
       ),
 
@@ -1687,7 +1540,7 @@ function MenuGenerator({ autoTrigger, t }) {
       h("div", { className: "gen-col" },
         h("div", { className: "gen-col-head" },
           h(Icon, { name: "plate", size: 17, style: { color: "var(--gold)" } }),
-          h("h3", null, t("gen_menu")),
+          h("h3", null, "Wygenerowane menu"),
           state === "done" && h("span", { className: "tag olive", style: { marginLeft: "auto" } }, menu.length + " dań · " + guests + " gości"),
           state !== "done" && h("span", { className: "eyebrow" }, "02")),
         h("div", { className: "gen-col-body" },
@@ -1697,8 +1550,8 @@ function MenuGenerator({ autoTrigger, t }) {
                   h("svg", { width: 56, height: 56, viewBox: "0 0 56 56", fill: "none" },
                     h("circle", { cx: 28, cy: 28, r: 24, stroke: "rgba(255,255,255,0.08)", strokeWidth: 4 }),
                     h("path", { d: "M28 4a24 24 0 0 1 24 24", stroke: "var(--olive)", strokeWidth: 4, strokeLinecap: "round" }))),
-                h("div", { className: "brand-serif", style: { fontSize: 22, marginBottom: 6 } }, t("gen_composing")),
-                h("div", { className: "gen-log" }, h("b", null, "→ "), t(GEN_STEPS[step])),
+                h("div", { className: "brand-serif", style: { fontSize: 22, marginBottom: 6 } }, "Komponuję menu…"),
+                h("div", { className: "gen-log" }, h("b", null, "→ "), GEN_STEPS[step]),
                 h("div", { className: "mono dim", style: { fontSize: 11, marginTop: 14 } }, "Krok " + (step + 1) + " / " + GEN_STEPS.length))
             : DAY_COMPOSITION.map((g) => groups[g.label] && h("div", { key: g.label, className: "menu-group" },
                 h("div", { className: "menu-group-head" },
@@ -1714,31 +1567,33 @@ function MenuGenerator({ autoTrigger, t }) {
       h("div", { className: "gen-col" },
         h("div", { className: "gen-col-head" },
           h(Icon, { name: "spark", size: 17, style: { color: "var(--olive)" } }),
-          h("h3", null, t("gen_ai")),
+          h("h3", null, "Silnik AI"),
           h("span", { className: "eyebrow" }, "03")),
         h("div", { className: "gen-col-body" },
           state === "done" && h("div", { className: "fade-in" },
+            // score grid
             h("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 18 } },
               [
-                [t("gen_score_color"), aiAnalysis ? aiAnalysis.color_harmony : 87, "high"],
-                [t("gen_score_stress"), aiAnalysis ? aiAnalysis.kitchen_stress : 64, "low"],
-                [t("gen_score_appeal"), aiAnalysis ? aiAnalysis.guest_appeal   : 91, "high"],
-                [t("gen_score_fc"),    aiAnalysis ? aiAnalysis.food_cost_avg  : +(totalCost / menu.length / budget * 100).toFixed(0), "low", "%"]
+                ["Harmonia kolorów", aiAnalysis ? aiAnalysis.color_harmony : 87, "high"],
+                ["Stres kuchni",     aiAnalysis ? aiAnalysis.kitchen_stress : 64, "low"],
+                ["Satysfakcja",      aiAnalysis ? aiAnalysis.guest_appeal   : 91, "high"],
+                ["Food cost",        aiAnalysis ? aiAnalysis.food_cost_avg  : +(totalCost / menu.length / budget * 100).toFixed(0), "low", "%"]
               ]
                 .map(([l, v, g, u]) => h("div", { key: l, style: { textAlign: "center", padding: "12px 8px", border: "1px solid var(--line)", borderRadius: 10, background: "var(--bg)" } },
                   h("div", { style: { display: "grid", placeItems: "center", marginBottom: 8 } }, h(RadialGauge, { value: v, good: g, size: 56, stroke: 5, unit: u || "" })),
                   h("div", { style: { fontSize: 11, color: "var(--text-muted)" } }, l)))),
+            // narrative summary
             h("div", { style: { padding: 14, border: "1px solid var(--olive-line)", borderRadius: 12, background: "var(--olive-soft)", marginBottom: 16 } },
-              h("div", { className: "row gap8", style: { marginBottom: 8 } }, h(Icon, { name: "check", size: 15, style: { color: "var(--olive)" } }), h("b", { style: { fontSize: 13 } }, t("gen_ready"))),
+              h("div", { className: "row gap8", style: { marginBottom: 8 } }, h(Icon, { name: "check", size: 15, style: { color: "var(--olive)" } }), h("b", { style: { fontSize: 13 } }, "Menu gotowe do realizacji")),
               h("div", { style: { fontSize: 12.5, color: "var(--text-muted)", lineHeight: 1.5 } },
-                `${aiAnalysis && aiAnalysis.vibe ? "✦ " + aiAnalysis.vibe + " ✦  " : ""}${(totalCost / menu.length).toFixed(2)} zł/${t("gen_per")} · ${budget} zł. ${t("gen_diff")} ${avgDiff.toFixed(1)}/5 — ${t("gen_crew")} ${staff} ${t("gen_people")}.${aiAnalysis && aiAnalysis.warnings && aiAnalysis.warnings[0] ? " ⚠ " + aiAnalysis.warnings[0] : ""}`)),
+                `${aiAnalysis && aiAnalysis.vibe ? "✦ " + aiAnalysis.vibe + " ✦  " : ""}Koszt surowca ${(totalCost / menu.length).toFixed(2)} zł/porcję przy budżecie ${budget} zł. Średnia trudność ${avgDiff.toFixed(1)}/5 — wykonalne przy obsadzie ${staff} osób.${aiAnalysis && aiAnalysis.warnings && aiAnalysis.warnings[0] ? " ⚠ " + aiAnalysis.warnings[0] : ""}`)),
             AI_RECOMMENDATIONS.map((r, i) => h("div", { key: i, className: "ai-rec " + r.type },
               h("div", { className: "ai-rec-ic" }, h(Icon, { name: r.icon, size: 16 })),
               h("div", null, h("div", { className: "ai-rec-t" }, r.title), h("div", { className: "ai-rec-x" }, r.text))))
           ),
           state !== "done" && h("div", { style: { textAlign: "center", padding: "50px 20px", color: "var(--text-dim)" } },
             h(Icon, { name: "spark", size: 30, style: { opacity: .4, marginBottom: 12 } }),
-            h("div", { style: { fontSize: 13 } }, state === "loading" ? t("gen_analyzing") : t("gen_waiting")))
+            h("div", { style: { fontSize: 13 } }, state === "loading" ? "Analiza w toku…" : "Wygeneruj menu, aby zobaczyć analizę AI"))
         )
       )
     )
@@ -1759,7 +1614,7 @@ const { useState: dbUseState, useMemo: dbUseMemo } = React;
 
 const CATS = ["Wszystkie", "Zupa", "Mięsne", "Rybne", "Wege", "Wegańskie", "Warzywa", "Pierogi", "Kopytka", "Ziemniaki", "Surówki"];
 
-function MenuDatabase({ t }) {
+function MenuDatabase() {
   const [q, setQ] = dbUseState("");
   const [cat, setCat] = dbUseState("Wszystkie");
   const [station, setStation] = dbUseState("Wszystkie");
@@ -1781,10 +1636,10 @@ function MenuDatabase({ t }) {
   return h("div", { className: "content-narrow fade-in" },
     h("div", { className: "page-head row between", style: { alignItems: "flex-end" } },
       h("div", null,
-        h("div", { className: "eyebrow", style: { marginBottom: 10 } }, t("db_title")),
-        h("h1", { className: "page-title" }, t("db_h1")),
-        h("p", { className: "page-sub" }, t("db_sub"))),
-      h("button", { className: "btn btn-primary" }, h(Icon, { name: "plus", size: 16 }), t("db_new"))
+        h("div", { className: "eyebrow", style: { marginBottom: 10 } }, "Baza dań"),
+        h("h1", { className: "page-title" }, "Biblioteka kulinarna"),
+        h("p", { className: "page-sub" }, "412 receptur z pełną charakterystyką kosztową, czasową i kolorystyczną.")),
+      h("button", { className: "btn btn-primary" }, h(Icon, { name: "plus", size: 16 }), "Nowe danie")
     ),
 
     // Filters
@@ -1792,12 +1647,12 @@ function MenuDatabase({ t }) {
       h("div", { className: "row gap12", style: { marginBottom: 14 } },
         h("div", { className: "search", style: { width: "100%", maxWidth: "none" } },
           h(Icon, { name: "search", size: 17 }),
-          h("input", { placeholder: t("db_search"), value: q, onChange: e => setQ(e.target.value) })),
+          h("input", { placeholder: "Szukaj po nazwie dania…", value: q, onChange: e => setQ(e.target.value) })),
         h("select", { className: "inp", style: { width: 200 }, value: sort, onChange: e => setSort(e.target.value) },
-          h("option", { value: "name" }, t("db_sort_name")),
-          h("option", { value: "cost" }, t("db_sort_cost")),
-          h("option", { value: "time" }, t("db_sort_time")),
-          h("option", { value: "diff" }, t("db_sort_diff")))),
+          h("option", { value: "name" }, "Sortuj: nazwa"),
+          h("option", { value: "cost" }, "Sortuj: koszt"),
+          h("option", { value: "time" }, "Sortuj: czas"),
+          h("option", { value: "diff" }, "Sortuj: trudność"))),
       h("div", { className: "row gap8", style: { flexWrap: "wrap", marginBottom: 10 } },
         CATS.map(c => h("span", { key: c, className: "chip" + (cat === c ? " on" : ""), onClick: () => setCat(c) }, c))),
       h("div", { className: "row gap8", style: { flexWrap: "wrap" } },
@@ -1810,12 +1665,12 @@ function MenuDatabase({ t }) {
       h("div", { className: "row between", style: { padding: "14px 18px", borderBottom: "1px solid var(--line)" } },
         h("span", { className: "mono", style: { fontSize: 12, color: "var(--text-muted)" } }, rows.length + " z 412 dań"),
         h("div", { className: "row gap8" },
-          h("span", { className: "tag" }, t("db_export")),
+          h("span", { className: "tag" }, "Eksport CSV"),
           h("span", { className: "tag" }, h(Icon, { name: "grid", size: 12 })))),
       h("table", { className: "tbl" },
         h("thead", null, h("tr", null,
-          h("th", null, t("db_col_dish")), h("th", null, t("db_col_cat")), h("th", null, t("db_col_station")),
-          h("th", null, t("db_col_diff")), h("th", null, t("db_col_time")), h("th", null, t("db_col_color")), h("th", { style: { textAlign: "right" } }, t("db_col_cost")))),
+          h("th", null, "Danie"), h("th", null, "Kategoria"), h("th", null, "Stanowisko"),
+          h("th", null, "Trudność"), h("th", null, "Czas"), h("th", null, "Kolor"), h("th", { style: { textAlign: "right" } }, "Koszt/porcja"))),
         h("tbody", null, rows.map((d, i) => h("tr", { key: i },
           h("td", null, h("div", { className: "row gap8" },
             h("span", { className: "dish-color", style: { background: d.color.hex, width: 9, height: 9 } }),
@@ -1844,49 +1699,49 @@ window.MenuDatabase = MenuDatabase;
 
 const h = React.createElement;
 
-function AnalysisScore({ s, i, t }) {
-  const label = s.good === “low”
-    ? (s.value <= 35 ? t(“score_low”) : s.value <= 65 ? t(“score_mid”) : t(“score_high”))
-    : s.value >= 80 ? t(“score_great”) : s.value >= 55 ? t(“score_good”) : t(“score_warn”);
-  return h(“div”, { className: “score-card rise”, style: { animationDelay: (i * 50) + “ms” } },
-    h(“div”, { style: { flexShrink: 0, textAlign: “center” } },
-      h(RadialGauge, { value: s.value, good: s.good, size: 76, stroke: 6, unit: s.unit || “” }),
-      h(“div”, { className: “mono”, style: { fontSize: 9.5, letterSpacing: “.1em”, textTransform: “uppercase”,
-        color: scoreColor(s.value, s.good), marginTop: 8 } }, label)),
-    h(“div”, null,
-      h(“div”, { className: “row between” },
-        h(“div”, { className: “an-title” }, s.label),
-        h(Icon, { name: “spark”, size: 15, style: { color: “var(--olive)”, opacity: .6 } })),
-      h(“div”, { className: “score-why” }, s.why))
+function AnalysisScore({ s, i }) {
+  return h("div", { className: "score-card rise", style: { animationDelay: (i * 50) + "ms" } },
+    h("div", { style: { flexShrink: 0, textAlign: "center" } },
+      h(RadialGauge, { value: s.value, good: s.good, size: 76, stroke: 6, unit: s.unit || "" }),
+      h("div", { className: "mono", style: { fontSize: 9.5, letterSpacing: ".1em", textTransform: "uppercase",
+        color: scoreColor(s.value, s.good), marginTop: 8 } },
+        s.good === "low" ? (s.value <= 35 ? "Niskie" : s.value <= 65 ? "Średnie" : "Wysokie")
+          : s.value >= 80 ? "Doskonałe" : s.value >= 55 ? "Dobre" : "Uwaga")),
+    h("div", null,
+      h("div", { className: "row between" },
+        h("div", { className: "an-title" }, s.label),
+        h(Icon, { name: "spark", size: 15, style: { color: "var(--olive)", opacity: .6 } })),
+      h("div", { className: "score-why" }, s.why))
   );
 }
 
-function AiAnalysis({ t }) {
-  return h(“div”, { className: “content-narrow fade-in” },
-    h(“div”, { className: “page-head” },
-      h(“div”, { className: “eyebrow”, style: { marginBottom: 10 } }, t(“an_eyebrow”)),
-      h(“h1”, { className: “page-title” }, t(“an_h1”)),
-      h(“p”, { className: “page-sub” }, t(“an_sub”))),
+function AiAnalysis() {
+  return h("div", { className: "content-narrow fade-in" },
+    h("div", { className: "page-head" },
+      h("div", { className: "eyebrow", style: { marginBottom: 10 } }, "Centrum analizy AI"),
+      h("h1", { className: "page-title" }, "Dlaczego to menu działa"),
+      h("p", { className: "page-sub" }, "Każdy wskaźnik z wyjaśnieniem — silnik AI tłumaczy, jak powstała ocena i co możesz poprawić.")),
 
     // Overall banner
-    h(“div”, { className: “card card-pad”, style: { marginBottom: 22, background: “linear-gradient(120deg, var(--surface-2), var(--surface-1))”, display: “flex”, alignItems: “center”, gap: 28 } },
-      h(“div”, { style: { display: “grid”, placeItems: “center” } },
-        h(RadialGauge, { value: 88, good: “high”, size: 108, stroke: 8 })),
-      h(“div”, { className: “grow” },
-        h(“div”, { className: “eyebrow”, style: { marginBottom: 8 } }, t(“an_overall”)),
-        h(“div”, { className: “brand-serif”, style: { fontSize: 24, marginBottom: 6 } }, t(“an_verdict”)),
-        h(“p”, { className: “muted”, style: { fontSize: 13.5, maxWidth: 640 } }, t(“an_detail”))),
-      h(“div”, { style: { display: “grid”, gap: 10 } },
-        [[t(“an_ready”), “GO”, “var(--olive)”], [t(“an_risk”), t(“an_risk_val”), “var(--olive)”], [t(“an_margin”), “+42%”, “var(--gold)”]].map(([l, v, c]) =>
-          h(“div”, { key: l, style: { textAlign: “right” } },
-            h(“div”, { className: “brand-serif”, style: { fontSize: 20, color: c } }, v),
-            h(“div”, { className: “kpi-hint” }, l))))
+    h("div", { className: "card card-pad", style: { marginBottom: 22, background: "linear-gradient(120deg,#19160F,#131009)", display: "flex", alignItems: "center", gap: 28 } },
+      h("div", { style: { display: "grid", placeItems: "center" } },
+        h(RadialGauge, { value: 88, good: "high", size: 108, stroke: 8 })),
+      h("div", { className: "grow" },
+        h("div", { className: "eyebrow", style: { marginBottom: 8 } }, "Ogólna ocena wykonalności"),
+        h("div", { className: "brand-serif", style: { fontSize: 24, marginBottom: 6 } }, "Menu można wykonać sprawnie, spójnie i z zyskiem"),
+        h("p", { className: "muted", style: { fontSize: 13.5, maxWidth: 640 } },
+          "Wszystkie 8 wskaźników mieści się w bezpiecznych progach. Jedyny punkt uwagi to obciążenie stanowiska „Garnek” w szczycie — sugerowana zmiana harmonogramu obniży ryzyko do 12%.")),
+      h("div", { style: { display: "grid", gap: 10 } },
+        [["Gotowość", "GO", "var(--olive)"], ["Ryzyko", "Niskie", "var(--olive)"], ["Marża", "+42%", "var(--gold)"]].map(([l, v, c]) =>
+          h("div", { key: l, style: { textAlign: "right" } },
+            h("div", { className: "brand-serif", style: { fontSize: 20, color: c } }, v),
+            h("div", { className: "kpi-hint" }, l))))
     ),
 
-    h(“div”, { className: “sec-head” }, h(“h3”, null, t(“an_scores”)), h(“div”, { className: “sec-rule” }),
-      h(“span”, { className: “eyebrow” }, t(“an_metrics”))),
-    h(“div”, { style: { display: “grid”, gridTemplateColumns: “1fr 1fr”, gap: 16 } },
-      ANALYSIS_SCORES.map((s, i) => h(AnalysisScore, { key: s.key, s, i, t }))
+    h("div", { className: "sec-head" }, h("h3", null, "Wskaźniki szczegółowe"), h("div", { className: "sec-rule" }),
+      h("span", { className: "eyebrow" }, "8 metryk · z wyjaśnieniem")),
+    h("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 } },
+      ANALYSIS_SCORES.map((s, i) => h(AnalysisScore, { key: s.key, s, i }))
     )
   );
 }
@@ -1909,7 +1764,7 @@ const FUTURE_MODULES = [
   "Rekomendacje zakupowe", "Analityka redukcji odpadów", "Zarządzanie wieloma lokalizacjami", "Raportowanie zarządcze",
 ];
 
-function Placeholder({ id, t }) {
+function Placeholder({ id }) {
   const p = PLACEHOLDERS[id] || PLACEHOLDERS.reports;
   return h("div", { className: "content-narrow fade-in" },
     h("div", { className: "ph-wrap" },
@@ -1917,9 +1772,9 @@ function Placeholder({ id, t }) {
         h("div", { className: "ph-ic" }, h(Icon, { name: p.icon, size: 26 })),
         h("h2", null, p.title),
         h("p", null, p.sub),
-        h("div", { className: "ph-badge tag gold" }, t("ph_coming")),
+        h("div", { className: "ph-badge tag gold" }, "Moduł w przygotowaniu"),
         h("div", { style: { marginTop: 30, paddingTop: 24, borderTop: "1px solid var(--line)" } },
-          h("div", { className: "eyebrow", style: { marginBottom: 14 } }, t("ph_roadmap")),
+          h("div", { className: "eyebrow", style: { marginBottom: 14 } }, "Mapa drogowa produktu"),
           h("div", { className: "row gap8", style: { flexWrap: "wrap", justifyContent: "center" } },
             FUTURE_MODULES.map(m => h("span", { key: m, className: "chip", style: { cursor: "default" } }, m))))
       )
@@ -1938,39 +1793,43 @@ window.Placeholder = Placeholder;
 const h = React.createElement;
 const { useState: aUseState } = React;
 
+const TR_EN = {
+  s_ops:"Operations", s_mgmt:"Management",
+  n_dashboard:"Dashboard", n_generator:"AI Menu Generator", n_database:"Dish Library",
+  n_analysis:"AI Analysis", n_cost:"Food Cost Control", n_production:"Production Planning",
+  n_capacity:"Kitchen Capacity", n_reports:"Reports", n_settings:"Settings",
+  tb_search:"Search dishes, reports, stations…", tb_kitchen:"Kitchen active",
+  tb_generate:"Generate AI Menu",
+};
+
 function App() {
   const [route, setRoute] = aUseState("dashboard");
   const [genTrigger, setGenTrigger] = aUseState(0);
-  const [lang,  setLangRaw]  = aUseState(() => localStorage.getItem("tasty_lang")  || "pl");
-  const [theme, setThemeRaw] = aUseState(() => localStorage.getItem("tasty_theme") || "dark");
+  const [lang,  setLangRaw]  = aUseState(function(){ return localStorage.getItem("tasty_lang")  || "pl"; });
+  const [theme, setThemeRaw] = aUseState(function(){ return localStorage.getItem("tasty_theme") || "dark"; });
 
-  const setLang  = (v) => { localStorage.setItem("tasty_lang",  v); setLangRaw(v); };
-  const setTheme = (v) => { localStorage.setItem("tasty_theme", v); setThemeRaw(v); };
+  const setLang  = function(v){ localStorage.setItem("tasty_lang",  v); setLangRaw(v); };
+  const setTheme = function(v){ localStorage.setItem("tasty_theme", v); setThemeRaw(v); };
 
-  React.useEffect(() => { document.documentElement.setAttribute("data-theme", theme); }, [theme]);
+  React.useEffect(function(){ document.documentElement.setAttribute("data-theme", theme); }, [theme]);
 
-  const t = (key) => {
-    const tr = window.TR[lang];
-    return (tr && tr[key] !== undefined) ? tr[key] : (window.TR.pl[key] || key);
-  };
+  const t = function(key){ return lang === "en" && TR_EN[key] ? TR_EN[key] : key; };
 
-  const goGenerate = () => { setRoute("generator"); setGenTrigger(n => n + 1); };
-
-  const lp = { t, lang, theme, setLang, setTheme };
+  const goGenerate = function(){ setRoute("generator"); setGenTrigger(function(n){ return n + 1; }); };
 
   let screen;
   switch (route) {
-    case "dashboard": screen = h(Dashboard, { onGenerate: goGenerate, t, lang }); break;
-    case "generator": screen = h(MenuGenerator, { key: genTrigger, autoTrigger: genTrigger > 0, t }); break;
-    case "database":  screen = h(MenuDatabase, { t }); break;
-    case "analysis":  screen = h(AiAnalysis, { t }); break;
-    default:          screen = h(Placeholder, { id: route, t });
+    case "dashboard": screen = h(Dashboard, { onGenerate: goGenerate }); break;
+    case "generator": screen = h(MenuGenerator, { key: genTrigger, autoTrigger: genTrigger > 0 }); break;
+    case "database":  screen = h(MenuDatabase, null); break;
+    case "analysis":  screen = h(AiAnalysis, null); break;
+    default:          screen = h(Placeholder, { id: route });
   }
 
   return h("div", { className: "app" },
-    h(Sidebar, { active: route, onNav: setRoute, t }),
+    h(Sidebar, { active: route, onNav: setRoute, lang: lang, t: t }),
     h("div", { className: "main" },
-      h(TopBar, { onGenerate: goGenerate, t, lang, setLang, theme, setTheme }),
+      h(TopBar, { onGenerate: goGenerate, lang: lang, setLang: setLang, theme: theme, setTheme: setTheme }),
       h("div", { className: "content" }, screen)
     )
   );
