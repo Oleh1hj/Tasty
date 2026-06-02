@@ -118,6 +118,9 @@
 [data-theme="light"] .sb-avatar {
   background: linear-gradient(140deg, #d4cebc, #c8c1a8);
 }
+.an-banner {
+  background: linear-gradient(120deg, var(--surface-2), var(--surface-1));
+}
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1004,14 +1007,14 @@ function buildMenu(seed) {
 
 // ---- KPI definitions (dashboard) ----
 const KPIS = [
-  { key: "stress",   label: "Indeks obciążenia kuchni", value: 64, unit: "", trend: -6, good: "low",  spark: [72,70,75,68,71,66,64], hint: "Umiarkowane" },
-  { key: "harmony",  label: "Harmonia kolorów",         value: 87, unit: "", trend: +4, good: "high", spark: [78,80,79,83,85,84,87], hint: "Bardzo dobra" },
-  { key: "appeal",   label: "Atrakcyjność dla gości",   value: 91, unit: "", trend: +2, good: "high", spark: [85,86,88,87,89,90,91], hint: "Wysoka" },
-  { key: "foodcost", label: "Efektywność food cost",    value: 28.4,unit: "%",trend: -1.2,good: "low", spark: [31,30.5,30,29.4,29,28.8,28.4], hint: "Cel ≤ 30%" },
-  { key: "complex",  label: "Złożoność produkcji",      value: 58, unit: "", trend: +3, good: "low",  spark: [52,54,53,55,56,57,58], hint: "Średnia" },
-  { key: "opeff",    label: "Efektywność operacyjna",   value: 82, unit: "", trend: +5, good: "high", spark: [74,76,75,78,80,81,82], hint: "Silna" },
-  { key: "capacity", label: "Wykorzystanie przepustowości", value: 76, unit: "%", trend: +2, good: "mid", spark: [70,72,71,74,73,75,76], hint: "Optymalne" },
-  { key: "diversity",label: "Różnorodność menu",        value: 84, unit: "", trend: +1, good: "high", spark: [80,81,80,82,83,83,84], hint: "Zróżnicowane" },
+  { key: "stress",   label: "Indeks obciążenia kuchni", label_en: "Kitchen Load Index",      value: 64, unit: "", trend: -6, good: "low",  spark: [72,70,75,68,71,66,64], hint: "Umiarkowane",  hint_en: "Moderate" },
+  { key: "harmony",  label: "Harmonia kolorów",          label_en: "Color Harmony",           value: 87, unit: "", trend: +4, good: "high", spark: [78,80,79,83,85,84,87], hint: "Bardzo dobra", hint_en: "Very good" },
+  { key: "appeal",   label: "Atrakcyjność dla gości",    label_en: "Guest Appeal",            value: 91, unit: "", trend: +2, good: "high", spark: [85,86,88,87,89,90,91], hint: "Wysoka",       hint_en: "High" },
+  { key: "foodcost", label: "Efektywność food cost",     label_en: "Food Cost Efficiency",    value: 28.4,unit:"%",trend:-1.2,good:"low",  spark: [31,30.5,30,29.4,29,28.8,28.4], hint: "Cel ≤ 30%", hint_en: "Target ≤ 30%" },
+  { key: "complex",  label: "Złożoność produkcji",       label_en: "Production Complexity",   value: 58, unit: "", trend: +3, good: "low",  spark: [52,54,53,55,56,57,58], hint: "Średnia",      hint_en: "Medium" },
+  { key: "opeff",    label: "Efektywność operacyjna",    label_en: "Operational Efficiency",  value: 82, unit: "", trend: +5, good: "high", spark: [74,76,75,78,80,81,82], hint: "Silna",        hint_en: "Strong" },
+  { key: "capacity", label: "Wykorzystanie przepustowości", label_en: "Capacity Utilization", value: 76, unit: "%", trend: +2, good: "mid", spark: [70,72,71,74,73,75,76], hint: "Optymalne",    hint_en: "Optimal" },
+  { key: "diversity",label: "Różnorodność menu",         label_en: "Menu Diversity",          value: 84, unit: "", trend: +1, good: "high", spark: [80,81,80,82,83,83,84], hint: "Zróżnicowane", hint_en: "Diverse" },
 ];
 
 // Station load (% of capacity today)
@@ -1047,12 +1050,12 @@ const CAPACITY_FORECAST = [
 
 // Cost breakdown
 const COST_BREAKDOWN = [
-  { name: "Mięso i drób", pct: 34, val: "8 420 zł" },
-  { name: "Warzywa",      pct: 21, val: "5 200 zł" },
-  { name: "Ryby",         pct: 14, val: "3 470 zł" },
-  { name: "Nabiał",       pct: 12, val: "2 970 zł" },
-  { name: "Kasze i mąki", pct: 11, val: "2 720 zł" },
-  { name: "Przyprawy",    pct: 8,  val: "1 980 zł" },
+  { name: "Mięso i drób", name_en: "Meat & poultry", pct: 34, val: "8 420 zł" },
+  { name: "Warzywa",      name_en: "Vegetables",      pct: 21, val: "5 200 zł" },
+  { name: "Ryby",         name_en: "Fish",            pct: 14, val: "3 470 zł" },
+  { name: "Nabiał",       name_en: "Dairy",           pct: 12, val: "2 970 zł" },
+  { name: "Kasze i mąki", name_en: "Grains & flour",  pct: 11, val: "2 720 zł" },
+  { name: "Przyprawy",    name_en: "Spices",          pct: 8,  val: "1 980 zł" },
 ];
 
 // Performance trend (operational score, 30d sampled)
@@ -1067,30 +1070,53 @@ const CAT_DIST = [
 
 // AI analysis detailed scores with explanations
 const ANALYSIS_SCORES = [
-  { key: "harmony", label: "Harmonia kolorów", value: 87, good: "high",
-    why: "Talerz dnia łączy 5 dominujących barw (brąz, zieleń, złoto, czerwień, biel). Brak dominacji jednego koloru powyżej 35% — oko gościa odbiera menu jako apetyczne i zbalansowane." },
-  { key: "stress", label: "Obciążenie kuchni", value: 64, good: "low",
-    why: "Stanowisko „Garnek” pracuje na 93% przepustowości w szczycie 12:00–13:00. Trzy dania wymagają długiego gotowania jednocześnie — to główny czynnik podnoszący indeks." },
-  { key: "appeal", label: "Atrakcyjność dla gości", value: 91, good: "high",
-    why: "Wysoki udział dań-klasyków (schabowy, rosół, pierogi ruskie) o sprawdzonej akceptacji + 2 pozycje sezonowe. Prognozowany wskaźnik zwrotów talerzy poniżej 4%." },
-  { key: "foodcost", label: "Food cost", value: 28.4, good: "low", unit: "%",
-    why: "Średni koszt surowca na porcję 4,82 zł przy cenie sprzedaży 17 zł. Najdroższe pozycje (łosoś, kaczka) zbilansowane tańszymi surówkami i kaszami." },
-  { key: "ratio", label: "Ciężkie vs lekkie", value: 56, good: "mid", unit: "%",
-    why: "56% dań klasyfikowanych jako sycące. Dla menu obiadowego 300+ gości zalecany zakres to 50–60% — wartość mieści się w normie." },
-  { key: "stationload", label: "Obciążenie stanowisk", value: 79, good: "mid", unit: "%",
-    why: "Średnie wykorzystanie 6 stanowisk wynosi 79%. „Grill” jest niedociążony (41%) — rekomendacja: przenieść pierś z indyka na grill, by odciążyć patelnię." },
-  { key: "complexity", label: "Złożoność produkcji", value: 58, good: "low",
-    why: "Trzy pozycje o trudności 4/5 (de volaille, zrazy, kaczka). Wymagają doświadczonego kucharza — przy obecnej obsadzie 6 osób to akceptowalny poziom." },
-  { key: "risk", label: "Ryzyko realizacji", value: 22, good: "low", unit: "%",
-    why: "Niskie ryzyko. Jedyny punkt krytyczny: zsynchronizowanie 18 pozycji na stanowisku Garnek w szczycie. Sugerowane przesunięcie startu surówek o 40 min wcześniej." },
+  { key: “harmony”, label: “Harmonia kolorów”, label_en: “Color Harmony”, value: 87, good: “high”,
+    why: “Talerz dnia łączy 5 dominujących barw (brąz, zieleń, złoto, czerwień, biel). Brak dominacji jednego koloru powyżej 35% — oko gościa odbiera menu jako apetyczne i zbalansowane.”,
+    why_en: “The day's plate combines 5 dominant colors (brown, green, gold, red, white). No single color exceeds 35% dominance — guests perceive the menu as appetizing and balanced.” },
+  { key: “stress”, label: “Obciążenie kuchni”, label_en: “Kitchen Load”, value: 64, good: “low”,
+    why: “Stanowisko „Garnek” pracuje na 93% przepustowości w szczycie 12:00–13:00. Trzy dania wymagają długiego gotowania jednocześnie — to główny czynnik podnoszący indeks.”,
+    why_en: “The \”Pot\” station runs at 93% capacity during the 12:00–13:00 peak. Three dishes require long simultaneous cooking — the main driver of this index.” },
+  { key: “appeal”, label: “Atrakcyjność dla gości”, label_en: “Guest Appeal”, value: 91, good: “high”,
+    why: “Wysoki udział dań-klasyków (schabowy, rosół, pierogi ruskie) o sprawdzonej akceptacji + 2 pozycje sezonowe. Prognozowany wskaźnik zwrotów talerzy poniżej 4%.”,
+    why_en: “High share of proven classics (schnitzel, broth, pierogi) + 2 seasonal items. Forecast plate return rate below 4%.” },
+  { key: “foodcost”, label: “Food cost”, label_en: “Food cost”, value: 28.4, good: “low”, unit: “%”,
+    why: “Średni koszt surowca na porcję 4,82 zł przy cenie sprzedaży 17 zł. Najdroższe pozycje (łosoś, kaczka) zbilansowane tańszymi surówkami i kaszami.”,
+    why_en: “Average ingredient cost 4.82 PLN/portion at a selling price of 17 PLN. Expensive items (salmon, duck) balanced by cheaper salads and grains.” },
+  { key: “ratio”, label: “Ciężkie vs lekkie”, label_en: “Hearty vs Light”, value: 56, good: “mid”, unit: “%”,
+    why: “56% dań klasyfikowanych jako sycące. Dla menu obiadowego 300+ gości zalecany zakres to 50–60% — wartość mieści się w normie.”,
+    why_en: “56% of dishes classified as hearty. For lunch menus of 300+ guests the recommended range is 50–60% — value is within normal.” },
+  { key: “stationload”, label: “Obciążenie stanowisk”, label_en: “Station Load”, value: 79, good: “mid”, unit: “%”,
+    why: “Średnie wykorzystanie 6 stanowisk wynosi 79%. „Grill” jest niedociążony (41%) — rekomendacja: przenieść pierś z indyka na grill, by odciążyć patelnię.”,
+    why_en: “Average utilization of 6 stations is 79%. \”Grill\” is underloaded (41%) — recommendation: move turkey breast to the grill to relieve the sauté station.” },
+  { key: “complexity”, label: “Złożoność produkcji”, label_en: “Production Complexity”, value: 58, good: “low”,
+    why: “Trzy pozycje o trudności 4/5 (de volaille, zrazy, kaczka). Wymagają doświadczonego kucharza — przy obecnej obsadzie 6 osób to akceptowalny poziom.”,
+    why_en: “Three dishes at difficulty 4/5 (de volaille, roulades, duck). They require an experienced chef — acceptable with the current 6-person crew.” },
+  { key: “risk”, label: “Ryzyko realizacji”, label_en: “Execution Risk”, value: 22, good: “low”, unit: “%”,
+    why: “Niskie ryzyko. Jedyny punkt krytyczny: zsynchronizowanie 18 pozycji na stanowisku Garnek w szczycie. Sugerowane przesunięcie startu surówek o 40 min wcześniej.”,
+    why_en: “Low risk. The only critical point: synchronizing 18 items at the Pot station during peak. Suggested fix: start salads 40 min earlier.” },
 ];
 
 const AI_RECOMMENDATIONS = [
-  { type: "ok",   icon: "spark", title: "Doskonałe parowanie", text: "Schabowy + ziemniaki opiekane + surówka z kapusty to zestaw o najwyższej akceptacji gości (96%) w Twojej historii." },
-  { type: "warn", icon: "alert", title: "Przeciążenie stanowiska", text: "Garnek osiąga 93% w szczycie. Przenieś „brokuły na parze” na wcześniejszą godzinę lub na piec." },
-  { type: "ok",   icon: "leaf",  title: "Harmonia kolorów", text: "Dodanie buraczków podniosło różnorodność barw o 6 pkt. Talerz wygląda pełniej i bardziej apetycznie." },
-  { type: "warn", icon: "coin",  title: "Optymalizacja kosztu", text: "Zamiana łososia na dorsza w 1 z 2 dni obniży food cost o 1,8 pkt proc. bez utraty atrakcyjności." },
-  { type: "ok",   icon: "chart", title: "Prognoza satysfakcji", text: "Przewidywana satysfakcja gości: 91/100. To o 7 pkt powyżej średniej z ostatnich 30 dni." },
+  { type: “ok”,   icon: “spark”,
+    title: “Doskonałe parowanie”,      title_en: “Excellent pairing”,
+    text:  “Schabowy + ziemniaki opiekane + surówka z kapusty to zestaw o najwyższej akceptacji gości (96%) w Twojej historii.”,
+    text_en: “Schnitzel + roasted potatoes + coleslaw is the highest guest-acceptance combination (96%) in your history.” },
+  { type: “warn”, icon: “alert”,
+    title: “Przeciążenie stanowiska”,  title_en: “Station overload”,
+    text:  “Garnek osiąga 93% w szczycie. Przenieś „brokuły na parze” na wcześniejszą godzinę lub na piec.”,
+    text_en: “The Pot station hits 93% at peak. Move \”steamed broccoli\” to an earlier slot or to the oven.” },
+  { type: “ok”,   icon: “leaf”,
+    title: “Harmonia kolorów”,         title_en: “Color harmony”,
+    text:  “Dodanie buraczków podniosło różnorodność barw o 6 pkt. Talerz wygląda pełniej i bardziej apetycznie.”,
+    text_en: “Adding beetroot raised color diversity by 6 pts. The plate looks fuller and more appetizing.” },
+  { type: “warn”, icon: “coin”,
+    title: “Optymalizacja kosztu”,     title_en: “Cost optimization”,
+    text:  “Zamiana łososia na dorsza w 1 z 2 dni obniży food cost o 1,8 pkt proc. bez utraty atrakcyjności.”,
+    text_en: “Swapping salmon for cod 1 out of 2 days will reduce food cost by 1.8 percentage points without losing appeal.” },
+  { type: “ok”,   icon: “chart”,
+    title: “Prognoza satysfakcji”,     title_en: “Satisfaction forecast”,
+    text:  “Przewidywana satysfakcja gości: 91/100. To o 7 pkt powyżej średniej z ostatnich 30 dni.”,
+    text_en: “Forecast guest satisfaction: 91/100. That is 7 pts above the 30-day average.” },
 ];
 
 Object.assign(window, {
@@ -1429,11 +1455,14 @@ Object.assign(window, { Sidebar, TopBar });
 const h = React.createElement;
 
 function KpiCard({ k, i }) {
+  const { lang } = React.useContext(window.AppContext);
   const up = k.trend > 0;
   const goodDir = (k.good === "high" && up) || (k.good === "low" && !up);
+  const label = lang === "en" && k.label_en ? k.label_en : k.label;
+  const hint  = lang === "en" && k.hint_en  ? k.hint_en  : k.hint;
   return h("div", { className: "kpi rise", style: { animationDelay: (i * 45) + "ms" } },
     h("div", { className: "kpi-top" },
-      h("div", { className: "kpi-label" }, k.label),
+      h("div", { className: "kpi-label" }, label),
       h(RadialGauge, { value: k.value, good: k.good, size: 50, stroke: 5, unit: k.unit })
     ),
     h("div", { className: "kpi-foot", style: { marginTop: 16 } },
@@ -1442,7 +1471,7 @@ function KpiCard({ k, i }) {
           h(Icon, { name: up ? "arrowUp" : "arrowDown" }),
           (up ? "+" : "") + k.trend + (k.unit === "%" ? " pp" : "")
         ),
-        h("div", { className: "kpi-hint", style: { marginTop: 4 } }, k.hint)
+        h("div", { className: "kpi-hint", style: { marginTop: 4 } }, hint)
       ),
       h(Sparkline, { data: k.spark, w: 80, hgt: 30,
         color: goodDir ? "var(--olive)" : "var(--gold)" })
@@ -1555,7 +1584,7 @@ function Dashboard({ onGenerate }) {
           h("div", { className: "legend grow" }, COST_BREAKDOWN.map((c, i) =>
             h("div", { key: c.name, className: "legend-item" },
               h("span", { className: "legend-dot", style: { background: ["#7A9E50","#D4A040","#6E94B0","#A4493D","#9A7BB0","#C47A36"][i] } }),
-              h("span", null, c.name),
+              h("span", null, lang === "en" && c.name_en ? c.name_en : c.name),
               h("span", { className: "legend-val" }, c.pct + "%"))))
         )
       ),
@@ -1793,10 +1822,14 @@ function MenuGenerator({ autoTrigger }) {
             h("div", { style: { padding: 14, border: "1px solid var(--olive-line)", borderRadius: 12, background: "var(--olive-soft)", marginBottom: 16 } },
               h("div", { className: "row gap8", style: { marginBottom: 8 } }, h(Icon, { name: "check", size: 15, style: { color: "var(--olive)" } }), h("b", { style: { fontSize: 13 } }, t("gen_ready_msg"))),
               h("div", { style: { fontSize: 12.5, color: "var(--text-muted)", lineHeight: 1.5 } },
-                `${aiAnalysis && aiAnalysis.vibe ? "✦ " + aiAnalysis.vibe + " ✦  " : ""}Koszt surowca ${(totalCost / menu.length).toFixed(2)} zł/porcję przy budżecie ${budget} zł. Średnia trudność ${avgDiff.toFixed(1)}/5 — wykonalne przy obsadzie ${staff} osób.${aiAnalysis && aiAnalysis.warnings && aiAnalysis.warnings[0] ? " ⚠ " + aiAnalysis.warnings[0] : ""}`)),
+                lang === "en"
+                  ? `${aiAnalysis && aiAnalysis.vibe ? "✦ " + aiAnalysis.vibe + " ✦  " : ""}Ingredient cost ${(totalCost / menu.length).toFixed(2)} PLN/portion within budget of ${budget} PLN. Avg difficulty ${avgDiff.toFixed(1)}/5 — achievable with ${staff} staff.${aiAnalysis && aiAnalysis.warnings && aiAnalysis.warnings[0] ? " ⚠ " + aiAnalysis.warnings[0] : ""}`
+                  : `${aiAnalysis && aiAnalysis.vibe ? "✦ " + aiAnalysis.vibe + " ✦  " : ""}Koszt surowca ${(totalCost / menu.length).toFixed(2)} zł/porcję przy budżecie ${budget} zł. Średnia trudność ${avgDiff.toFixed(1)}/5 — wykonalne przy obsadzie ${staff} osób.${aiAnalysis && aiAnalysis.warnings && aiAnalysis.warnings[0] ? " ⚠ " + aiAnalysis.warnings[0] : ""}`)),
             AI_RECOMMENDATIONS.map((r, i) => h("div", { key: i, className: "ai-rec " + r.type },
               h("div", { className: "ai-rec-ic" }, h(Icon, { name: r.icon, size: 16 })),
-              h("div", null, h("div", { className: "ai-rec-t" }, r.title), h("div", { className: "ai-rec-x" }, r.text))))
+              h("div", null,
+                h("div", { className: "ai-rec-t" }, lang === "en" && r.title_en ? r.title_en : r.title),
+                h("div", { className: "ai-rec-x" }, lang === "en" && r.text_en ? r.text_en : r.text))))
           ),
           state !== "done" && h("div", { style: { textAlign: "center", padding: "50px 20px", color: "var(--text-dim)" } },
             h(Icon, { name: "spark", size: 30, style: { opacity: .4, marginBottom: 12 } }),
@@ -1919,9 +1952,9 @@ function AnalysisScore({ s, i }) {
           : s.value >= 80 ? t("score_excellent") : s.value >= 55 ? t("score_good") : t("score_warn"))),
     h("div", null,
       h("div", { className: "row between" },
-        h("div", { className: "an-title" }, s.label),
+        h("div", { className: "an-title" }, lang === "en" && s.label_en ? s.label_en : s.label),
         h(Icon, { name: "spark", size: 15, style: { color: "var(--olive)", opacity: .6 } })),
-      h("div", { className: "score-why" }, s.why))
+      h("div", { className: "score-why" }, lang === "en" && s.why_en ? s.why_en : s.why))
   );
 }
 
@@ -1934,7 +1967,7 @@ function AiAnalysis() {
       h(“p”, { className: “page-sub” }, t(“an_sub”))),
 
     // Overall banner
-    h(“div”, { className: “card card-pad”, style: { marginBottom: 22, background: “linear-gradient(120deg,#19160F,#131009)”, display: “flex”, alignItems: “center”, gap: 28 } },
+    h(“div”, { className: “card card-pad an-banner”, style: { marginBottom: 22, display: “flex”, alignItems: “center”, gap: 28 } },
       h(“div”, { style: { display: “grid”, placeItems: “center” } },
         h(RadialGauge, { value: 88, good: “high”, size: 108, stroke: 8 })),
       h(“div”, { className: “grow” },
@@ -1962,32 +1995,40 @@ window.AiAnalysis = AiAnalysis;
    Placeholder screens (future modules)
    ============================================================ */
 const PLACEHOLDERS = {
-  cost:       { icon: "cost", title: "Kontrola food cost", sub: "Pełny moduł rentowności: marże per pozycja, alerty progów kosztowych i optymalizacja zakupów surowca." },
-  production: { icon: "production", title: "Planowanie produkcji", sub: "Harmonogram stanowisk, sekwencja mise en place i synchronizacja wydawki dla dużych eventów." },
-  capacity:   { icon: "capacity", title: "Przepustowość kuchni", sub: "Modelowanie mocy produkcyjnej, symulacja szczytów i rekomendacje obsady na zmianę." },
-  reports:    { icon: "reports", title: "Raporty", sub: "Raporty wykonawcze, trendy satysfakcji gości i eksport dla zarządu sieci." },
-  settings:   { icon: "settings", title: "Ustawienia", sub: "Konfiguracja lokali, stanowisk, zespołu i integracji z systemami magazynowymi." },
+  cost:       { icon: "cost",       title: "Kontrola food cost",     title_en: "Food Cost Control",      sub: "Pełny moduł rentowności: marże per pozycja, alerty progów kosztowych i optymalizacja zakupów surowca.",       sub_en: "Full profitability module: per-item margins, cost threshold alerts, and ingredient purchasing optimization." },
+  production: { icon: "production", title: "Planowanie produkcji",   title_en: "Production Planning",    sub: "Harmonogram stanowisk, sekwencja mise en place i synchronizacja wydawki dla dużych eventów.",               sub_en: "Station scheduling, mise en place sequence, and service synchronization for large events." },
+  capacity:   { icon: "capacity",   title: "Przepustowość kuchni",   title_en: "Kitchen Capacity",       sub: "Modelowanie mocy produkcyjnej, symulacja szczytów i rekomendacje obsady na zmianę.",                         sub_en: "Production capacity modeling, peak simulation, and shift staffing recommendations." },
+  reports:    { icon: "reports",    title: "Raporty",                 title_en: "Reports",                sub: "Raporty wykonawcze, trendy satysfakcji gości i eksport dla zarządu sieci.",                                  sub_en: "Executive reports, guest satisfaction trends, and multi-venue management exports." },
+  settings:   { icon: "settings",   title: "Ustawienia",             title_en: "Settings",               sub: "Konfiguracja lokali, stanowisk, zespołu i integracji z systemami magazynowymi.",                             sub_en: "Venue, station, team configuration and warehouse system integrations." },
 };
 
 const FUTURE_MODULES = [
-  "Prognozowanie AI", "Inteligencja magazynowa", "Optymalizacja dostawców",
-  "Rekomendacje zakupowe", "Analityka redukcji odpadów", "Zarządzanie wieloma lokalizacjami", "Raportowanie zarządcze",
+  { pl: "Prognozowanie AI",                  en: "AI Forecasting" },
+  { pl: "Inteligencja magazynowa",            en: "Inventory Intelligence" },
+  { pl: "Optymalizacja dostawców",            en: "Supplier Optimization" },
+  { pl: "Rekomendacje zakupowe",              en: "Purchasing Recommendations" },
+  { pl: "Analityka redukcji odpadów",         en: "Waste Reduction Analytics" },
+  { pl: "Zarządzanie wieloma lokalizacjami",  en: "Multi-venue Management" },
+  { pl: "Raportowanie zarządcze",             en: "Executive Reporting" },
 ];
 
 function Placeholder({ id }) {
-  const { t } = React.useContext(window.AppContext);
+  const { t, lang } = React.useContext(window.AppContext);
   const p = PLACEHOLDERS[id] || PLACEHOLDERS.reports;
+  const title = lang === "en" && p.title_en ? p.title_en : p.title;
+  const sub   = lang === "en" && p.sub_en   ? p.sub_en   : p.sub;
   return h("div", { className: "content-narrow fade-in" },
     h("div", { className: "ph-wrap" },
       h("div", { className: "ph" },
         h("div", { className: "ph-ic" }, h(Icon, { name: p.icon, size: 26 })),
-        h("h2", null, p.title),
-        h("p", null, p.sub),
+        h("h2", null, title),
+        h("p", null, sub),
         h("div", { className: "ph-badge tag gold" }, t("ph_badge")),
         h("div", { style: { marginTop: 30, paddingTop: 24, borderTop: "1px solid var(--line)" } },
           h("div", { className: "eyebrow", style: { marginBottom: 14 } }, t("ph_roadmap")),
           h("div", { className: "row gap8", style: { flexWrap: "wrap", justifyContent: "center" } },
-            FUTURE_MODULES.map(m => h("span", { key: m, className: "chip", style: { cursor: "default" } }, m))))
+            FUTURE_MODULES.map(m => h("span", { key: m.pl, className: "chip", style: { cursor: "default" } },
+              lang === "en" ? m.en : m.pl))))
       )
     )
   );
