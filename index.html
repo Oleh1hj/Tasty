@@ -673,8 +673,7 @@ select.inp { appearance: none; cursor: pointer; background-image: url("data:imag
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
   <script type="text/babel" data-from="context.jsx">
-/* Global context + translations */
-window.AppCtx = React.createContext(null);
+/* Global translations */
 window.TR = {
   pl: {
     /* navigation */
@@ -1284,8 +1283,7 @@ const NAV_ITEMS = [
   { id: "settings",   key: "n_settings",   icon: "settings" },
 ];
 
-function Sidebar({ active, onNav }) {
-  const { t } = React.useContext(window.AppCtx);
+function Sidebar({ active, onNav, t }) {
   return h("aside", { className: "sidebar" },
     h("div", { className: "sb-brand" },
       h("div", { className: "sb-logo" }, h("span", null, "T")),
@@ -1321,8 +1319,7 @@ function Sidebar({ active, onNav }) {
   );
 }
 
-function TopBar({ onGenerate }) {
-  const { t, lang, setLang, theme, setTheme } = React.useContext(window.AppCtx);
+function TopBar({ onGenerate, t, lang, setLang, theme, setTheme }) {
   const [time, setTime] = React.useState("");
   React.useEffect(() => {
     const locale = lang === "pl" ? "pl-PL" : "en-GB";
@@ -1393,8 +1390,7 @@ function KpiCard({ k, i }) {
   );
 }
 
-function Dashboard({ onGenerate }) {
-  const { t, lang } = React.useContext(window.AppCtx);
+function Dashboard({ onGenerate, t, lang }) {
   const locale = lang === "pl" ? "pl-PL" : "en-GB";
   return h("div", { className: "content-narrow fade-in" },
     // Hero
@@ -1552,8 +1548,7 @@ function MenuDish({ dish, delay }) {
   );
 }
 
-function MenuGenerator({ autoTrigger }) {
-  const { t } = React.useContext(window.AppCtx);
+function MenuGenerator({ autoTrigger, t }) {
   const GEN_STEPS = ["gen_step1","gen_step2","gen_step3","gen_step4","gen_step5","gen_step6"];
   const [guests, setGuests] = gUseState(300);
   const [budget, setBudget] = gUseState(17);
@@ -1764,8 +1759,7 @@ const { useState: dbUseState, useMemo: dbUseMemo } = React;
 
 const CATS = ["Wszystkie", "Zupa", "Mięsne", "Rybne", "Wege", "Wegańskie", "Warzywa", "Pierogi", "Kopytka", "Ziemniaki", "Surówki"];
 
-function MenuDatabase() {
-  const { t } = React.useContext(window.AppCtx);
+function MenuDatabase({ t }) {
   const [q, setQ] = dbUseState("");
   const [cat, setCat] = dbUseState("Wszystkie");
   const [station, setStation] = dbUseState("Wszystkie");
@@ -1850,8 +1844,7 @@ window.MenuDatabase = MenuDatabase;
 
 const h = React.createElement;
 
-function AnalysisScore({ s, i }) {
-  const { t } = React.useContext(window.AppCtx);
+function AnalysisScore({ s, i, t }) {
   const label = s.good === “low”
     ? (s.value <= 35 ? t(“score_low”) : s.value <= 65 ? t(“score_mid”) : t(“score_high”))
     : s.value >= 80 ? t(“score_great”) : s.value >= 55 ? t(“score_good”) : t(“score_warn”);
@@ -1868,8 +1861,7 @@ function AnalysisScore({ s, i }) {
   );
 }
 
-function AiAnalysis() {
-  const { t } = React.useContext(window.AppCtx);
+function AiAnalysis({ t }) {
   return h(“div”, { className: “content-narrow fade-in” },
     h(“div”, { className: “page-head” },
       h(“div”, { className: “eyebrow”, style: { marginBottom: 10 } }, t(“an_eyebrow”)),
@@ -1894,7 +1886,7 @@ function AiAnalysis() {
     h(“div”, { className: “sec-head” }, h(“h3”, null, t(“an_scores”)), h(“div”, { className: “sec-rule” }),
       h(“span”, { className: “eyebrow” }, t(“an_metrics”))),
     h(“div”, { style: { display: “grid”, gridTemplateColumns: “1fr 1fr”, gap: 16 } },
-      ANALYSIS_SCORES.map((s, i) => h(AnalysisScore, { key: s.key, s, i }))
+      ANALYSIS_SCORES.map((s, i) => h(AnalysisScore, { key: s.key, s, i, t }))
     )
   );
 }
@@ -1917,8 +1909,7 @@ const FUTURE_MODULES = [
   "Rekomendacje zakupowe", "Analityka redukcji odpadów", "Zarządzanie wieloma lokalizacjami", "Raportowanie zarządcze",
 ];
 
-function Placeholder({ id }) {
-  const { t } = React.useContext(window.AppCtx);
+function Placeholder({ id, t }) {
   const p = PLACEHOLDERS[id] || PLACEHOLDERS.reports;
   return h("div", { className: "content-narrow fade-in" },
     h("div", { className: "ph-wrap" },
@@ -1965,22 +1956,22 @@ function App() {
 
   const goGenerate = () => { setRoute("generator"); setGenTrigger(n => n + 1); };
 
+  const lp = { t, lang, theme, setLang, setTheme };
+
   let screen;
   switch (route) {
-    case "dashboard": screen = h(Dashboard, { onGenerate: goGenerate }); break;
-    case "generator": screen = h(MenuGenerator, { key: genTrigger, autoTrigger: genTrigger > 0 }); break;
-    case "database":  screen = h(MenuDatabase, null); break;
-    case "analysis":  screen = h(AiAnalysis, null); break;
-    default:          screen = h(Placeholder, { id: route });
+    case "dashboard": screen = h(Dashboard, { onGenerate: goGenerate, t, lang }); break;
+    case "generator": screen = h(MenuGenerator, { key: genTrigger, autoTrigger: genTrigger > 0, t }); break;
+    case "database":  screen = h(MenuDatabase, { t }); break;
+    case "analysis":  screen = h(AiAnalysis, { t }); break;
+    default:          screen = h(Placeholder, { id: route, t });
   }
 
-  return h(window.AppCtx.Provider, { value: { lang, theme, setLang, setTheme, t } },
-    h("div", { className: "app" },
-      h(Sidebar, { active: route, onNav: setRoute }),
-      h("div", { className: "main" },
-        h(TopBar, { onGenerate: goGenerate }),
-        h("div", { className: "content" }, screen)
-      )
+  return h("div", { className: "app" },
+    h(Sidebar, { active: route, onNav: setRoute, t }),
+    h("div", { className: "main" },
+      h(TopBar, { onGenerate: goGenerate, t, lang, setLang, theme, setTheme }),
+      h("div", { className: "content" }, screen)
     )
   );
 }
