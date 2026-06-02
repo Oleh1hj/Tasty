@@ -1117,7 +1117,6 @@ const h = React.createElement;
 
 const NAV = [
   { section: true, pl: "Operacje",    en: "Operations" },
-  { id: "dashboard", pl: "Pulpit",             en: "Dashboard",       icon: "dashboard" },
   { id: "generator", pl: "Generator Menu AI",  en: "AI Menu Generator", icon: "generator", badge: "AI", gold: true },
   { id: "database",  pl: "Baza dań",           en: "Dish Library",    icon: "database", badge: "412" },
   { id: "analysis",  pl: "Analiza AI",          en: "AI Analysis",     icon: "analysis" },
@@ -1823,7 +1822,7 @@ const TR_EN = {
 };
 
 function App() {
-  const [route, setRoute] = aUseState("dashboard");
+  const [route, setRoute] = aUseState("generator");
   const [genTrigger, setGenTrigger] = aUseState(0);
   const [lang,  setLangRaw]  = aUseState(function(){ return localStorage.getItem("tasty_lang")  || "pl"; });
   const [theme, setThemeRaw] = aUseState(function(){ return localStorage.getItem("tasty_theme") || "dark"; });
